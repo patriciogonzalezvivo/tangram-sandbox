@@ -9,23 +9,35 @@ lights:
         type: directional
         direction: [0, 1, -.5]
         diffuse: .5
-        ambient: .2
+        ambient: .3
     light2:
         type: point
         position: [0, 0, 500px]
         origin: ground
         ambient: .3
-        diffuse: .5
-        specular: .2
-
+        diffuse: .3
 styles:
+    texture:
+        extends: polygons
+        material:
+            normal:
+                texture: imgs/normal-0029.jpg
+                mapping: planar
+                scale: 0.01
+                # amount: 0.5
+            ambient: 1
+            diffuse: 1
     plain:
         extends: polygons
         texcoords: true
         material:
-            ambient: 0.8
+            normal:
+                texture: imgs/normal-0029.jpg
+                mapping: planar
+                scale: 0.01
+                # amount: 0.5
+            ambient: 1
             diffuse: 1
-            specular: 0
         shaders:
             blocks:
                 globals: |
@@ -87,9 +99,13 @@ styles:
         extends: polygons
         texcoords: true
         material:
+            normal:
+                texture: imgs/normal-0029.jpg
+                mapping: planar
+                scale: 0.01
+                # amount: 0.5
             ambient: 0.8
             diffuse: 1
-            specular: 0
         shaders:
             blocks:
                 globals: |
@@ -162,7 +178,7 @@ styles:
                             float angle = 3.1415 * gradient;
                             pattern = getHatch(st,angle,gradient);
                         } 
-
+                        pattern *= clamp(v_world_position.z*0.1,0.,1.);
                         color.rgb = mix(vec3(0.204,0.204,0.204),vec3(0.992,0.961,0.902),pattern);
                     }
 
@@ -201,31 +217,34 @@ layers:
             layer: water
         style:
             order: 2
-            color: '#FDF5E6'
+            color: '#343434'
 
     roads:
         data:
             source: osm
             layer: roads
         style:
-            name: plain
+            name: texture
             order: 3
-            color: gray    
+            color: '#343434'    
             width: 8
+            outline:
+                color: '#FDF5E6'
+                width: 2
         highway:
             filter:
                 kind: highway
             style:
-                color: '#cc6666'
+                color: '#343434'
                 width: 12
                 outline:
-                    color: [0, 0, 0]
+                    color: '#FDF5E6'
                     width: 2
         tunnel:
             filter:
                 is_tunnel: yes
             style:
-                color: tan
+                color: '#343434'
             rail:
                 filter:
                     kind: rail
@@ -235,29 +254,29 @@ layers:
             filter:
                 kind: minor_road
             style:
-                color: lightgrey
+                color: '#343434'
                 width: 5
                 outline:
-                    color: [0, 0, 0]
+                    color: '#FDF5E6'
                     width: 1
         path:
             filter:
                 kind: path
             style:
-                color: [0.8, 0.8, 0.8]
+                color: '#343434'
                 width: 3
                 outline:
-                    color: [0, 0, 0]
+                    color: '#FDF5E6'
                     width: 1
         rail:
             filter:
                 kind: rail
                 is_tunnel: no
             style:
-                color: pink
+                color: '#343434'
                 width: 3
                 outline:
-                    color: [0, 0, 0]
+                    color: '#FDF5E6'
                     width: 1
     
     buildings:
