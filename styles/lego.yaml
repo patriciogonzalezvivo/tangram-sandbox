@@ -28,7 +28,7 @@ styles:
                 scale: 0.003
             ambient: 0.8
             diffuse: 0.8
-            specular: 0.2
+            specular: 0.4
 
     buildings:
         extends: polygons
@@ -36,7 +36,7 @@ styles:
         material:
             ambient: 0.8
             diffuse: 0.8
-            specular: 0.2
+            specular: 0.4
         shaders:
             blocks:
                 globals: |
@@ -119,6 +119,8 @@ styles:
                     } else {
                         color.rgb = vec3(0.400,0.176,0.180);
                     } 
+
+                    color *= clamp(0.7+v_world_position.z*0.005,0.,1.);
 
 
 sources:
