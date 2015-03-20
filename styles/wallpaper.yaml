@@ -19,18 +19,24 @@ lights:
         specular: .2
 
 styles:
-    rock:
+    walls:
         extends: polygons
+        texcoords: true
         material:
-            normal:
-                texture: procedural/rock.jpg
-                mapping: uv
             ambient: 0.8
             diffuse: 1
             specular: 0
         shaders:
             blocks:
                 globals: |
+                    float getBrightness(in vec3 _rgb){
+                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
+                    }
+
+                    float random( in float _x){
+                        return fract(sin(_x)*1e4);
+                    }
+
                     vec2 rotate2D(vec2 _st, float _angle){
                       _st -= 0.5;
                       _st =  mat2(cos(_angle),-sin(_angle),
@@ -46,30 +52,38 @@ styles:
                         }
                         return fract(_st);
                     }
-                normal: |
-                    vec2 st = v_texcoord.xy;
 
-                    float rows = 10.0;
-                    st = brickTile(st,rows);
+                    vec3 wallpaper(in vec2 st) {
 
-                    float angle = 3.1415*0.25*cos(u_time*0.5);
+                        float rows = 10.0;
+                        st = brickTile(st,rows);
 
-                    if (fract(v_texcoord.y * 0.5 * rows) > 0.5){
-                        angle *= -1.0;
+                        float angle = 3.1415*0.25*cos(u_time*0.5);
+
+                        if (fract(v_texcoord.y * 0.5 * rows) > 0.5){
+                            angle *= -1.0;
+                        }
+
+                        st = rotate2D(st,angle);
+
+                        st *= 2.0;
+                        float pct = (1.0+cos(3.1415*st.x))*0.5;
+
+                        float pattern = 1.0-smoothstep( 0.5,0.6, pow(pct,st.y) ) * 1.0-smoothstep( 0.79,0.81, pow(pct,2.0-st.y ) );
+
+                        if( pattern > 0.5){
+                            return vec3(0.637,0.157,0.659);
+                        } else {
+                            return vec3(1.);
+                        }
                     }
+                color: |
+                    float b = random(getBrightness(color.rgb));
 
-                    st = rotate2D(st,angle);
-
-                    st *= 2.0;
-                    float pct = (1.0+cos(3.1415*st.x))*0.5;
-
-                    float pattern = 1.0-smoothstep( 0.5,0.6, pow(pct,st.y) ) * 1.0-smoothstep( 0.79,0.81, pow(pct,2.0-st.y ) );
-
-                    if( pattern > 0.5){
-                        g_material.ambient.rgb *= vec3(0.637,0.157,0.659);
-                        g_material.diffuse.rgb *= vec3(0.957,0.068,0.574);
-                        normal = v_normal;
+                    if (b > 0.8){
+                        color.rgb = wallpaper(v_texcoord);
                     }
+                    
 
 sources:
     osm:
@@ -153,13 +167,7 @@ layers:
             source: osm
             layer: buildings
         style:
-            name: rock
+            name: walls
             order: 4
-            color: |
-                function () {
-                    var h = feature.height || 20;
-                    h = Math.min((h + 50)/ 250, .8);
-                    h = Math.max(h, .4);
-                    return [h, h, h];
-                }
+            color: Style.color.pseudoRandomColor()
             extrude: true
