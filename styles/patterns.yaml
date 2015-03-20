@@ -20,22 +20,12 @@ styles:
     texture:
         extends: polygons
         material:
-            normal:
-                texture: imgs/normal-0029.jpg
-                mapping: planar
-                scale: 0.01
-                # amount: 0.5
             ambient: 1
             diffuse: 1
     plain:
         extends: polygons
         texcoords: true
         material:
-            normal:
-                texture: imgs/normal-0029.jpg
-                mapping: planar
-                scale: 0.01
-                # amount: 0.5
             ambient: 1
             diffuse: 1
         shaders:
@@ -99,11 +89,6 @@ styles:
         extends: polygons
         texcoords: true
         material:
-            normal:
-                texture: imgs/normal-0029.jpg
-                mapping: planar
-                scale: 0.01
-                # amount: 0.5
             ambient: 0.8
             diffuse: 1
         shaders:
