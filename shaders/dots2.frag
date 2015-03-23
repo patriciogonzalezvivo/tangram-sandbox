@@ -5,14 +5,32 @@
 precision mediump float;
 #endif
 
-const float PI = 3.1415926535897932384626433832795;
-
-uniform sampler2D u_tex0;
-uniform vec2 u_tex0Resolution;
+#define PI 3.14159265358979323846
 
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
+
+float rows = 10.0;
+
+vec2 tile(vec2 _st, float _zoom){
+  _st *= _zoom;
+  return fract(_st);
+}
+
+vec2 brickTile(vec2 _st, float _zoom){
+  _st *= _zoom;
+  if (fract(_st.y * 0.5) > 0.5){
+      _st.x += 0.5;
+  }
+  return fract(_st);
+}
+
+float circle(vec2 _st, float _radius){
+  vec2 pos = vec2(0.5)-_st;
+  _radius *= 0.75;
+  return 1.-smoothstep(_radius-(_radius*0.01),_radius+(_radius*0.01),dot(pos,pos)*3.14);
+}
 
 float random (in vec2 _st) { 
     return fract(sin(dot(_st.xy,
@@ -37,23 +55,11 @@ float noise (in vec2 _st) {
             (d - b) * u.x * u.y;
 }
 
-mat2 rotate2d(float _angle){
-    return mat2(cos(_angle),-sin(_angle),
-                sin(_angle),cos(_angle));
-}
-
 void main(){
-    vec2 st = gl_FragCoord.xy/u_resolution.xy;
-    float b = noise(st+sin(u_time*0.5));//texture2D(u_tex0,st).r;
 
-    float scale = 20.0;
-    float angle = (u_time*0.05);//+noise(st*2.0)*0.5;
-    st *= scale;
-   
-    st = rotate2d( angle ) * st;
+  vec2 st = gl_FragCoord.xy/u_resolution.xy;
+  st = brickTile(st,5.);
+  vec3 color = vec3(1.0-circle(st, 0.11));
 
-    float pct = 1.0-smoothstep(-1.+b*2.0,1.,abs(sin(st.x*PI)));
-
-    vec3 color = vec3(smoothstep(0.2,0.5,pct));
-    gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(color,1.0);
 }

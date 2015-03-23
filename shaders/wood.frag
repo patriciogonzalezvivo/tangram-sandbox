@@ -9,29 +9,40 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 
-float random (in vec2 _st) { 
-    return fract(sin(dot(_st.xy,
-                         vec2(12.9898,78.233)))* 
-        43758.5453123);
+float random (in float _x) {
+    return fract(sin(_x)*1e4);
 }
 
 // Based on Morgan McGuire @morgan3d
 // https://www.shadertoy.com/view/4dS3Wd
-float noise (in vec2 _st) {
-    vec2 i = floor(_st);
-    vec2 f = fract(_st);
+float noise (in vec3 _p) {
+    const vec3 step = vec3(110.0, 241.0, 171.0);
 
-    // Four corners in 2D of a tile
-    float a = random(i);
-    float b = random(i + vec2(1.0, 0.0));
-    float c = random(i + vec2(0.0, 1.0));
-    float d = random(i + vec2(1.0, 1.0));
+    vec3 i = floor(_p);
+    vec3 f = fract(_p);
+ 
+    // For performance, compute the base input to a 
+    // 1D random from the integer part of the 
+    // argument and the incremental change to the 
+    // 1D based on the 3D -> 1D wrapping
+    float n = dot(i, step);
 
-    vec2 u = f * f * (3.0 - 2.0 * f);
-
-    return mix(a, b, u.x) + 
-            (c - a)* u.y * (1.0 - u.x) + 
-            (d - b) * u.x * u.y;
+    vec3 u = f * f * (3.0 - 2.0 * f);
+    return mix( mix(mix(random(n + dot(step, vec3(0,0,0))),
+                        random(n + dot(step, vec3(1,0,0))),
+                        u.x),
+                    mix(random(n + dot(step, vec3(0,1,0))),
+                        random(n + dot(step, vec3(1,1,0))),
+                        u.x), 
+                u.y),
+                mix(mix(random(n + dot(step, vec3(0,0,1))),
+                        random(n + dot(step, vec3(1,0,1))),
+                        u.x),
+                    mix(random(n + dot(step, vec3(0,1,1))),
+                        random(n + dot(step, vec3(1,1,1))),
+                        u.x),
+                u.y),
+            u.z);
 }
 
 mat2 rotate2d(float _angle){
@@ -52,13 +63,11 @@ void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
     vec3 color = vec3(0.0);
 
-    vec2 pos = vec2(st*5.0);
+    vec3 pos = vec3(st*2.0,u_time*0.25)*vec3(3.0,1.,1.0);
 
-    float pattern = lines(pos, noise(pos*vec2(2.,0.5)+u_time*0.5),0.5);
-
-    color = mix(vec3(0.275,0.145,0.059),
-                vec3(0.761,0.529,0.239),
-                pattern*1.7);
+    float pattern = lines( pos.xy+noise(pos), 0.5, noise(pos*1.5) );
+    color.rgb = vec3( mix(vec3(0.275,0.145,0.059)*0.5, vec3(0.578,0.351,0.171)*0.9,pattern) );
+    color.rgb = mix(vec3(0.761,0.529,0.239)*1.2,color.rgb,smoothstep(0.0,color.g,pattern));
 
     gl_FragColor = vec4(color,1.0);
 }

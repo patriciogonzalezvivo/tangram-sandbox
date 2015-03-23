@@ -31,7 +31,7 @@ void main(void){
 
     st /= vec2(2.15,0.65)/2.15;
 
-    st = brickTile(st+vec2(0.0,u_time*0.5),5.0);
+    st = brickTile(st+vec2(0.0,u_time*0.5),3.0);
     
     vec3 color = vec3(1.0-box(st,vec2(0.95)));
 

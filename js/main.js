@@ -49,7 +49,7 @@ function captionizeImages() {
 }
 
 app.run(function($rootScope) {
-  var hash_loc = hash_params ? hash_params : {'center': {'lat': 40.7259, 'lng': -73.9805}, 'zoom': 12};
+  var hash_loc = hash_params ? hash_params : {'center': {'lat': 40.7154, 'lng': -73.9967}, 'zoom': 14};
   $rootScope.geobase = {
     'zoom': hash_loc.zoom,
     'lat' : hash_loc.center.lat,
@@ -179,13 +179,13 @@ app.controller('SearchController', function($scope, $rootScope, $sce, $http) {
     });
   });
 
-  map.on('click', function(e) {
-    var geo = {
-      'lat': e.latlng.lat,
-      'lon': e.latlng.lng
-    };
-    reverse(geo);
-  });
+  // map.on('click', function(e) {
+  //   var geo = {
+  //     'lat': e.latlng.lat,
+  //     'lon': e.latlng.lng
+  //   };
+  //   reverse(geo);
+  // });
 
   var highlight = function( text, focus ){
     var r = RegExp( '('+ focus + ')', 'gi' );
@@ -233,7 +233,7 @@ app.controller('SearchController', function($scope, $rootScope, $sce, $http) {
       params: {
         lat: geo.lat,
         lon: geo.lon,
-        zoom:$rootScope.geobase ? $rootScope.geobase.zoom : 12
+        zoom:$rootScope.geobase ? $rootScope.geobase.zoom : 14
       },
       headers: { 'Accept': 'application/json' }
     }).success(function (data, status, headers, config) {
@@ -266,7 +266,7 @@ app.controller('SearchController', function($scope, $rootScope, $sce, $http) {
     if ($scope.geobias === 'bbox' || $scope.geobias === 'loc') {
       params.lat = $rootScope.geobase ? $rootScope.geobase.lat : 0;
       params.lon = $rootScope.geobase ? $rootScope.geobase.lon : 0;
-      params.zoom= $rootScope.geobase ? $rootScope.geobase.zoom : 12;
+      params.zoom= $rootScope.geobase ? $rootScope.geobase.zoom : 14;
     }
     
     $http({

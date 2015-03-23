@@ -148,14 +148,14 @@ styles:
                             if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                                 st = fract(v_world_position.xy*0.1);
                             } else {
-                                st = tile(st,5.);
+                                st = tile(st,3.);
                             }
                             pattern = circle(st,0.2);
                         } else if (b > 0.8){
                             if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                                 st = fract(v_world_position.xy*0.1);
                             } else {
-                                st = tile(st,5.);
+                                st = brickTile(st,5.);
                             }
                             pattern = 1.0-circle(st,0.1);
                         } else {

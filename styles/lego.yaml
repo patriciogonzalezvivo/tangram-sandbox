@@ -12,7 +12,7 @@ lights:
         ambient: .2
     light2:
         type: point
-        position: [0, 0, 800px]
+        position: [0, 0, 400px]
         origin: ground
         ambient: .5
         diffuse: .3
@@ -123,7 +123,7 @@ styles:
                         color.rgb = vec3(0.400,0.176,0.180);
                     } 
 
-                    color *= clamp(0.6+v_world_position.z*0.005,0.,1.);
+                    color *= clamp(0.6+v_world_position.z*0.007,0.,1.);
 
 
 sources:
