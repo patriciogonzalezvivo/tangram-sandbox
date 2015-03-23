@@ -82,7 +82,7 @@ styles:
                         float b = 1.0-getBrightness(color.rgb);
                         float pattern = 0.0;
                         pattern = getHatch(st,3.1415*b,b);
-                        color.rgb = mix(vec3(0.204,0.204,0.204),vec3(0.992,0.961,0.902),pattern);
+                        color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
                     }
 
     buildings:
@@ -139,7 +139,7 @@ styles:
                     vec2 st = v_texcoord.xy;
                     if (color.rgb == vec3(0.0)){
                         // Border
-                        color.rgb = mix(vec3(0.204,0.204,0.204),vec3(0.992,0.961,0.902),smoothstep(0.4,0.5,st.x));
+                        color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),smoothstep(0.4,0.5,st.x));
                     } else {
                         // Fill
                         float b = random(getBrightness(color.rgb));
@@ -164,7 +164,7 @@ styles:
                             pattern = getHatch(st,angle,gradient);
                         } 
                         pattern *= clamp(v_world_position.z*0.1,0.,1.);
-                        color.rgb = mix(vec3(0.204,0.204,0.204),vec3(0.992,0.961,0.902),pattern);
+                        color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
                     }
 
 sources:

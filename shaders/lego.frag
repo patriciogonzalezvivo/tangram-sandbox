@@ -11,6 +11,14 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 
+ vec2 rotate2D(vec2 _st, float _angle){
+  _st -= 0.5;
+  _st =  mat2(cos(_angle),-sin(_angle),
+              sin(_angle),cos(_angle)) * _st;
+  _st += 0.5;
+  return _st;
+}
+
 vec2 tile(vec2 _st, float _zoom){
   _st *= _zoom;
   return fract(_st);
@@ -33,8 +41,9 @@ void main(){
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
     vec3 normal = vec3(0.0);
 
-    vec2 pos = st-0.5;
-    normal = vec3(pos*2.0,1.0)*(1.0-vec3(box(st,vec2(0.95))));
+    vec2 pos = rotate2D(st-vec2(0.0,0.71),PI*0.25);
+    normal = vec3(vec2( step(0.0,pos.x),step(0.0,pos.y) ),1.0)*(1.0-vec3(box(st,vec2(0.95))));
+    // normal = vec3(pos*2.0,1.0)*(1.0-vec3(box(st,vec2(0.95))));
 
     st = tile(st,2.);
 

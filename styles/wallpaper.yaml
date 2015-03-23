@@ -45,6 +45,11 @@ styles:
                       return _st;
                     }
 
+                    vec2 tile(vec2 _st, float _zoom){
+                      _st *= _zoom;
+                      return fract(_st);
+                    }
+
                     vec2 brickTile(vec2 _st, float _zoom){
                         _st *= _zoom;
                         if (fract(_st.y * 0.5) > 0.5){
@@ -53,12 +58,22 @@ styles:
                         return fract(_st);
                     }
 
-                    vec3 wallpaper(in vec2 st) {
+                    float shape(float _radius, float _shape){
+                      return 1.-smoothstep(_shape-(_shape*0.01),_shape+(_shape*0.01),_radius);
+                    }
+
+                    float circle(vec2 _st, float _radius){
+                      vec2 pos = vec2(0.5)-_st;
+                      _radius *= 0.75;
+                      return 1.-smoothstep(_radius-(_radius*0.01),_radius+(_radius*0.01),dot(pos,pos)*3.14);
+                    }
+
+                    float nuts(in vec2 st) {
 
                         float rows = 10.0;
                         st = brickTile(st,rows);
 
-                        float angle = 3.1415*0.25*cos(u_time*0.5);
+                        float angle = 3.1415*0.25;
 
                         if (fract(v_texcoord.y * 0.5 * rows) > 0.5){
                             angle *= -1.0;
@@ -69,20 +84,52 @@ styles:
                         st *= 2.0;
                         float pct = (1.0+cos(3.1415*st.x))*0.5;
 
-                        float pattern = 1.0-smoothstep( 0.5,0.6, pow(pct,st.y) ) * 1.0-smoothstep( 0.79,0.81, pow(pct,2.0-st.y ) );
+                        return clamp(1.0-smoothstep( 0.5,0.6, pow(pct,st.y) ) * 1.0-smoothstep( 0.79,0.81, pow(pct,2.0-st.y )),0.0,1.0);
+                    }
 
-                        if( pattern > 0.5){
-                            return vec3(0.637,0.157,0.659);
-                        } else {
-                            return vec3(1.);
-                        }
+                    float flower(in vec2 st){
+                        vec2 pos = vec2(0.5)-st;
+
+                        float r = length(pos)*2.0;
+                        float a = atan(pos.y,pos.x);
+
+                        float shape1 = 0.5-0.2*cos(a*5.0);
+                        float shape2 = 0.15-0.03*cos(a*5.0);
+
+                        float pct = shape(r,shape1);
+                        pct -= shape(r,shape2);
+                        pct += circle(st,0.0005);
+
+                        return pct;
+                    }
+
+                    float stripes(in vec2 _pos, float _angle, float _brigtness){
+                        float scale = 20.0;
+                        _pos *= scale;
+                        _pos = rotate2D(_pos, _angle );
+                        return 1.0-smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
                     }
                 color: |
                     float b = random(getBrightness(color.rgb));
 
+                    vec2 st = v_texcoord;
+                    float pattern = 0.0;
+
                     if (b > 0.8){
-                        color.rgb = wallpaper(v_texcoord);
+                        pattern = nuts(st);
+                    } else if (b > 0.6){
+                        st = brickTile(st,4.);
+                        pattern = flower(st);
+                    } else if (b > 0.4){
+                        pattern = stripes(st, 3.1415*0.25, 0.25);
+                    } else if (b > 0.2){
+                        pattern = 1.0-stripes(st, -3.1415*0.25, 0.25);
+                    } else {
+                        st = tile(st,5.);
+                        pattern = 1.0-circle(st,0.1);
                     }
+
+                    color.rgb = mix(vec3(1.),color.rgb,pattern);
                     
 
 sources:
@@ -104,7 +151,7 @@ layers:
             layer: landuse
         style:
             order: 1
-            color: '#aaffaa'
+            color: [0.502,0.369,0.494]
             interactive: true
 
     water:
@@ -127,7 +174,7 @@ layers:
             filter:
                 kind: highway
             style:
-                color: '#cc6666'
+                color: [0.855,0.463,0.255]
                 width: 12
                 outline:
                     color: grey
