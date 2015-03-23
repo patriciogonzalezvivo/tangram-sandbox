@@ -102,7 +102,6 @@ styles:
                             normal = v_normal;
                         }
                         
-
                         float p = fract(z);
                         float size = 0.92;
                         size = 0.5-size*0.5;

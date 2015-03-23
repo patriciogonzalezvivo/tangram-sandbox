@@ -1,5 +1,5 @@
-// Created by patricio gonzalez vivo - 2015
-// http://shiny.ooo/~patriciogv/
+// Author @patriciogv - 2015
+// http://patriciogonzalezvivo.com
 
 #ifdef GL_ES
 precision mediump float;
@@ -87,7 +87,7 @@ float fbm ( in vec2 _st) {
 
 void main(){
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
-    st *= 2.0;
+    // st *= 2.0;
     
     float b = 0.0;
     b += noise(st*2.0);

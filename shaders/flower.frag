@@ -1,5 +1,5 @@
-// Created by patricio gonzalez vivo - 2015
-// http://shiny.ooo/~patriciogv/
+// Author @patriciogv - 2015
+// http://patriciogonzalezvivo.com
 
 #ifdef GL_ES
 precision mediump float;
@@ -28,7 +28,7 @@ void main(){
     vec2 pos = vec2(0.5)-st;
 
     float r = length(pos)*2.0;
-    float a = atan(pos.y,pos.x);
+    float a = atan(pos.y,pos.x)+u_time*0.1;
 
     float shape1 = 0.5-0.2*cos(a*5.0);
     float shape2 = 0.15-0.03*cos(a*5.0);

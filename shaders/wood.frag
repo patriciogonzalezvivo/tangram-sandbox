@@ -5,11 +5,6 @@
 precision mediump float;
 #endif
 
-const float PI = 3.1415926535897932384626433832795;
-
-uniform sampler2D u_tex0;
-uniform vec2 u_tex0Resolution;
-
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
@@ -20,6 +15,8 @@ float random (in vec2 _st) {
         43758.5453123);
 }
 
+// Based on Morgan McGuire @morgan3d
+// https://www.shadertoy.com/view/4dS3Wd
 float noise (in vec2 _st) {
     vec2 i = floor(_st);
     vec2 f = fract(_st);
@@ -42,18 +39,26 @@ mat2 rotate2d(float _angle){
                 sin(_angle),cos(_angle));
 }
 
-void main(){
+float lines(in vec2 _pos, float _angle, float _b){
+    float scale = 10.0;
+    _pos *= scale;
+    _pos = rotate2d( _angle ) * _pos;
+    return smoothstep(0.0,
+                    0.5+_b*0.5,
+                    abs((sin(_pos.x*3.1415)+_b*2.0))*0.5);
+}
+
+void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
-    float b = noise(st+sin(u_time*0.5));//texture2D(u_tex0,st).r;
+    vec3 color = vec3(0.0);
 
-    float scale = 50.0;
-    float angle = (u_time*0.05);//+noise(st*2.0)*0.5;
-    st *= scale;
-   
-    st = rotate2d( angle ) * st;
+    vec2 pos = vec2(st*5.0);
 
-    float pct = 1.0-smoothstep(-1.+b*2.0,1.,abs(sin(st.x*PI)));
+    float pattern = lines(pos, noise(pos*vec2(2.,0.5)+u_time*0.5),0.5);
 
-    vec3 color = vec3(smoothstep(0.2,0.5,pct));
-    gl_FragColor = vec4(color, 1.0);
+    color = mix(vec3(0.275,0.145,0.059),
+                vec3(0.761,0.529,0.239),
+                pattern*1.7);
+
+    gl_FragColor = vec4(color,1.0);
 }
