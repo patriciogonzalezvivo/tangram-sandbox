@@ -19,7 +19,15 @@ lights:
         specular: .2
 
 styles:
-    rock:
+    cheetah:
+        extends: polygons
+        material:
+            diffuse:
+                texture: imgs/tex-0001.jpg
+                mapping: planar
+                scale: 0.01
+
+    zebra:
         extends: polygons
         material:
             normal:
@@ -110,8 +118,9 @@ layers:
             source: osm
             layer: landuse
         style:
+            name: cheetah
             order: 1
-            color: '#aaffaa'
+            color: white
             interactive: true
 
     water:
@@ -134,7 +143,7 @@ layers:
             filter:
                 kind: highway
             style:
-                color: '#cc6666'
+                color: tan
                 width: 12
                 outline:
                     color: grey
@@ -166,7 +175,7 @@ layers:
                 kind: rail
                 is_tunnel: no
             style:
-                color: pink
+                color: tan
                 width: 3
     
     buildings:
@@ -174,7 +183,7 @@ layers:
             source: osm
             layer: buildings
         style:
-            name: rock
+            name: zebra
             order: 4
             color: |
                 function () {
