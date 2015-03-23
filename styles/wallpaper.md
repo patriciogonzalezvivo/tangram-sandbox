@@ -11,3 +11,6 @@ Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blo
 
 <a href="code.html#shaders/dots.frag"><canvas class="canvas" data-fragment-url="shaders/dots.frag" width="200px" height="200px"></canvas></a>
 #### Procedural dots
+
+<a href="code.html#shaders/geom-patt.frag"><canvas class="canvas" data-fragment-url="shaders/geom-patt.frag" width="200px" height="200px"></canvas></a>
+#### Procedural snowflakes

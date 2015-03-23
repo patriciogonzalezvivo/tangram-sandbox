@@ -7,8 +7,8 @@ var styles = {
   'patterns':'./styles/patterns',
   'sandbox':'./styles/sandbox',
   'tron':'./styles/tron',
-  'wallpaper':'./styles/wallpaper',
-  'zebra':'./styles/zebra'
+  'wallpaper':'./styles/wallpaper'
+  // 'zebra':'./styles/zebra'
 }
 
 function insertAfter(newElement,targetElement) {

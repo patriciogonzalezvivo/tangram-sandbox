@@ -5,7 +5,7 @@
     /*z-index: 1;*/
     background: white;
     opacity: 0.9;
-    border-radius: 4px;
+    border-bottom-right-radius: 8px;
     width: 280px;
 }
 
@@ -52,6 +52,7 @@ img {
     margin-right: auto;
     max-width: 150px;
     opacity: 1.0;
+    border-radius: 5px;
 }
 
 .canvas {
@@ -60,7 +61,7 @@ img {
     margin-right: auto;
     max-width: 150px;
     opacity: 1.0;
-    border-radius: 3px;
+    border-radius: 5px;
 }
 
 .imgcontainer {
