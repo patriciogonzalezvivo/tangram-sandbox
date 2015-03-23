@@ -8,7 +8,7 @@ var styles = {
   'sandbox':'./styles/sandbox',
   'tron':'./styles/tron',
   'wallpaper':'./styles/wallpaper'
-  // 'zebra':'./styles/zebra'
+  'zebra':'./styles/zebra'
 }
 
 function insertAfter(newElement,targetElement) {
