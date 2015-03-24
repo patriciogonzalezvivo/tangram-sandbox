@@ -17,5 +17,5 @@ if (dot(v_normal,vec3(0.,0.,1.)) == 0.0){
 <a href="code.html#shaders/brick.frag"><canvas class="canvas" data-fragment-url="shaders/brick.frag" width="200px" height="200px"></canvas></a>
 #### Procedural brick pattern
 
-<a href="code.html#shaders/lego.frag"><canvas class="canvas" data-fragment-url="shaders/lego.frag" width="200px" height="200px"></canvas></a>
+<a href="code.html#shaders/lego-pattern.frag"><canvas class="canvas" data-fragment-url="shaders/lego-pattern.frag" width="200px" height="200px"></canvas></a>
 #### Procedural brick pattern

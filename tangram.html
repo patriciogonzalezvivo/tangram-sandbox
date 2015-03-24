@@ -99,11 +99,11 @@
         var list = document.getElementsByTagName("code");
         for(var i = 0; i < list.length; i++){
             if (list[i].className == "lang-glsl" || 
-              list[i].className == "lang-bash" || 
-              list[i].className == "lang-cpp" || 
-              list[i].className == "lang-html" ||
-                    list[i].className == "lang-processing" ){
-              hljs.highlightBlock(list[i]);
+                list[i].className == "lang-bash" || 
+                list[i].className == "lang-cpp" || 
+                list[i].className == "lang-html" ||
+                list[i].className == "lang-processing" ){
+                hljs.highlightBlock(list[i]);
             }
         }
         loadShaders();
@@ -150,8 +150,11 @@
         /*** Map ***/
 
         var map = L.map('map',
+            { zoomControl: false },
             {'keyboardZoomOffset': .05}
         );
+
+        new L.Control.Zoom({ position: 'topright' }).addTo(map);
 
         var layer = Tangram.leafletLayer({
             scene: style_file,
@@ -164,6 +167,7 @@
 
         map.setView(map_start_location.slice(0, 2), map_start_location[2]);
         var hash = new L.Hash(map);
+        
 
         // Resize map to window
         function resizeMap() {
@@ -178,11 +182,12 @@
         window.addEventListener('load', function () {
             // Scene initialized
             layer.addTo(map);
+            renderShaders(); 
         });
 
-        window.onload = function(){
-            renderShaders(); 
-        };
+        // window.onload = function(){
+            
+        // };
     }());
     </script>
 

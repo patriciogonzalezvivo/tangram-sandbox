@@ -61,13 +61,9 @@ float lines(in vec2 _pos, float _angle, float _b){
 
 void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
-    vec3 color = vec3(0.0);
 
     vec3 pos = vec3(st*2.0,u_time*0.25)*vec3(3.0,1.,1.0);
-
     float pattern = lines( pos.xy+noise(pos), 0.5, noise(pos*1.5) );
-    color.rgb = vec3( mix(vec3(0.275,0.145,0.059)*0.5, vec3(0.578,0.351,0.171)*0.9,pattern) );
-    color.rgb = mix(vec3(0.761,0.529,0.239)*1.2,color.rgb,smoothstep(0.0,color.g,pattern));
 
-    gl_FragColor = vec4(color,1.0);
+    gl_FragColor = vec4(vec3(pattern),1.0);
 }
