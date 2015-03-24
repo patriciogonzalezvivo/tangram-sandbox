@@ -18,6 +18,17 @@ body {
     width: 280px;
 }
 
+#floating-content {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: -1;
+    background: white;
+    opacity: 0.9;
+    border-bottom-right-radius: 8px;
+    width: 280px;
+}
+
 #map {
     background: rgba(0, 0, 0, 0);
     /*position: absolute;*/
