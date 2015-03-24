@@ -1,87 +1,39 @@
-
 <!DOCTYPE html>
-<html data-ng-app="pelias">
-  <head>
-    <title>Tangram-Pelias</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Tangram Sandbox</title>
 
+        <script type="text/javascript" src="src/glslCanvas.js"></script>
+        <script type="text/javascript" src="src/marked.js"></script>
+        <link type='text/css' rel='stylesheet' href="css/style.css">
+        
+        </style>
+    </head>
+    <body>
+        <div id="content"> </div>
+        <script>
+        function fetchHTTP(url, methood){
+            var request = new XMLHttpRequest(), response;
 
-    <!-- Pelias -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="js/leaflet/leaflet.css" />
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css">
-    <link rel="stylesheet" href="css/leaflet.awesome-markers.css">
-    <link rel="stylesheet" href="css/leaflet.locate.css" />
-    <link rel="stylesheet" href="css/leaflet.locations.css" />
-    <link rel="stylesheet" href="css/demo.css" />
+            request.onreadystatechange = function () {
+                if (request.readyState === 4 && request.status === 200) {
+                    response = request.responseText;
+                }
+            }
+            request.open(methood ? methood : 'GET', url, false);
+            request.send();
+            return response;
+        }
 
-    <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular.min.js"></script>
-    <script type="text/javascript" src="js/leaflet/leaflet.js"></script>
-    <script type="text/javascript" src="js/leaflet-hash.js"></script>
-    <script src="//rawgit.com/tangrams/tangram/master/dist/tangram.debug.js"></script>
-    <script type="text/javascript" src="js/L.Control.Locate.js" ></script>
-    <script type="text/javascript" src="js/L.Control.Search.js" ></script>
-    <script type="text/javascript" src="js/L.Control.Locations.js" ></script>
-    <script type="text/javascript" src="js/L.Control.Styles.js" ></script>
-    <script type="text/javascript" src="js/latlon.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+        function loadMarkdown(){
+            var mdText = fetchHTTP("README.md");
+            content.innerHTML = marked(mdText);
+        }
 
-    <!-- Info -->
-    <link type='text/css' rel='stylesheet' href="css/github.css">
-    <link type='text/css' rel='stylesheet' href="css/style.css">
-    <script type="text/javascript" src="js/glslCanvas.js"></script>
-    <script type="text/javascript" src="js/marked.js"></script>
-    <script type="text/javascript" src="js/highlight.min.js"></script>
-    
-  </head>
-  <body>
-      <div id="map"></div>
-      <div id="content"></div>
-
-      <section id="searchbar" data-ng-controller="SearchController" style="display: none;">
-        <form role="search">
-          <div class="input">
-            <input type="text" data-ng-model="search" class="form-control" ng-focus="onFocus($event)" ng-blur="onBlur($event)" ng-keydown="keyPressed($event)" placeholder="Search" />
-            <!-- <div class="aside geobias-{{geobias}}">
-              <a data-ng-click="switchGeobias(geobias)" data-toggle="tooltip" title="click to toggle between sending lat-lon, bbox and nothing. Right now you are sending {{geobiasInfo}}.">
-                <span class="fa geobias-class {{geobiasClass}}"></span>
-              </a>
-              <a data-ng-click="switchType(searchType)" data-toggle="tooltip" title="click to toggle between fine/coarse geocoder modes">
-                <span class="label label-default label-searchType">{{searchType}}</span>
-              </a>
-            </div> -->
-          </div>
-        </form>
-
-        <ul id="suggestresults" class="results">
-          <li data-ng-repeat="result in suggestresults">
-            <a data-ng-click="selectResult(result, true)">
-              <!-- <i title="{{result.type}}" data-toggle="tooltip" class="glyphicon glyphicon-{{result.icon}}"></i> -->
-              <span data-ng-bind-html="result.htmltext"></span>
-              <!-- <div class="aside">
-                <em class="label label-info">{{result.distance}}km</em>
-              </div> -->
-            </a>
-          </li>
-        </ul>
-
-        <ul id="searchresults" class="results">
-          <li data-ng-repeat="result in searchresults">
-            <a data-ng-click="selectResult(result)">
-              <!-- <i title="{{result.type}}" data-toggle="tooltip" class="glyphicon glyphicon-{{result.icon}}"></i> -->
-              <span data-ng-bind-html="result.htmltext"></span>
-              <!-- <div class="aside">
-                <em class="label label-info">{{result.distance}}km</em>
-              </div> -->
-            </a>
-          </li>
-        </ul>
-      </section>
-      <!-- Adding a script block to post message to the parent container (think iframed demos) -->
-      <script type="text/javascript">
-        window.addEventListener("hashchange",function(){parent.postMessage(window.location.hash, "*")});
-      </script>
-  </body>
+        window.onload = function(){
+            loadMarkdown();
+        };
+        </script>
+    </body>
 </html>
