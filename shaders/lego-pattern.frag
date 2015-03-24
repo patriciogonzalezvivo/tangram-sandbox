@@ -37,7 +37,7 @@ float box(vec2 _st, vec2 _size){
 
 vec3 pattern(inout vec2 st){
     st *= 5.0;
-    st.x += u_time*0.1;
+    st.x += u_time*0.5;
     vec3 normal = vec3(0.0);
 
     vec2 ivec = floor(st);  // integer
