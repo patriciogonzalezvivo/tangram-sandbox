@@ -67,7 +67,7 @@ styles:
                     float t = u_time*0.009;
                     vec2 ipos = floor(pos);
                     float rnd = random(ipos+t);
-                    g_material.diffuse.rgb = vec3(0.9+rnd*rnd*rnd);
+                    g_material.ambient.rgb = vec3(0.9+rnd*rnd*rnd);
     floor:
         extends: polygons
         material:
@@ -122,7 +122,7 @@ styles:
                     float b = getBrightness(color.rgb);
                     vec2 pos = v_world_position.xy*0.1;
                     float rnd = fbm(pos);
-                    g_material.diffuse.rgb = vec3(0.9+rnd*rnd*rnd);
+                    g_material.ambient.rgb = vec3(0.9+rnd*rnd*rnd);
     walls:
         extends: polygons
         material:
@@ -156,7 +156,7 @@ styles:
                     vec3 pos = v_world_position.xyz*0.5;
                     vec3 ipos = floor(pos);
                     float rnd = random(ipos);
-                    g_material.diffuse.rgb = vec3(0.9+rnd*rnd*rnd);
+                    g_material.ambient.rgb = vec3(0.9+rnd*rnd*rnd);
                     
 
 sources:
