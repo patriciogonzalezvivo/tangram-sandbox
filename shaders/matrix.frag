@@ -1,5 +1,8 @@
+// Author @patriciogv - 2015
+// http://patriciogonzalezvivo.com
+
 #ifdef GL_ES
-precision highp float;
+precision mediump float;
 #endif
 
 uniform sampler2D u_tex0;
@@ -29,7 +32,7 @@ vec3 matrix(in vec2 st){
     float rows = 30.0;
     vec2 ipos = floor(st*rows);
 
-    if (fract(st.x *rows * 0.5) > 0.5){
+    if (fract(st.x*rows * 0.5) > 0.5){
         ipos -= vec2(.0,floor(u_time*20.*random(ipos.x)));
     } else {
         ipos += vec2(.0,floor(u_time*20.*random(ipos.x)));

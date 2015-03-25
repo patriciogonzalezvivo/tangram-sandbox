@@ -1,7 +1,5 @@
 Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blob/gh-pages/styles/matrix.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
 
-Inspiration: [Tron](http://www.followingthenerd.com/site/wp-content/uploads/Tron-1982-3.jpg)
-
 <a href="code.html#shaders/matrix.frag"><canvas class="canvas" data-fragment-url="shaders/matrix.frag" width="200px" height="200px"></canvas></a>
 #### Procedural dots on roads
 
