@@ -60,8 +60,6 @@ styles:
                         return color;
                     }
                 color: |
-                    //float pattern = getHatch( u_time*0.1+v_texcoord.xy*0.5, 3.1415*0.5, 0.5);
-                    //color.rgb = vec3(1.000,0.865,0.387)*pattern*sin(smoothstep(0.0,1.,v_texcoord.x)*3.1415);
                     color.rgb = matrix(v_texcoord.xy);
 
     grid:
@@ -80,11 +78,32 @@ styles:
                         return clamp(g.x+g.y,0.0,1.0);
                     }
 
+                    float random (in vec2 _st) { 
+                        return fract(sin(dot(_st.xy,
+                                             vec2(12.9898,78.233)))* 
+                            43758.5453123);
+                    }
+
+                    float noise (in vec2 _st) {
+                        vec2 i = floor(_st);
+                        vec2 f = fract(_st);
+
+                        // Four corners in 2D of a tile
+                        float a = random(i);
+                        float b = random(i + vec2(1.0, 0.0));
+                        float c = random(i + vec2(0.0, 1.0));
+                        float d = random(i + vec2(1.0, 1.0));
+
+                        vec2 u = f * f * (3.0 - 2.0 * f);
+
+                        return mix(a, b, u.x) + 
+                                (c - a)* u.y * (1.0 - u.x) + 
+                                (d - b) * u.x * u.y;
+                    }
 
                 filter: |
                     vec2 pos = v_world_position.xy*0.01;
-                    float b = getBrightness(v_color.rgb);
-                    color.rgb = v_color.rgb*grid(pos,10.,0.05+b*0.05)*(1.0-b);
+                    color.rgb = v_color.rgb*grid(pos,10.,0.01+noise(pos+u_time)*0.05);
 
     tiledCross:
         extends: polygons
@@ -211,9 +230,8 @@ layers:
         data:
             source: osm
         style:
-            name: grid
             order: 0
-            color: '#ddeeee'
+            color: [0.004,0.051,0.008]
     landuse:
         data:
             source: osm

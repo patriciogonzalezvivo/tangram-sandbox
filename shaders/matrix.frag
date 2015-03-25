@@ -29,7 +29,7 @@ float rchar(in vec2 outer,in vec2 inner){
 }
 
 vec3 matrix(in vec2 st){
-    float rows = 30.0;
+    float rows = 10.0;
     vec2 ipos = floor(st*rows);
 
     if (fract(st.x*rows * 0.5) > 0.5){
@@ -45,9 +45,9 @@ vec3 matrix(in vec2 st){
     float pct = random(ipos);
     float glow = (1.-dot(center,center)*3.)*2.0;
 
-    vec3 color = vec3(0.643,0.851,0.690) * ( rchar(ipos,fpos) * pct );
-    color +=  vec3(0.027,0.180,0.063) * pct * glow;
-    return color;
+    // vec3 color = vec3(0.643,0.851,0.690) * ( rchar(ipos,fpos) * pct );
+    // color +=  vec3(0.027,0.180,0.063) * pct * glow;
+    return vec3(rchar(ipos,fpos) * pct * glow);
 }
 
 void main(){
