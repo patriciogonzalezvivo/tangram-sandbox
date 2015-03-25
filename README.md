@@ -14,5 +14,7 @@ Personal experiments using [tangram.js](https://github.com/tangrams/tangram) 3D 
 
 * [**Tron**](tangram.html?styles/tron.yaml) : [info](tangram.html?styles/tron)
 * [**Lego**](tangram.html?styles/lego.yaml) : [info](tangram.html?styles/lego)
+* [**Matrix**](tangram.html?styles/matrix.yaml) : [info](tangram.html?styles/matrix)
 * [**Patterns**](tangram.html?styles/patterns.yaml) : [info](tangram.html?styles/patterns)
 * [**Wallpaper**](tangram.html?styles/wallpaper.yaml) : [info](tangram.html?styles/wallpaper)
+
