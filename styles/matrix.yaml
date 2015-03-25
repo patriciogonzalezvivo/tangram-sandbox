@@ -207,11 +207,10 @@ styles:
 
                     if ( v_color.rgb == vec3(0.0) ) {
                         float pct = grid(v_texcoord,10.,0.1)*0.5;
-                        //float pct = grid(pos.xy,10.,0.1);
                         if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
                             color.rgb = matrix(v_texcoord);
                         } else {
-                            
+                            color.rgb = vec3(-10.);
                         }
                         
                     } else {
