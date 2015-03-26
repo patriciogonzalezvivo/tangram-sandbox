@@ -1,3 +1,5 @@
+# Author @patriciogv - 2015
+
 cameras:
     camera1:
         type: perspective

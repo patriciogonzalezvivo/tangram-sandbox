@@ -1,5 +1,7 @@
 Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blob/gh-pages/styles/sandbox.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
 
+Author: [@patriciogv](https://twitter.com/)
+
 Inspiration: [sandbox](http://collegeadmissions.testmasters.com/wp-content/uploads/2015/01/Girl-in-her-sandbox.jpg)
 
 <a href="code.html#shaders/wood.frag"><canvas class="canvas" data-fragment-url="shaders/wood.frag" width="200px" height="200px"></canvas></a>

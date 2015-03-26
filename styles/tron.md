@@ -1,6 +1,8 @@
 Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blob/gh-pages/styles/tron.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
 
-Inspiration: [Tron](http://www.followingthenerd.com/site/wp-content/uploads/Tron-1982-3.jpg)
+Author: [@patriciogv](https://twitter.com/)
+
+Inspiration: [Tron](http://www.imdb.com/title/tt0084827/?ref_=fn_al_tt_1)
 
 <a href="code.html#shaders/pulse.frag"><canvas class="canvas" data-fragment-url="shaders/pulse.frag" width="200px" height="200px"></canvas></a>
 #### Procedural dots on roads

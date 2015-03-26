@@ -1,3 +1,5 @@
+# Author @patriciogv - 2015
+
 cameras:
     camera1:
         type: perspective
@@ -19,10 +21,24 @@ lights:
         specular: .2
 
 styles:
+    floor:
+        extends: polygons
+        material:
+            normal:
+                texture: imgs/normal-0001.jpg
+                mapping: planar
+                scale: 0.02
+            ambient: 0.8
+            diffuse: 1
+            specular: 0
     walls:
         extends: polygons
         texcoords: true
         material:
+            normal:
+                texture: imgs/normal-0001.jpg
+                mapping: triplanar
+                scale: 0.02
             ambient: 0.8
             diffuse: 1
             specular: 0
@@ -162,6 +178,7 @@ layers:
             source: osm
             layer: earth
         style:
+            name: floor
             order: 0
             color: '#ddeeee'
     landuse:
@@ -169,6 +186,7 @@ layers:
             source: osm
             layer: landuse
         style:
+            name: floor
             order: 1
             color: [0.502,0.369,0.494]
             interactive: true
@@ -178,6 +196,7 @@ layers:
             source: osm
             layer: water
         style:
+            name: floor
             order: 2
             color: '#88bbee'
 

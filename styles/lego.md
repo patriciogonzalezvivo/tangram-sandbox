@@ -1,6 +1,8 @@
 Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blob/gh-pages/styles/lego.yaml) | [tangram](https://github.com/tangrams/tangram) | [patterns](http://tangrams.github.io/ProceduralTextures/)
 
-Inspiration: [Lego building blocks](http://cache.lego.com/r/www/r/city/-/media/franchises/lego%20city/panorama/img2600x2000_crosspromotion_gv.jpg)
+Author: [@patriciogv](https://twitter.com/)
+
+Inspiration: [The Lego Movie](http://www.imdb.com/title/tt1490017/?ref_=fn_al_tt_1)
 
 ```glsl
 vec2 st = fract(v_world_position.xy*0.07);

@@ -1,0 +1,279 @@
+# Author @patriciogv - 2015
+
+cameras:
+    camera1:
+        type: perspective
+        focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
+        vanishing_point: [-250, -250] # relative to center of screen, in pixels
+
+lights:
+    light1:
+        type: directional
+        direction: [0, 1, -.5]
+        diffuse: .5
+        ambient: .3
+    light2:
+        type: point
+        position: [0, 0, 500px]
+        origin: ground
+        ambient: .3
+        diffuse: .3
+styles:
+    paper:
+        extends: polygons
+        animated: true
+        material:
+            normal:
+                texture: imgs/normal-0031.jpg
+                mapping: planar
+                scale: 0.001
+            ambient: 1.
+            diffuse: 1.
+    grain:
+        extends: polygons
+        texcoords: true
+        material:
+            ambient: 1
+            diffuse: 1
+            normal:
+                texture: imgs/normal-0031.jpg
+                mapping: planar
+                scale: 0.01
+        shaders:
+            uniforms:
+                u_hatchmap: imgs/hatch-0002.png
+            blocks:
+                globals: |
+                    float random(in vec2 _st){ 
+                        return fract(sin(dot(_st.xy,
+                                             vec2(12.9898,78.233)))* 
+                            43758.5453123);
+                    }
+
+                    float noise (in vec2 _st) {
+                        vec2 i = floor(_st);
+                        vec2 f = fract(_st);
+
+                        // Four corners in 2D of a tile
+                        float a = random(i);
+                        float b = random(i + vec2(1.0, 0.0));
+                        float c = random(i + vec2(0.0, 1.0));
+                        float d = random(i + vec2(1.0, 1.0));
+
+                        vec2 u = f * f * (3.0 - 2.0 * f);
+
+                        return mix(a, b, u.x) + 
+                                (c - a)* u.y * (1.0 - u.x) + 
+                                (d - b) * u.x * u.y;
+                    }
+
+                    float getBrightness(in vec3 _rgb){
+                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
+                    }
+                color: |
+                    vec2 st = v_world_position.xy*0.01;
+                    vec2 uv = v_texcoord;
+                    if ( v_color.rgb == vec3(0.0) ){
+                        color.rgb = vec3(0.976,0.953,0.890);
+                    } else {
+                        color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
+                    }
+                    
+    plain:
+        extends: polygons
+        texcoords: true
+        material:
+            ambient: 1
+            diffuse: 1
+            normal:
+                texture: imgs/normal-0031.jpg
+                mapping: planar
+                scale: 0.01
+        shaders:
+            uniforms:
+                u_hatchmap: imgs/hatch-0002.png
+            blocks:
+                globals: |
+                    float getBrightness(in vec3 _rgb){
+                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
+                    }
+
+                    float hatch ( sampler2D hatchmap, vec2 st, float brightness ){
+                        brightness = clamp(brightness,0.,0.9999999);
+                        vec2 pos1 = vec2(floor(brightness*9.0)/3.,
+                                         floor(brightness*3.0)/3.);
+
+                        float minBrightness = clamp(brightness-0.111111111,0.,1.0);
+                        vec2 pos2 = vec2(floor(minBrightness*9.0)/3.,
+                                         floor(minBrightness*3.0)/3.);
+
+                        return mix(texture2D( hatchmap,fract(pos1+fract(st)/3.)).a,
+                                   texture2D( hatchmap,fract(pos2+fract(st)/3.)).a,
+                                   1.0-fract(brightness*9.0));
+                    }
+                filter: |
+                    vec2 st = v_world_position.xy*0.01;
+                    if ( v_color.rgb == vec3(0.0) ){
+                        // Border
+                        color.rgb = vec3(0.302,0.302,0.306);
+                    } else {
+                        // Fill
+                        float b = getBrightness(color.rgb);
+                        float pattern = 1.-hatch(u_hatchmap,st,b);
+                        color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
+                    }
+
+    buildings:
+        extends: polygons
+        texcoords: true
+        material:
+            ambient: 0.8
+            diffuse: 1
+        shaders:
+            uniforms:
+                u_hatchmap: imgs/hatch-0002.png
+            blocks:
+                globals: |
+                    float getBrightness(in vec3 _rgb){
+                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
+                    }
+
+                    float hatch ( sampler2D hatchmap, vec2 st, float brightness ){
+                        brightness = clamp(brightness,0.,0.9999999);
+                        vec2 pos1 = vec2(floor(brightness*9.0)/3.,
+                                         floor(brightness*3.0)/3.);
+
+                        float minBrightness = clamp(brightness-0.111111111,0.,1.0);
+                        vec2 pos2 = vec2(floor(minBrightness*9.0)/3.,
+                                         floor(minBrightness*3.0)/3.);
+
+                        return mix(texture2D( hatchmap,fract(pos1+fract(st)/3.)).a,
+                                   texture2D( hatchmap,fract(pos2+fract(st)/3.)).a,
+                                   1.0-fract(brightness*9.0));
+                    }
+
+                filter: |
+                    vec2 st = v_texcoord.xy*1.;
+                    if (v_color.rgb == vec3(0.0)){
+                        // Border
+                        color.rgb = vec3(0.302,0.302,0.306);
+                    } else {
+                        // Fill
+                        float b = getBrightness(g_light_accumulator_diffuse.rgb);
+                        //float b = getBrightness(color.rgb);
+                        float pattern = 1.-hatch(u_hatchmap,st,b);
+                        color.rgb = mix(color.rgb,vec3(0.976,0.953,0.890),pattern);
+                        //color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
+                    }
+
+sources:
+    osm:
+        type: GeoJSONTileSource
+        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.json
+
+layers:
+    earth:
+        data:
+            source: osm
+            layer: earth
+        style:
+            name: plain
+            order: 0
+            color: '#dddddd'
+            outline:
+                color: [0, 0, 0]
+                width: 2
+    landuse:
+        data:
+            source: osm
+            layer: landuse
+        style:
+            name: plain
+            order: 1
+            color: '#999999'
+            outline:
+                color: [0, 0, 0]
+                width: 2
+
+    water:
+        data:
+            source: osm
+            layer: water
+        style:
+            name: paper
+            order: 2
+            color: '#343434'
+
+    roads:
+        data:
+            source: osm
+            layer: roads
+        style:
+            name: grain
+            order: 3
+            color: '#343434'    
+            width: 8
+            outline:
+                color: [0,0,0]
+                width: 2
+        highway:
+            filter:
+                kind: highway
+            style:
+                color: '#343434'
+                width: 12
+                outline:
+                    color: [0,0,0]
+                    width: 2
+        tunnel:
+            filter:
+                is_tunnel: yes
+            style:
+                color: '#343434'
+            rail:
+                filter:
+                    kind: rail
+                style:
+                    width: 0
+        minor_road:
+            filter:
+                kind: minor_road
+            style:
+                color: '#343434'
+                width: 5
+                outline:
+                    color: [0,0,0]
+                    width: 1
+        path:
+            filter:
+                kind: path
+            style:
+                color: '#343434'
+                width: 3
+                outline:
+                    color: [0,0,0]
+                    width: 1
+        rail:
+            filter:
+                kind: rail
+                is_tunnel: no
+            style:
+                color: '#343434'
+                width: 3
+                outline:
+                    color: [0,0,0]
+                    width: 1
+    
+    buildings:
+        data:
+            source: osm
+            layer: buildings
+        style:
+            name: buildings
+            order: 4
+            color: Style.color.pseudoRandomColor()
+            outline:
+                color: [0, 0, 0]
+                width: 0.5
+                tile_edges: true
+            extrude: true

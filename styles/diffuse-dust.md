@@ -1,5 +1,7 @@
 Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blob/gh-pages/styles/diffuse-dust.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
 
+Author: [@patriciogv](https://twitter.com/)
+
 <a href="code.html#shaders/random.frag"><canvas class="canvas" data-fragment-url="shaders/random.frag" width="200px" height="200px"></canvas></a>
 #### Procedural random 
 
