@@ -19,12 +19,7 @@ lights:
         ambient: .3
         diffuse: .3
 styles:
-    texture:
-        extends: polygons
-        material:
-            ambient: 1
-            diffuse: 1
-    plain:
+    patterns:
         extends: polygons
         texcoords: true
         material:
@@ -74,6 +69,14 @@ styles:
                         _pos = rotate2D( _pos, _angle );
                         return smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
                     }
+
+    plain:
+        extends: patterns
+        material:
+            ambient: .9
+            diffuse: 1.
+        shaders:
+            blocks:
                 color: |
                     vec2 st = v_world_position.xy*0.01;
                     if ( color.rgb == vec3(0.0) ){
@@ -88,55 +91,9 @@ styles:
                     }
 
     buildings:
-        extends: polygons
-        texcoords: true
-        material:
-            ambient: 0.8
-            diffuse: 1
+        extends: patterns
         shaders:
             blocks:
-                globals: |
-
-                    float random( in float _x){
-                        return fract(sin(_x)*1e4);
-                    }
-
-                    vec2 rotate2D(vec2 _st, float _angle){
-                      _st -= 0.5;
-                      _st =  mat2(cos(_angle),-sin(_angle),
-                                  sin(_angle),cos(_angle)) * _st;
-                      _st += 0.5;
-                      return _st;
-                    }
-
-                    vec2 tile(vec2 _st, float _zoom){
-                      _st *= _zoom;
-                      return fract(_st);
-                    }
-
-                    vec2 brickTile(vec2 _st, float _zoom){
-                        _st *= _zoom;
-                        if (fract(_st.y * 0.5) > 0.5){
-                            _st.x += 0.5;
-                        }
-                        return fract(_st);
-                    }
-
-                    float circle(vec2 _st, float _radius){
-                      vec2 pos = vec2(0.5)-_st;
-                      return smoothstep(1.0-_radius,1.0-_radius+_radius*0.2,1.-dot(pos,pos)*3.14);
-                    }
-
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
-
-                    float getHatch(in vec2 _pos, float _angle, float _brigtness){
-                        float scale = 20.0;
-                        _pos *= scale;
-                        _pos = rotate2D( _pos, _angle );
-                        return smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
-                    }
                 color: |
                     vec2 st = v_texcoord.xy;
                     if (color.rgb == vec3(0.0)){
@@ -172,7 +129,6 @@ styles:
                         //pattern *= clamp(v_world_position.z*0.1,0.,1.);
                         color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
                     }
-
 sources:
     osm:
         type: GeoJSONTileSource
@@ -215,7 +171,6 @@ layers:
             source: osm
             layer: roads
         style:
-            name: texture
             order: 3
             color: '#343434'    
             width: 8

@@ -3,6 +3,8 @@
 cameras:
     camera1:
         type: perspective
+        focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
+        vanishing_point: [-250, -250] # relative to center of screen, in pixels
 
 styles:
     matrix:
@@ -79,7 +81,7 @@ styles:
                     vec2 st = v_texcoord.xy;
                     vec2 rows = vec2(2.,20.);
                     vec2 ipos = floor(st*rows);
-                    float t = u_time*15.;
+                    float t = u_time*12.;
                     if (fract(st.x*rows.x * 0.5) > 0.5){
                         ipos -= vec2(.0,floor(t));
                     } else {
@@ -89,7 +91,7 @@ styles:
                     vec2 center = (.5-fpos);
                     float pct = random(ipos);
                     float glow = (1.-dot(center,center)*3.)*2.0;
-                    color.rgb = vec3(0.329,0.459,0.392) * ( randomChar(ipos,fpos) * pct );
+                    color.rgb = vec3(0.757,0.784,0.710) * ( randomChar(ipos,fpos) * pct );
                     color.rgb +=  vec3(0.027,0.180,0.063) * pct * glow;
 
     grid:
@@ -98,9 +100,8 @@ styles:
             blocks:
                 color: |
                     vec2 pos = v_world_position.xy*0.01;
-                    float pct = 0.001+noise(pos+u_time)*0.05*random(pos+u_time*0.5);
-                    color.rgb = mix(vec3(0.031,0.047,0.035),vec3(0.757,0.784,0.710),grid(pos,10.,pct));
-                    //color.rgb = v_color.rgb*grid(pos,10.,pct);
+                    float pct = 0.001+noise(pos+u_time)*0.02*random(pos+u_time*0.5);
+                    color.rgb = mix(vec3(0.031,0.047,0.035),vec3(0.643,0.851,0.690),grid(pos,10.,pct));
 
     tiledCross:
         extends: matrix
@@ -110,23 +111,25 @@ styles:
                     vec2 pos = v_world_position.xy*0.01;
                     if ( v_color.rgb == vec3(0.0) ) {
                         float pct = clamp(cross(fract(pos),0.2),0.0,1.0);
-                        color.rgb = mix(vec3(0.004,0.051,0.008),vec3(0.212,0.408,0.267),pct);
+                        color.rgb = mix(vec3(0.004,0.051,0.008),vec3(0.173,0.235,0.200),pct);
                     } else {
-                        color.rgb = vec3(0.114,0.294,0.165);
+                        // Border
+                        color.rgb = vec3(0.757,0.784,0.710);
                     }
-    walls:
+    buildings:
         extends: matrix
         blend: add
         shaders:
             blocks:
                 filter: |
                     vec3 pos = v_world_position.xyz*0.01;
+                    vec2 uv = v_texcoord.xy;
                     if ( v_color.rgb == vec3(0.0) ) {
                         float pct = grid(v_texcoord,10.,0.1)*0.5;
                         if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
                             // Wall
                             vec2 st = v_texcoord.xy;
-                            float rows = 20.0;
+                            float rows = 30.0;
                             vec2 ipos = floor(st*rows);
                             ipos += vec2(.0,floor(u_time*20.*random(ipos.x)));
                             vec2 fpos = fract(st*rows);
@@ -135,8 +138,8 @@ styles:
                             float pct = random(ipos);
                             float glow = (1.-dot(center,center)*3.)*2.0;
 
-                            color.rgb = vec3(0.643,0.851,0.690) * ( randomChar(ipos,fpos) * pct );
-                            color.rgb +=  (vec3(0.027,0.180,0.063) * pct * glow)*0.5;
+                            color.rgb = vec3(0.643,0.851,0.690) * ( randomChar(ipos,fpos) * pct )* 0.5;
+                            color.rgb += (vec3(0.027,0.180,0.063) * pct * glow)*0.5;
                         } else {
                             // Roof
                             color.rgb = vec3(0.);
@@ -155,7 +158,7 @@ layers:
             source: osm
         style:
             order: 0
-            color: [0.004,0.051,0.008]
+            color: [0.031,0.051,0.035]
     landuse:
         data:
             source: osm
@@ -164,7 +167,6 @@ layers:
             order: 1
             color: [0.545,0.565,0.494]
             interactive: true
-
     water:
         data:
             source: osm
@@ -176,7 +178,6 @@ layers:
                 color: [1, 1, 1]
                 width: 1px
                 tile_edges: false
-
     roads:
         data:
             source: osm
@@ -229,7 +230,7 @@ layers:
         data:
             source: osm
         style:
-            name: walls
+            name: buildings
             order: 4
             color: [0, 0, 0]
             outline:
