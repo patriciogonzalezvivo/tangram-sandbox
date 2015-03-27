@@ -12,10 +12,11 @@ lights:
         ambient: .3
     light2:
         type: point
-        position: [0, 0, 500px]
+        position: [0, -500px, 500px]
         origin: ground
+        diffuse: .5
         ambient: .3
-        diffuse: .3
+        
 styles:
     paper:
         extends: polygons
@@ -38,6 +39,10 @@ styles:
                 u_hatchmap: imgs/hatch-0002.png
             blocks:
                 globals: |
+                    float random(in float x){
+                        return fract(sin(x)*43758.5453);
+                    }
+
                     float random(in vec2 _st){ 
                         return fract(sin(dot(_st.xy,
                                              vec2(12.9898,78.233)))* 
@@ -55,6 +60,14 @@ styles:
                         return mix(a, b, u.x) + 
                                 (c - a)* u.y * (1.0 - u.x) + 
                                 (d - b) * u.x * u.y;
+                    }
+
+                    vec2 rotate2D(vec2 _st, float _angle){
+                      _st -= 0.5;
+                      _st =  mat2(cos(_angle),-sin(_angle),
+                                  sin(_angle),cos(_angle)) * _st;
+                      _st += 0.5;
+                      return _st;
                     }
 
                     float getBrightness(in vec3 _rgb){
@@ -107,24 +120,36 @@ styles:
                         float pattern = 1.-hatch(u_hatchmap,st,b);
                         color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
                     }
-
     buildings:
         extends: hatch
         shaders:
             blocks:
                 filter: |
-                    vec2 st = v_texcoord.xy*1.;
+                    vec2 st = v_world_position.xy*0.01;
+                    vec2 uv = v_texcoord;
+                    float b = getBrightness(g_light_accumulator_diffuse.rgb);
+                    float pattern = 1.0;
                     if (v_color.rgb == vec3(0.0)){
                         // Border
-                        color.rgb = vec3(0.302,0.302,0.306);
+                        float edge = 0.5*noise(st*100.);
+                        color.rgb = mix(vec3(0.976,0.953,0.890),vec3(0.302,0.302,0.306),
+                                        smoothstep(0.,edge,uv.x)*smoothstep(0.,edge,1.0-uv.x));
                     } else {
                         // Fill
-                        float b = getBrightness(color.rgb)*1.2;
-                        float pattern = 1.-hatch(u_hatchmap,st,b);
-                        vec2 edge = vec2(0.1,0.05)*noise(st*20.);
-                        vec2 blend = smoothstep(vec2(0.0),edge,st)*smoothstep(vec2(0.0),edge,vec2(1.)-st);
-                        //color.rgb = mix(color.rgb,vec3(0.976,0.953,0.890),pattern);
-                        color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),mix(1.0,pattern,blend.x*blend.y));
+                        if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
+                            // Walls
+                            b *=  clamp(uv.y*1.5,0.0,1.0)+0.2;
+                            pattern = 1.-hatch(u_hatchmap,uv,b);
+                            vec2 edge = vec2(0.1,0.05)*noise(uv*20.);
+                            vec2 blend = smoothstep(vec2(0.0),edge,uv)*smoothstep(vec2(0.0),edge,vec2(1.)-uv);
+                            pattern = mix(1.0,pattern,blend.x*blend.y);
+                        } else {
+                            // Roof
+                            b *= 1.8;
+                            uv = fract(rotate2D(uv,0.7853));
+                            pattern = 1.-hatch(u_hatchmap,uv,b);
+                        }
+                        color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
                     }
 
 sources:
@@ -235,6 +260,6 @@ layers:
             color: Style.color.pseudoRandomColor()
             outline:
                 color: [0, 0, 0]
-                width: 1
+                width: 1.
                 tile_edges: true
             extrude: true
