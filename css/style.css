@@ -97,6 +97,14 @@ img {
     opacity: 1.0;
 }
 
+.info {
+    font-style: italic;
+    font-size: 14px;
+    padding: 7px;
+    text-align: center;
+    opacity: 1.0;
+}
+
 code {
     font-family: monospace;
     font-size: 14px;

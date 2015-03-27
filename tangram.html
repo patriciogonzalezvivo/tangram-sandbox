@@ -142,9 +142,8 @@
         }
 
         if (info_file != ''){
-            loadMarkdown(info_file);
-        } else {
-            document.getElementById('content').innerHTML = '';
+            document.getElementById('content').innerHTML = '<div class="info" onclick="loadMarkdown(\''+info_file+'\')"> By <a href="https://twitter.com/patriciogv" target="_blank">@patriciogv</a> [+ info] </div>';
+            //loadMarkdown(info_file);
         }
         
         /*** Map ***/
