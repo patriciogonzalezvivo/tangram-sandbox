@@ -1,6 +1,6 @@
-Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blob/gh-pages/styles/patterns.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
+Style by [@patriciogv](https://twitter.com/patriciogv)
 
-Author: [@patriciogv](https://twitter.com/)
+Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blob/gh-pages/styles/patterns.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
 
 Inspiration: [texture.js](http://riccardoscalco.github.io/textures/)
 

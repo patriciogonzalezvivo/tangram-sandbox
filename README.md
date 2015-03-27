@@ -1,6 +1,6 @@
-# Tangram Sandbox
+# Tangram Styles Sandbox
 
-Personal experiments using [tangram.js](https://github.com/tangrams/tangram) 3D map engine.
+Personal aesthetic experiments using [tangram.js](https://github.com/tangrams/tangram) 3D map engine for [Mapzen](https://mapzen.com/).
 
 #### Materials & Lights
 [ ![](styles/specular-dust.png) ](http://patriciogonzalezvivo.github.io/tangram-sandbox/tangram.html?styles/specular-dust)
