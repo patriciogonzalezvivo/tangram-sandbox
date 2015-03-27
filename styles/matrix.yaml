@@ -5,85 +5,19 @@ cameras:
         type: perspective
 
 styles:
-    roads:
-        animated: true
+    matrix:
         extends: polygons
+        animated: true
         texcoords: true
         shaders:
             blocks:
                 globals: |
-                    mat2 rotate2d(float _angle){
-                        return mat2(cos(_angle),-sin(_angle),
-                                    sin(_angle),cos(_angle));
-                    }
-
-                    float getHatch(in vec2 _pos, float _angle, float _brigtness){
-                        float scale = 20.0;
-                        _pos *= scale;
-                        _pos = rotate2d( _angle ) * _pos;
-                        return 1.0-smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
-                    }
-
                     float random(in float x){
                         return fract(sin(x)*43758.5453);
                     }
 
                     float random(in vec2 st){
                         return fract(sin(dot(st.xy ,vec2(12.9898,78.233))) * 43758.5453);
-                    }
-
-                    float rchar(in vec2 outer,in vec2 inner){
-                        float grid = 5.;
-                        vec2 margin = vec2(.2,.05);
-                        float seed = 23.;
-                        vec2 borders = step(margin,inner)*step(margin,1.-inner);
-                        return step(.5,random(outer*seed+floor(inner*grid))) * borders.x * borders.y;
-                    }
-
-                    vec3 matrix(in vec2 st){
-                        vec2 rows = vec2(2.,20.);
-                        vec2 ipos = floor(st*rows);
-                        float t = u_time*15.;
-                        if (fract(st.x*rows.x * 0.5) > 0.5){
-                            ipos -= vec2(.0,floor(t));
-                        } else {
-                            ipos += vec2(.0,floor(t));
-                        }
-
-                        
-                        vec2 fpos = fract(st*rows);
-                        vec2 center = (.5-fpos);
-
-                        float pct = random(ipos);
-                        float glow = (1.-dot(center,center)*3.)*2.0;
-
-                        vec3 color = vec3(0.643,0.851,0.690) * ( rchar(ipos,fpos) * pct );
-                        color +=  vec3(0.027,0.180,0.063) * pct * glow;
-                        return color;
-                    }
-                color: |
-                    color.rgb = matrix(v_texcoord.xy);
-
-    grid:
-        extends: polygons
-        shaders:
-            blocks:
-                globals: |
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
-
-                    float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
-                        _pos = fract(_pos*_zoom);
-                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) - 
-                                 smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
-                        return clamp(g.x+g.y,0.0,1.0);
-                    }
-
-                    float random (in vec2 _st) { 
-                        return fract(sin(dot(_st.xy,
-                                             vec2(12.9898,78.233)))* 
-                            43758.5453123);
                     }
 
                     float noise (in vec2 _st) {
@@ -103,18 +37,23 @@ styles:
                                 (d - b) * u.x * u.y;
                     }
 
-                filter: |
-                    vec2 pos = v_world_position.xy*0.01;
-                    color.rgb = v_color.rgb*grid(pos,10.,0.01+noise(pos+u_time)*0.05);
+                    float randomChar(in vec2 outer,in vec2 inner){
+                        float grid = 5.;
+                        vec2 margin = vec2(.2,.05);
+                        float seed = 23.;
+                        vec2 borders = step(margin,inner)*step(margin,1.-inner);
+                        return step(.5,random(outer*seed+floor(inner*grid))) * borders.x * borders.y;
+                    }
 
-    tiledCross:
-        extends: polygons
-        texcoords: true
-        shaders:
-            blocks:
-                globals: |
                     float getBrightness(in vec3 _rgb){
                         return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
+                    }
+
+                    float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
+                        _pos = fract(_pos*_zoom);
+                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) - 
+                                 smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
+                        return clamp(g.x+g.y,0.0,1.0);
                     }
 
                     float box(in vec2 _st, in vec2 _size){
@@ -132,13 +71,41 @@ styles:
                         return  box(_st, vec2(_size*0.5,_size*0.125)) + 
                                 box(_st, vec2(_size*0.125,_size*0.5));
                     }
-
-                    float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
-                        _pos = fract(_pos*_zoom);
-                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) - 
-                                 smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
-                        return clamp(g.x+g.y,0.0,1.0);
+    roads:
+        extends: matrix
+        shaders:
+            blocks:
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    vec2 rows = vec2(2.,20.);
+                    vec2 ipos = floor(st*rows);
+                    float t = u_time*15.;
+                    if (fract(st.x*rows.x * 0.5) > 0.5){
+                        ipos -= vec2(.0,floor(t));
+                    } else {
+                        ipos += vec2(.0,floor(t));
                     }
+                    vec2 fpos = fract(st*rows);
+                    vec2 center = (.5-fpos);
+                    float pct = random(ipos);
+                    float glow = (1.-dot(center,center)*3.)*2.0;
+                    color.rgb = vec3(0.329,0.459,0.392) * ( randomChar(ipos,fpos) * pct );
+                    color.rgb +=  vec3(0.027,0.180,0.063) * pct * glow;
+
+    grid:
+        extends: matrix
+        shaders:
+            blocks:
+                color: |
+                    vec2 pos = v_world_position.xy*0.01;
+                    float pct = 0.001+noise(pos+u_time)*0.05*random(pos+u_time*0.5);
+                    color.rgb = mix(vec3(0.031,0.047,0.035),vec3(0.757,0.784,0.710),grid(pos,10.,pct));
+                    //color.rgb = v_color.rgb*grid(pos,10.,pct);
+
+    tiledCross:
+        extends: matrix
+        shaders:
+            blocks:
                 filter: |
                     vec2 pos = v_world_position.xy*0.01;
                     if ( v_color.rgb == vec3(0.0) ) {
@@ -147,80 +114,36 @@ styles:
                     } else {
                         color.rgb = vec3(0.114,0.294,0.165);
                     }
-                    
-
     walls:
-        extends: polygons
-        texcoords: true
+        extends: matrix
         blend: add
         shaders:
             blocks:
-                globals: |
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
-
-                    float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
-                        _pos = fract(_pos*_zoom);
-                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) - 
-                                 smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
-                        return clamp(g.x+g.y,0.0,1.0);
-                    }
-
-                    float grid (in vec3 _pos, in float _zoom, in float _lineWidth){
-                        _pos = fract(_pos*_zoom);
-                        vec3 g = smoothstep(vec3(0.5-_lineWidth),vec3(0.5),_pos) - 
-                                 smoothstep(vec3(0.5),vec3(0.5+_lineWidth),_pos);
-                        return clamp(g.x+g.y+g.z,0.0,1.0);
-                    }
-
-                    float random(in float x){
-                        return fract(sin(x)*43758.5453);
-                    }
-
-                    float random(in vec2 st){
-                        return fract(sin(dot(st.xy ,vec2(12.9898,78.233))) * 43758.5453);
-                    }
-
-                    float rchar(in vec2 outer,in vec2 inner){
-                        float grid = 5.;
-                        vec2 margin = vec2(.2,.05);
-                        float seed = 23.;
-                        vec2 borders = step(margin,inner)*step(margin,1.-inner);
-                        return step(.5,random(outer*seed+floor(inner*grid))) * borders.x * borders.y;
-                    }
-
-                    vec3 matrix(in vec2 st){
-                        float rows = 30.0;
-                        vec2 ipos = floor(st*rows);
-                        ipos += vec2(.0,floor(u_time*20.*random(ipos.x)));
-                        vec2 fpos = fract(st*rows);
-                        vec2 center = (.5-fpos);
-
-                        float pct = random(ipos);
-                        float glow = (1.-dot(center,center)*3.)*2.0;
-
-                        vec3 color = vec3(0.643,0.851,0.690) * ( rchar(ipos,fpos) * pct );
-                        color +=  vec3(0.027,0.180,0.063) * pct * glow;
-                        return color;
-                    }
                 filter: |
                     vec3 pos = v_world_position.xyz*0.01;
-
                     if ( v_color.rgb == vec3(0.0) ) {
                         float pct = grid(v_texcoord,10.,0.1)*0.5;
                         if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
-                            color.rgb = matrix(v_texcoord);
+                            // Wall
+                            vec2 st = v_texcoord.xy;
+                            float rows = 20.0;
+                            vec2 ipos = floor(st*rows);
+                            ipos += vec2(.0,floor(u_time*20.*random(ipos.x)));
+                            vec2 fpos = fract(st*rows);
+                            vec2 center = (.5-fpos);
+
+                            float pct = random(ipos);
+                            float glow = (1.-dot(center,center)*3.)*2.0;
+
+                            color.rgb = vec3(0.643,0.851,0.690) * ( randomChar(ipos,fpos) * pct );
+                            color.rgb +=  (vec3(0.027,0.180,0.063) * pct * glow)*0.5;
                         } else {
-                            color.rgb = vec3(-10.);
+                            // Roof
+                            color.rgb = vec3(0.);
                         }
-                        
                     } else {
                         color.rgb = vec3(0.643,0.851,0.690);
                     }
-                    
-
-
 sources:
     osm:
         type: GeoJSONTileSource
@@ -239,7 +162,7 @@ layers:
         style:
             name: grid
             order: 1
-            color: [0.212,0.408,0.267]
+            color: [0.545,0.565,0.494]
             interactive: true
 
     water:
