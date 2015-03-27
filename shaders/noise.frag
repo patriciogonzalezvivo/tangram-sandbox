@@ -8,13 +8,20 @@ precision mediump float;
 uniform vec2 u_resolution;
 uniform float u_time;
 
+float cdot(in vec2 a, in vec2 b){
+    return clamp(dot(a,b),0.,1.);
+}
+
+float cdot(in vec3 a, in vec3 b){
+    return clamp(dot(a,b),0.,1.);
+}
+
 float random (in float _x) {
     return fract(sin(_x)*1e4);
 }
 
 float random (in vec2 _st) { 
-    // return fract(sin(dot(_st.xy ,vec2(12.9898,78.233))) * 43758.5453123);
-    return fract( 1e4 * sin(17.0 * _st.x + _st.y * 0.1) * (0.1 + abs(sin(_st.y * 13.0 + _st.x)))); 
+    return fract(sin(dot(_st.xy ,vec2(12.9898,78.233))) * 43758.5453123);
 }
 
 // Based on Morgan McGuire @morgan3d
@@ -48,24 +55,26 @@ float noise (in vec2 _st){
 }
 
 float noise (in vec3 _p) {
-    const vec3 step = vec3(110.0, 241.0, 171.0);
+    vec3 step = vec3(110.0, 241.0, 171.0);
 
     vec3 i = floor(_p);
     vec3 f = fract(_p);
  
     // For performance, compute the base input to a 1D random from the integer part of the argument and the 
     // incremental change to the 1D based on the 3D -> 1D wrapping
-    float n = dot(i, step);
+    float n = dot(i,step);
 
     vec3 u = f * f * (3.0 - 2.0 * f);
-    return mix(mix(mix( random(n + dot(step, vec3(0, 0, 0))), random(n + dot(step, vec3(1, 0, 0))), u.x),
-                   mix( random(n + dot(step, vec3(0, 1, 0))), random(n + dot(step, vec3(1, 1, 0))), u.x), u.y),
-               mix(mix( random(n + dot(step, vec3(0, 0, 1))), random(n + dot(step, vec3(1, 0, 1))), u.x),
-                   mix( random(n + dot(step, vec3(0, 1, 1))), random(n + dot(step, vec3(1, 1, 1))), u.x), u.y), u.z);
+    return mix(mix(mix( random(n + dot(step, vec3(0., 0., 0.))), random(n + dot(step, vec3(1., 0., 0.))), u.x),
+                   mix( random(n + dot(step, vec3(0., 1., 0.))), random(n + dot(step, vec3(1., 1., 0.))), u.x), u.y),
+               mix(mix( random(n + dot(step, vec3(0., 0., 1.))), random(n + dot(step, vec3(1., 0., 1.))), u.x),
+                   mix( random(n + dot(step, vec3(0., 1., 1.))), random(n + dot(step, vec3(1., 1., 1.))), u.x), u.y), u.z);
 }
 
 void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    st.x *= u_resolution.x/u_resolution.y;
+
     vec3 color = vec3(0.0);
 
     color = vec3( noise(vec3(st*5.,u_time*0.5)) );

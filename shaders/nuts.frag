@@ -32,6 +32,8 @@ vec2 rotate2D(vec2 _st, float _angle){
 void main(){
 
   vec2 st = gl_FragCoord.xy/u_resolution.xy;
+  st.x *= u_resolution.x/u_resolution.y;
+  
   vec2 pos = brickTile(st,rows);
 
   float angle = PI*0.25*cos(u_time*0.5);

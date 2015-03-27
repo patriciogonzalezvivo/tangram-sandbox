@@ -27,7 +27,8 @@ float box(vec2 _st, vec2 _size){
 }
 
 void main(void){
-    vec2 st = gl_FragCoord.xy/u_resolution.xy;;
+    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    st.x *= u_resolution.x/u_resolution.y;
 
     st /= vec2(2.15,0.65)/2.15;
 

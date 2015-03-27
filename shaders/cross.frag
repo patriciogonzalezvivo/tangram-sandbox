@@ -42,6 +42,7 @@ float cross(in vec2 _st, float _size){
 
 void main(){
   vec2 st = gl_FragCoord.xy/u_resolution.xy;
+  st.x *= u_resolution.x/u_resolution.y;
 
   st = tile(st,3.0);
   vec3 color = vec3( clamp(cross(fract(st),0.3),0.0,1.0) );

@@ -50,6 +50,7 @@ float noise (in vec2 _st) {
 void main(){
 
   vec2 st = gl_FragCoord.xy/u_resolution.xy;
+  st.x *= u_resolution.x/u_resolution.y;
   st = tile(st,5.);
   vec3 color = vec3(circle(st, 0.2));
 

@@ -13,18 +13,16 @@ float random (in float _x) {
 }
 
 float random (in vec2 _st) { 
-    // return fract(sin(dot(_st.xy ,vec2(12.9898,78.233))) * 43758.5453123);
-    return fract( 1e4 * sin(17.0 * _st.x + _st.y * 0.1) * (0.1 + abs(sin(_st.y * 13.0 + _st.x)))); 
+    return fract(sin(dot(_st.xy ,vec2(12.9898,78.233))) * 43758.5453123);
 }
 
 float random(in vec3 _st){ 
-    return fract(sin(dot(_st.xyz,
-                         vec3(12.9898,78.233,32.4355)))* 
-        43758.5453123);
+    return fract(sin(dot(_st.xyz, vec3(12.9898,78.233,32.4355)))* 43758.5453123);
 }
 
 void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    st.x *= u_resolution.x/u_resolution.y;
     vec3 color = vec3(1.0);
 
     st *= 20.;

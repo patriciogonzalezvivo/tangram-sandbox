@@ -26,6 +26,8 @@ float getHatch(in vec2 _pos, float _angle, float _brigtness){
 void main(){
 
   vec2 st = gl_FragCoord.xy/u_resolution.xy;
+  st.x *= u_resolution.x/u_resolution.y;
+  
   float pattern = getHatch( u_time*0.1+st.xy*0.5, PI*0.5, 0.5);
   vec3 color = vec3( pattern*sin(smoothstep(0.0,1.,st.x)*PI) );
 

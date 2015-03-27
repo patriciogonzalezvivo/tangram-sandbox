@@ -87,6 +87,7 @@ float fbm ( in vec2 _st) {
 
 void main(){
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    st.x *= u_resolution.x/u_resolution.y;
     // st *= 2.0;
     
     float b = 0.0;

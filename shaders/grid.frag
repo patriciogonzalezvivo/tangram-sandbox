@@ -44,6 +44,8 @@ float noise (in vec2 _st) {
 void main(){
 
   vec2 st = gl_FragCoord.xy/u_resolution.xy;
+  st.x *= u_resolution.x/u_resolution.y;
+  
   vec3 color = vec3( 0.0 );
   color = vec3( grid(st,10.,0.05+noise(st*5.+u_time*2.)*0.1 ) );
   // color = vec3( grid(st,10.,0.05+abs(sin(u_time))*0.1 ) );

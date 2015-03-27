@@ -58,6 +58,7 @@ float snoise(vec3 p) {
 
 void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    st.x *= u_resolution.x/u_resolution.y;
     vec3 color = vec3(0.0);
 
     color += snoise(vec3(st*4.,u_time*.5));

@@ -44,6 +44,8 @@ mat2 rotate2d(float _angle){
 
 void main(){
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    st.x *= u_resolution.x/u_resolution.y;
+    
     float b = noise(st+sin(u_time*0.5));//texture2D(u_tex0,st).r;
 
     float scale = 20.0;
