@@ -221,3 +221,24 @@ layers:
                 width: 1px
                 tile_edges: true
             extrude: true
+
+    road_labels:
+        data: { source: osm, layer: roads }
+        filter: { name: true, $zoom: { min: 14 } }
+        style:
+            name: text
+            order: 5
+            font:
+                typeface: Italic 12px Helvetica
+                fill: [.9,.9,1.]
+                stroke: { color: black , width: 3 }
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        style:
+            order: 6
+            name: text
+            font:
+                typeface: Bold 18px Helvetica
+                fill: black
+                stroke: { color: white , width: 5 }

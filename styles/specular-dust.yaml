@@ -220,3 +220,24 @@ layers:
             order: 4
             color: Style.color.pseudoRandomColor()
             extrude: true
+
+    road_labels:
+        data: { source: osm, layer: roads }
+        filter: { name: true, $zoom: { min: 14 } }
+        style:
+            name: text
+            order: 5
+            font:
+                typeface: 12px Helvetica
+                fill: white
+                stroke: black
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        style:
+            order: 6
+            name: text
+            font:
+                typeface: 12px Helvetica
+                fill: black
+                stroke: { color: white, width: 3 }
