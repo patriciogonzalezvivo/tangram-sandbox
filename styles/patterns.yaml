@@ -20,19 +20,15 @@ lights:
         diffuse: .3
 styles:
     patterns:
-        extends: polygons
-        texcoords: true
         material:
             ambient: 1
             diffuse: 1
         shaders:
             blocks:
-                globals: |
-
+                global: |
                     float random( in float _x){
                         return fract(sin(_x)*1e4);
                     }
-
                     vec2 rotate2D(vec2 _st, float _angle){
                       _st -= 0.5;
                       _st =  mat2(cos(_angle),-sin(_angle),
@@ -40,12 +36,10 @@ styles:
                       _st += 0.5;
                       return _st;
                     }
-
                     vec2 tile(vec2 _st, float _zoom){
                       _st *= _zoom;
                       return fract(_st);
                     }
-
                     vec2 brickTile(vec2 _st, float _zoom){
                         _st *= _zoom;
                         if (fract(_st.y * 0.5) > 0.5){
@@ -53,25 +47,22 @@ styles:
                         }
                         return fract(_st);
                     }
-
                     float circle(vec2 _st, float _radius){
                       vec2 pos = vec2(0.5)-_st;
                       return smoothstep(1.0-_radius,1.0-_radius+_radius*0.2,1.-dot(pos,pos)*3.14);
                     }
-
                     float getBrightness(in vec3 _rgb){
                         return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
                     }
-
                     float getHatch(in vec2 _pos, float _angle, float _brigtness){
                         float scale = 20.0;
                         _pos *= scale;
                         _pos = rotate2D( _pos, _angle );
                         return smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
                     }
-
     plain:
-        extends: patterns
+        base: polygons
+        mix: patterns
         material:
             ambient: .9
             diffuse: 1.
@@ -79,183 +70,196 @@ styles:
             blocks:
                 color: |
                     vec2 st = v_world_position.xy*0.01;
-                    if ( color.rgb == vec3(0.0) ){
-                        // Border
-                        color.rgb = vec3(0.204,0.204,0.204);
-                    } else {
-                        // Fill
-                        float b = 1.0-getBrightness(color.rgb);
-                        float pattern = 0.0;
-                        pattern = getHatch(st,3.1415*b,b);
-                        color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
-                    }
-
+                    float b = 1.0-getBrightness(color.rgb);
+                    float pattern = 0.0;
+                    pattern = getHatch(st,3.1415*b,b);
+                    color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
     buildings:
-        extends: patterns
+        base: polygons
+        mix: patterns
+        texcoords: true
         shaders:
             blocks:
                 color: |
                     vec2 st = v_texcoord.xy;
-                    if (color.rgb == vec3(0.0)){
-                        // Border
-                        color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),smoothstep(0.4,0.5,st.x));
-                    } else {
-                        // Fill
-                        float b = random(getBrightness(color.rgb));
-                        float pattern = 0.0;
-                        if (b > 0.9){
-                            if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
-                                st = fract(v_world_position.xy*0.1);
-                            } else {
-                                st = tile(st,3.);
-                            }
-                            pattern = circle(st,0.2);
-                        } else if (b > 0.8){
-                            if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
-                                st = fract(v_world_position.xy*0.05);
-                                st = brickTile(st,2.);
-                            } else {
-                                st = brickTile(st,5.);
-                            }
-                            pattern = 1.0-circle(st,0.1);
+                    float b = random(getBrightness(color.rgb));
+                    float pattern = 0.0;
+                    if (b > 0.9){
+                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
+                            st = fract(v_world_position.xy*0.1);
                         } else {
-                            if( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
-                                st *= 0.5;
-                            }
-                            float gradient = floor(b*10.)*0.1;
-                            float angle = 3.1415 * gradient;
-                            pattern = getHatch(st,angle,gradient);
-                        } 
-                        //pattern *= clamp(v_world_position.z*0.1,0.,1.);
-                        color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
-                    }
+                            st = tile(st,3.);
+                        }
+                        pattern = circle(st,0.2);
+                    } else if (b > 0.8){
+                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
+                            st = fract(v_world_position.xy*0.05);
+                            st = brickTile(st,2.);
+                        } else {
+                            st = brickTile(st,5.);
+                        }
+                        pattern = 1.0-circle(st,0.1);
+                    } else {
+                        if( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
+                            st *= 0.5;
+                        }
+                        float gradient = floor(b*10.)*0.1;
+                        float angle = 3.1415 * gradient;
+                        pattern = getHatch(st,angle,gradient);
+                    } 
+                    //pattern *= clamp(v_world_position.z*0.1,0.,1.);
+                    color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
+    buildings-lines:
+        base: lines
+        mix: patterns
+        texcoords: true
+        shaders:
+            blocks:
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),smoothstep(0.4,0.5,st.x));
 sources:
     osm:
-        type: GeoJSONTileSource
-        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.json
+        type: TopoJSONTiles
+        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
 
 layers:
     earth:
         data:
             source: osm
             layer: earth
-        style:
-            name: plain
-            order: 0
-            color: '#ddeeee'
+        draw:
+            plain:
+                order: 1
+                color: '#ddeeee'
             outline:
-                color: [0, 0, 0]
+                order: 0
+                style: lines
+                color: [0.204,0.204,0.204]
                 width: 2
     landuse:
         data:
             source: osm
             layer: landuse
-        style:
-            name: plain
-            order: 1
-            color: '#aaffaa'
+        draw:
+            plain:
+                order: 1
+                color: '#aaffaa'
             outline:
-                color: [0, 0, 0]
+                order: 2
+                style: lines
+                color: [0.204,0.204,0.204]
                 width: 2
 
     water:
         data:
             source: osm
             layer: water
-        style:
-            order: 2
-            color: '#343434'
+        draw:
+            polygons:
+                order: 3
+                color: '#343434'
 
     roads:
         data:
             source: osm
             layer: roads
-        style:
-            order: 3
-            color: '#343434'    
-            width: 8
+        draw:
+            lines:
+                order: 5
+                color: '#343434'    
+                width: 8
             outline:
+                order: 4
+                style: lines
                 color: '#FDF5E6'
-                width: 2
+                width: 10
         highway:
             filter:
                 kind: highway
-            style:
-                color: '#343434'
-                width: 12
+            draw:
+                lines:
+                    color: '#343434'
+                    width: 12
                 outline:
                     color: '#FDF5E6'
-                    width: 2
+                    width: 14
         tunnel:
             filter:
                 is_tunnel: yes
-            style:
-                color: '#343434'
+            draw:
+                lines:
+                    color: '#343434'
             rail:
                 filter:
                     kind: rail
-                style:
-                    width: 0
+                draw:
+                    lines:
+                        width: 0
         minor_road:
             filter:
                 kind: minor_road
-            style:
-                color: '#343434'
-                width: 5
+            draw:
+                lines:
+                    color: '#343434'
+                    width: 5
                 outline:
                     color: '#FDF5E6'
-                    width: 1
+                    width: 6
         path:
             filter:
                 kind: path
-            style:
-                color: '#343434'
-                width: 3
+            draw:
+                lines:
+                    color: '#343434'
+                    width: 3
                 outline:
                     color: '#FDF5E6'
-                    width: 1
+                    width: 4
         rail:
             filter:
                 kind: rail
                 is_tunnel: no
-            style:
-                color: '#343434'
-                width: 3
+            draw:
+                lines:
+                    color: '#343434'
+                    width: 3
                 outline:
                     color: '#FDF5E6'
-                    width: 1
+                    width: 4
     
     buildings:
         data:
             source: osm
             layer: buildings
-        style:
-            name: buildings
-            order: 4
-            color: Style.color.pseudoRandomColor()
+        draw:
+            buildings:
+                order: 6
+                color: Style.color.pseudoRandomColor()
+                extrude: true
             outline:
-                color: [0, 0, 0]
+                order: 7
+                style: buildings-lines
+                color: [0]
                 width: 2
                 tile_edges: true
-            extrude: true
+                extrude: true
 
     road_labels:
         data: { source: osm, layer: roads }
         filter: { name: true, $zoom: { min: 14 } }
-        style:
-            name: text
-            order: 5
-            font:
-                typeface: 14px Helvetica
-                fill: [1.000,0.968,0.968]
-                stroke: { color: [0.204,0.204,0.204] , width: 3 }
+        draw:
+            text:
+                font:
+                    typeface: 14px Helvetica
+                    fill: [1.000,0.968,0.968]
+                    stroke: { color: [0.204,0.204,0.204] , width: 3 }
     places:
         data: { source: osm }
         filter: { name: true }
-        style:
-            order: 6
-            name: text
-            font:
-                typeface: Bold 20px Helvetica
-                fill: [0.204,0.204,0.204]
-                stroke: { color: white , width: 4 }
+        draw:
+            text:
+                font:
+                    typeface: Bold 20px Helvetica
+                    fill: [0.204,0.204,0.204]
+                    stroke: { color: white , width: 4 }

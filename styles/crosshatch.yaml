@@ -18,18 +18,7 @@ lights:
         ambient: .3
         
 styles:
-    paper:
-        extends: polygons
-        texcoords: true
-        material:
-            normal:
-                texture: imgs/normal-0031.jpg
-                mapping: planar
-                scale: 0.001
-            ambient: 1.
-            diffuse: 1.
     hatch:
-        extends: polygons
         texcoords: true
         material:
             ambient: 1.
@@ -38,17 +27,15 @@ styles:
             uniforms:
                 u_hatchmap: imgs/hatch-0002.png
             blocks:
-                globals: |
+                global: |
                     float random(in float x){
                         return fract(sin(x)*43758.5453);
                     }
-
                     float random(in vec2 _st){ 
                         return fract(sin(dot(_st.xy,
                                              vec2(12.9898,78.233)))* 
                             43758.5453123);
                     }
-
                     float noise (in vec2 _st) {
                         vec2 i = floor(_st);
                         vec2 f = fract(_st);
@@ -61,7 +48,6 @@ styles:
                                 (c - a)* u.y * (1.0 - u.x) + 
                                 (d - b) * u.x * u.y;
                     }
-
                     vec2 rotate2D(vec2 _st, float _angle){
                       _st -= 0.5;
                       _st =  mat2(cos(_angle),-sin(_angle),
@@ -69,38 +55,23 @@ styles:
                       _st += 0.5;
                       return _st;
                     }
-
                     float getBrightness(in vec3 _rgb){
                         return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
                     }
-
                     float hatch( sampler2D hatchmap, vec2 st, float brightness ){
                         brightness = clamp(brightness,0.,0.9999999);
                         vec2 pos1 = vec2(floor(brightness*9.0)/3.,
                                          floor(brightness*3.0)/3.);
-
                         float minBrightness = clamp(brightness-0.111111111,0.,1.0);
                         vec2 pos2 = vec2(floor(minBrightness*9.0)/3.,
                                          floor(minBrightness*3.0)/3.);
-
                         return mix(texture2D( hatchmap,fract(pos1+fract(st)/3.)).a,
                                    texture2D( hatchmap,fract(pos2+fract(st)/3.)).a,
                                    1.0-fract(brightness*9.0));
-                    }    
-    ink:
-        extends: hatch
-        shaders:
-            blocks:
-                color: |
-                    vec2 st = v_world_position.xy*0.01;
-                    vec2 uv = v_texcoord;
-                    if ( v_color.rgb == vec3(0.0) ){
-                        color.rgb = vec3(0.976,0.953,0.890);
-                    } else {
-                        color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
-                    }      
+                    }        
     plain:
-        extends: hatch
+        base: polygons
+        mix: hatch
         material:
             normal:
                 texture: imgs/normal-0031.jpg
@@ -110,177 +81,209 @@ styles:
             blocks:
                 filter: |
                     vec2 st = v_world_position.xy*0.01;
-                    vec2 uv = v_texcoord;
-                    if ( v_color.rgb == vec3(0.0) ){
-                        // Border
-                        color.rgb = vec3(0.302,0.302,0.306);
-                    } else {
-                        // Fill
-                        float b = getBrightness(color.rgb);
-                        float pattern = 1.-hatch(u_hatchmap,st,b);
-                        color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
-                    }
+                    float b = getBrightness(color.rgb);
+                    float pattern = 1.-hatch(u_hatchmap,st,b);
+                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
     buildings:
-        extends: hatch
+        base: polygons
+        mix: hatch
         shaders:
             blocks:
                 filter: |
                     vec2 st = v_world_position.xy*0.01;
                     vec2 uv = v_texcoord;
-                    float b = getBrightness(g_light_accumulator_diffuse.rgb);
+                    float b = getBrightness(light_accumulator_diffuse.rgb);
                     float pattern = 1.0;
-                    if (v_color.rgb == vec3(0.0)){
-                        // Border
-                        float edge = 0.5*noise(st*100.);
-                        color.rgb = mix(vec3(0.976,0.953,0.890),vec3(0.302,0.302,0.306),
-                                        smoothstep(0.,edge,uv.x)*smoothstep(0.,edge,1.0-uv.x));
+                    if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
+                        // Walls
+                        b *=  clamp(uv.y*1.5,0.0,1.0)+0.2;
+                        pattern = 1.-hatch(u_hatchmap,uv,b);
+                        vec2 edge = vec2(0.1,0.05)*noise(uv*20.);
+                        vec2 blend = smoothstep(vec2(0.0),edge,uv)*smoothstep(vec2(0.0),edge,vec2(1.)-uv);
+                        pattern = mix(1.0,pattern,blend.x*blend.y);
                     } else {
-                        // Fill
-                        if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
-                            // Walls
-                            b *=  clamp(uv.y*1.5,0.0,1.0)+0.2;
-                            pattern = 1.-hatch(u_hatchmap,uv,b);
-                            vec2 edge = vec2(0.1,0.05)*noise(uv*20.);
-                            vec2 blend = smoothstep(vec2(0.0),edge,uv)*smoothstep(vec2(0.0),edge,vec2(1.)-uv);
-                            pattern = mix(1.0,pattern,blend.x*blend.y);
-                        } else {
-                            // Roof
-                            b *= 1.8;
-                            uv = fract(rotate2D(uv,0.7853));
-                            pattern = 1.-hatch(u_hatchmap,uv,b);
-                        }
-                        color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
+                        // Roof
+                        b *= 1.8;
+                        uv = fract(rotate2D(uv,0.7853));
+                        pattern = 1.-hatch(u_hatchmap,uv,b);
                     }
+                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
+    buildings-lines:
+        base: lines
+        mix: hatch
+        shaders:
+            blocks:
+                filter: |
+                    vec2 st = v_world_position.xy*0.01;
+                    vec2 uv = v_texcoord;
+                    float edge = 0.5*noise(st*100.);
+                    color.rgb = mix(vec3(0.976,0.953,0.890),vec3(0.302,0.302,0.306),
+                                    smoothstep(0.,edge,uv.x)*smoothstep(0.,edge,1.0-uv.x));
+    ink-lines:
+        base: lines
+        mix: hatch
+        texcoords: true
+        material:
+            ambient: 1.
+            diffuse: 1.
+        shaders:
+            blocks:
+                color: |
+                    vec2 uv = v_texcoord;
+                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
+    paper:
+        base: polygons
+        texcoords: true
+        material:
+            normal:
+                texture: imgs/normal-0031.jpg
+                mapping: planar
+                scale: 0.001
+            ambient: 1.
+            diffuse: 1.
 
 sources:
     osm:
-        type: GeoJSONTileSource
-        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.json
+        type: TopoJSONTiles
+        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
 
 layers:
     earth:
         data:
             source: osm
             layer: earth
-        style:
-            name: plain
-            order: 0
-            color: '#dddddd'
-            outline:
-                color: [0, 0, 0]
+        draw:
+            plain:
+                order: 0
+                color: '#dddddd'
+            outlines:
+                style: lines
+                color: [0.302,0.302,0.306]
                 width: 2
     landuse:
         data:
             source: osm
             layer: landuse
-        style:
-            name: plain
-            order: 1
-            color: '#999999'
+        draw:
+            plain:
+                order: 1
+                color: '#999999'
             outline:
-                color: [0, 0, 0]
+                style: lines
+                color: [0.302, 0.302, 0.306]
                 width: 2
 
     water:
         data:
             source: osm
             layer: water
-        style:
-            name: paper
-            order: 2
-            color: '#343434'
+        draw:
+            paper:
+                order: 2
+                color: '#343434'
 
     roads:
         data:
             source: osm
             layer: roads
-        style:
-            name: ink
-            order: 3
-            color: '#343434'    
-            width: 8
+        draw:
+            ink-lines:
+                order: 3
+                color: '#343434'    
+                width: 8
             outline:
-                color: [0,0,0]
-                width: 2
+                style: lines
+                color: [0.976,0.953,0.890]
+                width: 10
         highway:
             filter:
                 kind: highway
-            style:
-                color: '#343434'
-                width: 12
+            draw:
+                ink-lines:
+                    color: '#343434'
+                    width: 12
                 outline:
-                    color: [0,0,0]
-                    width: 2
+                    style: lines
+                    color: [0.976,0.953,0.890]
+                    width: 14
         tunnel:
             filter:
                 is_tunnel: yes
-            style:
-                color: '#343434'
+            draw:
+                ink-lines:
+                    color: '#343434'
             rail:
                 filter:
                     kind: rail
-                style:
-                    width: 0
+                draw:
+                    lines:
+                        width: 0
         minor_road:
             filter:
                 kind: minor_road
-            style:
-                color: '#343434'
-                width: 5
+            draw:
+                ink-lines:
+                    color: '#343434'
+                    width: 5
                 outline:
-                    color: [0,0,0]
-                    width: 1
+                    style: lines
+                    color: [0.976,0.953,0.890]
+                    width: 6
         path:
             filter:
                 kind: path
-            style:
-                color: '#343434'
-                width: 3
+            draw:
+                ink-lines:
+                    color: '#343434'
+                    width: 3
                 outline:
-                    color: [0,0,0]
-                    width: 1
+                    style: lines
+                    color: [0.976,0.953,0.890]
+                    width: 4
         rail:
             filter:
                 kind: rail
                 is_tunnel: no
-            style:
-                color: '#343434'
-                width: 3
+            draw:
+                ink-lines:
+                    color: '#343434'
+                    width: 3
                 outline:
-                    color: [0,0,0]
-                    width: 1
-    
+                    style: lines
+                    color: [0.976,0.953,0.890]
+                    width: 4
     buildings:
         data:
             source: osm
             layer: buildings
-        style:
-            name: buildings
-            order: 4
-            color: Style.color.pseudoRandomColor()
-            outline:
+        draw:
+            buildings:
+                order: 4
+                color: Style.color.pseudoRandomColor()
+                extrude: true
+            buildings-lines:
+                order: 5
                 color: [0, 0, 0]
                 width: 1.
                 tile_edges: true
-            extrude: true
-
+                extrude: true
     road_labels:
         data: { source: osm, layer: roads }
         filter: { name: true, $zoom: { min: 14 } }
-        style:
-            name: text
-            order: 5
-            font:
-                typeface: Italic 16px Baskerville
-                fill: [0.976,0.953,0.890]
-                stroke: black
+        draw:
+            text:
+                order: 5
+                font:
+                    typeface: Italic 16px Baskerville
+                    fill: [0.976,0.953,0.890]
+                    stroke: black
     places:
         data: { source: osm }
         filter: { name: true }
-        style:
-            order: 6
-            name: text
-            font:
-                typeface: Italic 18px Baskerville
-                fill: black
-                stroke: { color: [0.976,0.953,0.890] , width: 3 }
+        draw:
+            text:
+                order: 6
+                font:
+                    typeface: Italic 18px Baskerville
+                    fill: black
+                    stroke: { color: [0.976,0.953,0.890] , width: 3 }

@@ -36,7 +36,7 @@ lights:
 
 styles:
     water:
-        extends: polygons
+        base: polygons
         animated: true
         material:
             ambient: 0.8
@@ -45,7 +45,7 @@ styles:
             shininess: 2.0
         shaders:
             blocks:
-                globals: |
+                global: |
                     float random(in vec2 _st){ 
                         return fract(sin(dot(_st.xy,
                                              vec2(12.9898,78.233)))* 
@@ -56,9 +56,9 @@ styles:
                     float t = u_time*0.005;
                     vec2 ipos = floor(pos);
                     float rnd = random(ipos+t);
-                    g_material.specular *= rnd*rnd;
+                    material.specular *= rnd*rnd;
     floor:
-        extends: polygons
+        base: polygons
         animated: true
         material:
             ambient: 0.8
@@ -67,7 +67,7 @@ styles:
             shininess: 2.0
         shaders:
             blocks:
-                globals: |
+                global: |
                     float getBrightness(in vec3 _rgb){
                         return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
                     }
@@ -108,9 +108,14 @@ styles:
                 color: |
                     float b = getBrightness(color.rgb);
                     vec2 pos = v_world_position.xy*0.1;
-                    g_material.specular *= fbm(vec3(pos,u_time*0.3));
+                    material.specular *= fbm(vec3(pos,u_time*0.3));
+
+    floor-lines:
+        base: lines
+        mix: floor
+
     walls:
-        extends: polygons
+        base: polygons
         material:
             ambient: 0.8
             diffuse: 1
@@ -118,7 +123,7 @@ styles:
             shininess: 5.0
         shaders:
             blocks:
-                globals: |
+                global: |
                     float random(in vec3 _st){ 
                         return fract(sin(dot(_st.xyz,
                                              vec3(12.9898,78.233,32.4355)))* 
@@ -128,116 +133,118 @@ styles:
                     vec3 pos = v_world_position.xyz*0.5;
                     vec3 ipos = floor(pos);
                     float rnd = random(ipos);
-                    g_material.specular *= rnd*rnd;
+                    material.specular *= rnd*rnd;
                     
 
 sources:
     osm:
-        type: GeoJSONTileSource
-        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.json
+        type: TopoJSONTiles
+        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
 
 layers:
     earth:
         data:
             source: osm
             layer: earth
-        style:
-            order: 0
-            color: '#ddeeee'
+        draw:
+            polygons:
+                order: 0
+                color: '#ddeeee'
     landuse:
         data:
             source: osm
             layer: landuse
-        style:
-            name: floor
-            order: 1
-            color: [0.502,0.369,0.494]
-            interactive: true
+        draw:
+            floor:
+                order: 1
+                color: [0.502,0.369,0.494]
+                interactive: true
 
     water:
         data:
             source: osm
             layer: water
-        style:
-            name: water
-            order: 2
-            color: '#88bbee'
+        draw:
+            water:
+                order: 2
+                color: '#88bbee'
 
     roads:
         data:
             source: osm
             layer: roads
-        style:
-            name: floor
-            order: 3
-            color: gray    
-            width: 8
+        draw:
+            floor-lines:
+                order: 3
+                color: gray    
+                width: 8
         highway:
             filter:
                 kind: highway
-            style:
-                color: [0.855,0.463,0.255]
-                width: 12
-                outline:
-                    color: grey
-                    width: 3
+                draw:
+                    floor-lines:
+                        color: [0.855,0.463,0.255]
+                        width: 12
+                    outline:
+                        style: floor-lines
+                        color: grey
+                        width: 18
         tunnel:
             filter:
                 is_tunnel: yes
-            style:
-                color: tan
-            rail:
-                filter:
-                    kind: rail
-                style:
-                    width: 0
+            draw:
+                floor-lines:
+                    color: tan
         minor_road:
             filter:
                 kind: minor_road
-            style:
-                color: lightgrey
-                width: 5
+            draw:
+                floor-lines:
+                    color: lightgrey
+                    width: 5
         path:
             filter:
                 kind: path
-            style:
-                color: [0.8, 0.8, 0.8]
-                width: 3
+            draw:
+                floor-lines:
+                    color: [0.8, 0.8, 0.8]
+                    width: 3
         rail:
             filter:
                 kind: rail
                 is_tunnel: no
-            style:
-                color: pink
-                width: 3
+            draw:
+                floor-lines:
+                    color: pink
+                    width: 3
     
     buildings:
         data:
             source: osm
             layer: buildings
-        style:
-            name: walls
-            order: 4
-            color: Style.color.pseudoRandomColor()
-            extrude: true
+        draw:
+            walls:
+                order: 4
+                color: Style.color.pseudoRandomColor()
+                extrude: true
 
     road_labels:
         data: { source: osm, layer: roads }
         filter: { name: true, $zoom: { min: 14 } }
-        style:
-            name: text
-            order: 5
-            font:
-                typeface: 12px Helvetica
-                fill: white
-                stroke: black
+        draw:
+            text:
+                order: 5
+                font:
+                    typeface: 12px Helvetica
+                    fill: white
+                    stroke: black
     places:
         data: { source: osm }
         filter: { name: true }
-        style:
-            order: 6
-            name: text
-            font:
-                typeface: 12px Helvetica
-                fill: black
-                stroke: { color: white, width: 3 }
+        draw:
+            text:
+                order: 6
+                font:
+                    typeface: 12px Helvetica
+                    fill: black
+                    stroke: { color: white, width: 3 }

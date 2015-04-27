@@ -22,7 +22,7 @@ lights:
 
 styles:
     floor:
-        extends: polygons
+        base: polygons
         material:
             normal:
                 texture: imgs/normal-0001.jpg
@@ -32,7 +32,7 @@ styles:
             diffuse: 1
             specular: 0
     walls:
-        extends: polygons
+        base: polygons
         texcoords: true
         material:
             normal:
@@ -44,7 +44,7 @@ styles:
             specular: 0
         shaders:
             blocks:
-                globals: |
+                global: |
                     float getBrightness(in vec3 _rgb){
                         return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
                     }
@@ -169,111 +169,123 @@ styles:
 
 sources:
     osm:
-        type: GeoJSONTileSource
-        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.json
+        type: TopoJSONTiles
+        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
 
 layers:
     earth:
         data:
             source: osm
             layer: earth
-        style:
-            name: floor
-            order: 0
-            color: '#ddeeee'
+        draw:
+            floor: 
+                order: 0
+                color: '#ddeeee'
     landuse:
         data:
             source: osm
             layer: landuse
-        style:
-            name: floor
-            order: 1
-            color: [0.502,0.369,0.494]
-            interactive: true
+        draw:
+            floor: 
+                order: 1
+                color: [0.502,0.369,0.494]
+                interactive: true
 
     water:
         data:
             source: osm
             layer: water
-        style:
-            name: floor
-            order: 2
-            color: '#88bbee'
+        draw:
+            floor:
+                order: 2
+                color: '#88bbee'
 
     roads:
         data:
             source: osm
             layer: roads
-        style:
-            order: 3
-            color: gray    
-            width: 8
+        draw:
+            lines:
+                order: 8
+                color: gray    
+                width: 8
         highway:
             filter:
                 kind: highway
-            style:
-                color: [0.855,0.463,0.255]
-                width: 12
+            draw:
+                lines:
+                    color: [0.855,0.463,0.255]
+                    width: 12
                 outline:
+                    order: 3
+                    style: lines
                     color: grey
-                    width: 3
+                    width: 15
         tunnel:
             filter:
                 is_tunnel: yes
-            style:
-                color: tan
+            draw:
+                lines:
+                    color: tan
             rail:
                 filter:
                     kind: rail
-                style:
-                    width: 0
+                # visible: false
+                draw:
+                    lines:
+                        order: -4
+                        width: 0
         minor_road:
             filter:
                 kind: minor_road
-            style:
-                color: lightgrey
-                width: 5
+            draw:
+                lines:
+                    order: -1
+                    color: lightgrey
+                    width: 5
         path:
             filter:
                 kind: path
-            style:
-                color: [0.8, 0.8, 0.8]
-                width: 3
+            draw:
+                lines:
+                    order: -2
+                    color: [0.8, 0.8, 0.8]
+                    width: 3
         rail:
             filter:
                 kind: rail
                 is_tunnel: no
-            style:
-                color: pink
-                width: 3
+            draw:
+                lines:
+                    order: -3
+                    color: pink
+                    width: 3
     
     buildings:
         data:
             source: osm
             layer: buildings
-        style:
-            name: walls
-            order: 4
-            color: Style.color.pseudoRandomColor()
-            extrude: true
+        draw:
+            walls:
+                order: 9
+                color: Style.color.pseudoRandomColor()
+                extrude: true
 
     road_labels:
         data: { source: osm, layer: roads }
         filter: { name: true, $zoom: { min: 14 } }
-        style:
-            name: text
-            order: 5
-            font:
-                typeface: 12px Helvetica
-                fill: white
-                stroke: { color: [0.232,0.170,0.229] , width: 3 }
+        draw:
+            text:
+                font:
+                    typeface: 12px Helvetica
+                    fill: white
+                    stroke: { color: [0.232,0.170,0.229] , width: 3 }
     places:
         data: { source: osm }
         filter: { name: true }
-        style:
-            order: 6
-            name: text
-            font:
-                typeface: Bold 18px Helvetica
-                fill: [0.232,0.170,0.229]
-                stroke: { color: white , width: 3 }
+        draw:
+            text:
+                font:
+                    typeface: Bold 18px Helvetica
+                    fill: [0.232,0.170,0.229]
+                    stroke: { color: white , width: 3 }
