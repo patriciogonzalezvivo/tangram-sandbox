@@ -120,7 +120,7 @@ styles:
                         // Wall
                         vec2 st = v_texcoord.xy;
                         float rows = 30.0;
-                        vec2 ipos = floor(st*rows);
+                        vec2 ipos = floor(st*rows)+1.;
                         ipos += vec2(.0,floor(u_time*20.*random(ipos.x)));
                         vec2 fpos = fract(st*rows);
                         vec2 center = (.5-fpos);
@@ -197,9 +197,7 @@ layers:
             rail:
                 filter:
                     kind: rail
-                draw:
-                    roads:
-                        width: 0
+                visible: false
         minor_road:
             filter:
                 kind: minor_road
@@ -239,7 +237,7 @@ layers:
                 extrude: true
     road_labels:
         data: { source: osm, layer: roads }
-        filter: { name: true, $zoom: { min: 14 } }
+        filter: { name: true, not: { kind: rail }, $zoom: { min: 14 } }
         draw:
             text:
                 font:

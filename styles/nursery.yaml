@@ -230,11 +230,7 @@ layers:
             rail:
                 filter:
                     kind: rail
-                # visible: false
-                draw:
-                    lines:
-                        order: -4
-                        width: 0
+                visible: false
         minor_road:
             filter:
                 kind: minor_road
