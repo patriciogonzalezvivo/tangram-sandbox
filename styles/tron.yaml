@@ -183,7 +183,7 @@ layers:
             outline:
                 order: 7
                 style: lines
-                color: [0.305,0.637,1.000]
+                color: [1, 1, 1]
                 width: 1px
                 tile_edges: true
                 extrude: true

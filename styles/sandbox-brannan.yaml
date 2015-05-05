@@ -24,7 +24,7 @@ styles:
     LUT:
         shaders:
             uniforms:
-                u_lut: imgs/lut-0013.png
+                u_lut: imgs/lut-0011.png
             blocks:
                 global: |
                     vec4 lookup(in vec4 textureColor, in sampler2D lookupTable) {
