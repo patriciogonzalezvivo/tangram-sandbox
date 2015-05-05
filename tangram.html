@@ -37,6 +37,7 @@
 
     <!-- Main tangram library -->
     <script src="src/tangram.debug.js"></script>
+    <script src="https://cdn.rawgit.com/mapzen/ui/30d93828c035d747acd93888585482a50304e2eb/components/bug/bug.js"></script>
     <!-- <script src="//cdn.rawgit.com/tangrams/tangram/03c1150a6c08231d3a700c3b04782448db83e25e/dist/tangram.debug.js"></script> -->
 
     <!-- Demo module -->
@@ -189,6 +190,12 @@
             
         // };
     }());
+
+    var mzBug = new MapzenBug({
+        name: 'Map using d3 and vector PBF',
+        link: 'https://github.com/mapzen/d3-vector-tiles',
+        twitterShareMsg: 'Wow, what cool demo by @mapzen.'
+    });
     </script>
 
     <!-- Adding a script block to post message to the parent container (think iframed demos) -->
