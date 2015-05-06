@@ -16,7 +16,7 @@ lights:
         origin: ground
         diffuse: .5
         ambient: .3
-        
+
 styles:
     hatch:
         texcoords: true
@@ -25,15 +25,15 @@ styles:
             diffuse: 1.
         shaders:
             uniforms:
-                u_hatchmap: imgs/hatch-0002.png
+                u_hatchmap: /styles/imgs/hatch-0002.png
             blocks:
                 global: |
                     float random(in float x){
                         return fract(sin(x)*43758.5453);
                     }
-                    float random(in vec2 _st){ 
+                    float random(in vec2 _st){
                         return fract(sin(dot(_st.xy,
-                                             vec2(12.9898,78.233)))* 
+                                             vec2(12.9898,78.233)))*
                             43758.5453123);
                     }
                     float noise (in vec2 _st) {
@@ -44,8 +44,8 @@ styles:
                         float c = random(i + vec2(0.0, 1.0));
                         float d = random(i + vec2(1.0, 1.0));
                         vec2 u = f * f * (3.0 - 2.0 * f);
-                        return mix(a, b, u.x) + 
-                                (c - a)* u.y * (1.0 - u.x) + 
+                        return mix(a, b, u.x) +
+                                (c - a)* u.y * (1.0 - u.x) +
                                 (d - b) * u.x * u.y;
                     }
                     vec2 rotate2D(vec2 _st, float _angle){
@@ -68,7 +68,7 @@ styles:
                         return mix(texture2D( hatchmap,fract(pos1+fract(st)/3.)).a,
                                    texture2D( hatchmap,fract(pos2+fract(st)/3.)).a,
                                    1.0-fract(brightness*9.0));
-                    }        
+                    }
     plain:
         base: polygons
         mix: hatch
@@ -189,7 +189,7 @@ layers:
         draw:
             ink-lines:
                 order: 3
-                color: '#343434'    
+                color: '#343434'
                 width: 8
             outline:
                 style: lines
