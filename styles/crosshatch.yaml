@@ -25,7 +25,7 @@ styles:
             diffuse: 1.
         shaders:
             uniforms:
-                u_hatchmap: /styles/imgs/hatch-0002.png
+                u_hatchmap: imgs/hatch-0002.png
             blocks:
                 global: |
                     float random(in float x){
