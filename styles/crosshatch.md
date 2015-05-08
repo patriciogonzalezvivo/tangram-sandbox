@@ -6,4 +6,4 @@ Inspiration: [@thespite cross-hatching](http://www.clicktorelease.com/code/cross
 
 [![Normal map](styles/imgs/normal-0031.jpg)](code.html#shaders/normalmap.frag&styles/imgs/normal-0031.jpg)
 
-[ ![Lookup Croos Hatch table](imgs/hatch-0002.png) ](code.html#shaders/crosshatch.frag&styles/imgs/hatch-0002.png)
+[ ![Lookup Croos Hatch table](styles/imgs/hatch-0002.png) ](code.html#shaders/crosshatch.frag&styles/imgs/hatch-0002.png)
