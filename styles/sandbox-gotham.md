@@ -7,11 +7,11 @@ Inspiration: [sandbox](http://collegeadmissions.testmasters.com/wp-content/uploa
 <a href="code.html#shaders/wood.frag"><canvas class="canvas" data-fragment-url="shaders/wood.frag" width="200px" height="200px"></canvas></a>
 #### Procedural 3D Wood Textures
 
-[![Sand normalmap](imgs/normal-0015.jpg)](code.html#shaders/normalmap.frag&imgs/normal-0015.jpg)
+[![Sand normalmap](styles/imgs/normal-0015.jpg)](code.html#shaders/normalmap.frag&styles/imgs/normal-0015.jpg)
 
 <a href="code.html#shaders/water.frag"><canvas class="canvas" data-fragment-url="shaders/water.frag" width="200px" height="200px"></canvas></a>
 #### Procedural water normals
 
-[![Water spherical enviromentalmap](imgs/sem-sky-0001.jpg)](code.html#shaders/env-map.frag&imgs/normal-0001.jpg&imgs/sem-sky-0001.jpg)
+[![Water spherical enviromentalmap](styles/imgs/sem-sky-0001.jpg)](code.html#shaders/env-map.frag&styles/imgs/normal-0001.jpg&styles/imgs/sem-sky-0001.jpg)
 
-![LookUpTable](imgs/lut-0010.png)
+![LookUpTable](styles/imgs/lut-0010.png)

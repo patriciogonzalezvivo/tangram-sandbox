@@ -4,6 +4,6 @@ Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blo
 
 Inspiration: [@thespite cross-hatching](http://www.clicktorelease.com/code/cross-hatching/)
 
-[![Normal map](imgs/normal-0031.jpg)](code.html#shaders/normalmap.frag&imgs/normal-0031.jpg)
+[![Normal map](styles/imgs/normal-0031.jpg)](code.html#shaders/normalmap.frag&styles/imgs/normal-0031.jpg)
 
-[ ![Lookup Croos Hatch table](imgs/hatch-0002.png) ](code.html#shaders/crosshatch.frag&imgs/hatch-0002.png)
+[ ![Lookup Croos Hatch table](imgs/hatch-0002.png) ](code.html#shaders/crosshatch.frag&styles/imgs/hatch-0002.png)
