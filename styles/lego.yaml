@@ -44,7 +44,7 @@ styles:
                       _st *= _zoom;
                       return fract(_st);
                     }
-                    float random(in vec2 _st){ 
+                    float random(in vec2 _st){
                         return fract(sin(dot(_st.xy,vec2(12.9898,78.233)))* 43758.5453123);
                     }
                     vec3 legoPattern(inout vec2 st){
@@ -101,7 +101,7 @@ styles:
                     float getBrightness(in vec3 _rgb){
                         return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
                     }
-                    float random(float x){ 
+                    float random(float x){
                         return fract(sin(x)*43758.5453123);
                     }
                 normal: |
@@ -140,7 +140,7 @@ styles:
                         color.rgb = vec3(0.278,0.341,0.396);
                     } else {
                         color.rgb = vec3(0.400,0.176,0.180);
-                    } 
+                    }
                     color *= clamp(0.6+v_world_position.z*0.007,0.,1.);
 sources:
     osm:
@@ -181,7 +181,7 @@ layers:
         draw:
             roads:
                 order: 4
-                color: gray    
+                color: gray
                 width: 8
             outline:
                 order: 3

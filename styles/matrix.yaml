@@ -30,8 +30,8 @@ styles:
 
                         vec2 u = f * f * (3.0 - 2.0 * f);
 
-                        return mix(a, b, u.x) + 
-                                (c - a)* u.y * (1.0 - u.x) + 
+                        return mix(a, b, u.x) +
+                                (c - a)* u.y * (1.0 - u.x) +
                                 (d - b) * u.x * u.y;
                     }
                     float randomChar(in vec2 outer,in vec2 inner){
@@ -46,7 +46,7 @@ styles:
                     }
                     float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
                         _pos = fract(_pos*_zoom);
-                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) - 
+                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) -
                                  smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
                         return clamp(g.x+g.y,0.0,1.0);
                     }
@@ -61,7 +61,7 @@ styles:
                         return uv.x*uv.y;
                     }
                     float cross(in vec2 _st, float _size){
-                        return  box(_st, vec2(_size*0.5,_size*0.125)) + 
+                        return  box(_st, vec2(_size*0.5,_size*0.125)) +
                                 box(_st, vec2(_size*0.125,_size*0.5));
                     }
     roads:

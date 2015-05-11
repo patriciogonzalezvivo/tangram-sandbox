@@ -46,9 +46,9 @@ styles:
         shaders:
             blocks:
                 global: |
-                    float random(in vec2 _st){ 
+                    float random(in vec2 _st){
                         return fract(sin(dot(_st.xy,
-                                             vec2(12.9898,78.233)))* 
+                                             vec2(12.9898,78.233)))*
                             43758.5453123);
                     }
                 color: |
@@ -82,8 +82,8 @@ styles:
 
                         vec3 i = floor(_p);
                         vec3 f = fract(_p);
-                     
-                        // For performance, compute the base input to a 1D random from the integer part of the argument and the 
+
+                        // For performance, compute the base input to a 1D random from the integer part of the argument and the
                         // incremental change to the 1D based on the 3D -> 1D wrapping
                         float n = dot(i, step);
 
@@ -124,9 +124,9 @@ styles:
         shaders:
             blocks:
                 global: |
-                    float random(in vec3 _st){ 
+                    float random(in vec3 _st){
                         return fract(sin(dot(_st.xyz,
-                                             vec3(12.9898,78.233,32.4355)))* 
+                                             vec3(12.9898,78.233,32.4355)))*
                             43758.5453123);
                     }
                 color: |
@@ -134,7 +134,7 @@ styles:
                     vec3 ipos = floor(pos);
                     float rnd = random(ipos);
                     material.specular *= rnd*rnd;
-                    
+
 
 sources:
     osm:
@@ -176,7 +176,7 @@ layers:
         draw:
             floor-lines:
                 order: 3
-                color: gray    
+                color: gray
                 width: 8
         highway:
             filter:
@@ -217,7 +217,7 @@ layers:
                 floor-lines:
                     color: pink
                     width: 3
-    
+
     buildings:
         data:
             source: osm
