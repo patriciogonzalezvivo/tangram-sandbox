@@ -153,7 +153,7 @@ layers:
             grid:
                 order: 1
                 color: [0.545,0.565,0.494]
-                interactive: true
+
     water:
         data:
             source: osm
@@ -227,14 +227,20 @@ layers:
             buildings:
                 order: 7
                 color: [0, 0, 0]
-                extrude: true
             outline:
                 order: 6
                 style: lines
                 color: [0.643,0.851,0.690]
                 width: 1px
                 tile_edges: true
-                extrude: true
+        3d-buildings:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                buildings:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+                outline:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+
     road_labels:
         data: { source: osm, layer: roads }
         filter: { name: true, not: { kind: rail }, $zoom: { min: 14 } }

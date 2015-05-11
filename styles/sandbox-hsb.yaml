@@ -210,7 +210,6 @@ layers:
             sand:
                 order: 1
                 color: [0.902,0.843,0.757]
-                interactive: true
 
     water:
         data:
@@ -280,7 +279,11 @@ layers:
             wood:
                 order: 4
                 color: Style.color.pseudoRandomColor()
-                extrude: true
+        3d-buildings:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                wood:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
 
     road_labels:
         data: { source: osm, layer: roads }
