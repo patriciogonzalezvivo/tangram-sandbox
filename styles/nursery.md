@@ -1,6 +1,6 @@
 Style by [@patriciogv](https://twitter.com/patriciogv)
 
-Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blob/gh-pages/styles/nursery.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
+Source Code: [style](https://github.com/tangrams/tangram-sandbox/blob/gh-pages/styles/nursery.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
 
 [![Normal map](styles/imgs/normal-0001.jpg)](code.html#shaders/normalmap.frag&styles/imgs/normal-0001.jpg)
 
