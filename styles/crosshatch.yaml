@@ -79,7 +79,13 @@ styles:
                     } else {
                         // Roof
                         b *= 1.8;
-                        uv = v_world_position.xy*0.01;
+                        //uv = v_world_position.xy*0.01;
+                        const float pixel_scale = 695.;
+                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                        uv = gl_FragCoord.xy/pixel_scale;
+                        const float dot_wrap = 1000.;
+                        uv += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                        uv *= 5.00;
                         pattern = 1.-hatch(u_hatchmap,uv,b);
                     }
                     color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
