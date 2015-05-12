@@ -142,7 +142,7 @@
             }
         }
 
-        if (info_file != ''){
+        if (info_file != '' && window.self == window.top){
             document.getElementById('content').innerHTML = '<div class="info" onclick="loadMarkdown(\''+info_file+'\')"> [+info] </div>';
             //loadMarkdown(info_file);
         }
@@ -169,7 +169,6 @@
         map.setView(map_start_location.slice(0, 2), map_start_location[2]);
         var hash = new L.Hash(map);
 
-
         // Resize map to window
         function resizeMap() {
             document.getElementById('map').style.width = window.innerWidth + 'px';
@@ -185,6 +184,11 @@
             layer.addTo(map);
             renderShaders();
         });
+
+        //disable mousewheel zoom if iframed
+        if (window.self !== window.top) {
+          map.scrollWheelZoom.disable();
+        }
 
         // window.onload = function(){
 
