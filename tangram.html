@@ -23,10 +23,31 @@
     <!-- My stuff -->
     <link type='text/css' rel='stylesheet' href="css/style.css">
     <script type="text/javascript" src="src/glslCanvas.js"></script>
+
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        #ui-locator {
+            display: none;
+        }
+    </style>
+
   </head>
 
   <body>
     <div id="map"></div>
+    <div id="ui-locator">
+        <div id="citylocator">
+            <div class="citylocate-input-container">
+                <select class="js-citylocate-select2">
+                    <option disabled selected>Search</option>
+                </select>
+            </div>
+        </div>
+        <div id="geolocator">
+            <div class="geolocate-button" title="Get current location"><span class="geolocate-icon"></span></div>
+        </div>
+    </div>
     <div id="content"></div>
 
     <!-- 3rd party libraries -->
@@ -111,7 +132,7 @@
         loadShaders();
     }
 
-    (function () {
+    var map = (function () {
         'use strict';
 
         var map_start_location = [40.70531887544228, -74.00976419448853, 16];
@@ -143,7 +164,7 @@
             }
         }
 
-        if (info_file != ''){
+        if (info_file != '' && window.self == window.top){
             document.getElementById('content').innerHTML = '<div class="info" onclick="loadMarkdown(\''+info_file+'\')"> [+info] </div>';
             //loadMarkdown(info_file);
         }
@@ -157,6 +178,7 @@
 
         L.control.zoom({ position: 'topright' }).addTo(map);
 
+        map.attributionControl.setPrefix('<a href="http://leafletjs.com" title="A JS library for interactive maps" target="_blank">Leaflet</a>')
         var layer = Tangram.leafletLayer({
             scene: style_file,
             attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
@@ -168,7 +190,6 @@
 
         map.setView(map_start_location.slice(0, 2), map_start_location[2]);
         var hash = new L.Hash(map);
-
 
         // Resize map to window
         function resizeMap() {
@@ -186,8 +207,13 @@
             renderShaders();
         });
 
-        // window.onload = function(){
+        //disable mousewheel zoom if iframed
+        if (window.self !== window.top) {
+          map.scrollWheelZoom.disable();
+        }
 
+        // window.onload = function(){
+        return map;
         // };
     }());
 
@@ -202,5 +228,12 @@
     <script type="text/javascript">
       window.addEventListener("hashchange",function(){parent.postMessage(window.location.hash, "*")});
     </script>
+
+    <!-- Locator js -->
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script src="lib/locator/geolocate.js"></script>
+    <script src="lib/locator/findcity.js"></script>
+
   </body>
 </html>
