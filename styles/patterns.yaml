@@ -106,7 +106,7 @@ styles:
                         float gradient = floor(b*10.)*0.1;
                         float angle = 3.1415 * gradient;
                         pattern = getHatch(st,angle,gradient);
-                    } 
+                    }
                     //pattern *= clamp(v_world_position.z*0.1,0.,1.);
                     color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
     buildings-lines:
@@ -121,7 +121,7 @@ styles:
 sources:
     osm:
         type: TopoJSONTiles
-        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
 
 layers:
     earth:
@@ -167,7 +167,7 @@ layers:
         draw:
             lines:
                 order: 5
-                color: '#343434'    
+                color: '#343434'
                 width: 8
             outline:
                 order: 4
@@ -227,7 +227,7 @@ layers:
                 outline:
                     color: '#FDF5E6'
                     width: 4
-    
+
     buildings:
         data:
             source: osm
@@ -236,14 +236,19 @@ layers:
             buildings:
                 order: 6
                 color: Style.color.pseudoRandomColor()
-                extrude: true
             outline:
                 order: 7
                 style: buildings-lines
                 color: [0]
                 width: 2
                 tile_edges: true
-                extrude: true
+        3d-buildings:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                buildings:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+                outline:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
 
     road_labels:
         data: { source: osm, layer: roads }

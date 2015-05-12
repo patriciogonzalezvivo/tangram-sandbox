@@ -153,9 +153,9 @@ styles:
                         return mat2(cos(_angle),-sin(_angle),
                                     sin(_angle),cos(_angle));
                     }
-                    float random (in vec2 _st) { 
+                    float random (in vec2 _st) {
                         return fract(sin(dot(_st.xy,
-                                             vec2(12.9898,78.233)))* 
+                                             vec2(12.9898,78.233)))*
                             43758.5453123);
                     }
                     float noise (in vec2 _st) {
@@ -171,7 +171,7 @@ styles:
                         vec2 u = f * f * (3.0 - 2.0 * f);
 
                         return mix(a, b, u.x) +
-                                (c - a)* u.y * (1.0 - u.x) + 
+                                (c - a)* u.y * (1.0 - u.x) +
                                 (d - b) * u.x * u.y;
                     }
                     float getHatch(in vec2 _pos, float _angle, float _brigtness){
@@ -190,7 +190,7 @@ styles:
 sources:
     osm:
         type: TopoJSONTiles
-        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
 
 layers:
     earth:
@@ -209,7 +209,6 @@ layers:
             sand:
                 order: 1
                 color: [0.902,0.843,0.757]
-                interactive: true
 
     water:
         data:
@@ -270,7 +269,7 @@ layers:
                 roads:
                     color: pink
                     width: 3
-    
+
     buildings:
         data:
             source: osm
@@ -279,7 +278,11 @@ layers:
             wood:
                 order: 4
                 color: Style.color.pseudoRandomColor()
-                extrude: true
+        3d-buildings:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                wood:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
 
     road_labels:
         data: { source: osm, layer: roads }

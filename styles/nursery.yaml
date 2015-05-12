@@ -127,7 +127,7 @@ styles:
 
                         //float f = abs(cos(a*12.)*sin(a*3.))*.8+.1;
                         float f = abs(cos(a*12.)*sin(a*3.))*.6+0.15;
-                        
+
                         return 1.0-shape(r,f);
                     }
 
@@ -137,14 +137,14 @@ styles:
                         _pos = rotate2D(_pos, _angle );
                         return 1.0-smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
                     }
-                    
+
                 color: |
                     float b = random(getBrightness(color.rgb));
 
                     vec2 st = v_texcoord;
                     if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                         st = fract(v_world_position.xy*0.05);
-                    } 
+                    }
                     float pattern = 0.0;
 
                     if (b > 0.85){
@@ -165,12 +165,12 @@ styles:
                     }
 
                     color.rgb = mix(vec3(1.),color.rgb,pattern);
-                    
+
 
 sources:
     osm:
         type: TopoJSONTiles
-        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
 
 layers:
     earth:
@@ -178,7 +178,7 @@ layers:
             source: osm
             layer: earth
         draw:
-            floor: 
+            floor:
                 order: 0
                 color: '#ddeeee'
     landuse:
@@ -186,10 +186,9 @@ layers:
             source: osm
             layer: landuse
         draw:
-            floor: 
+            floor:
                 order: 1
                 color: [0.502,0.369,0.494]
-                interactive: true
 
     water:
         data:
@@ -207,7 +206,7 @@ layers:
         draw:
             lines:
                 order: 8
-                color: gray    
+                color: gray
                 width: 8
         highway:
             filter:
@@ -256,7 +255,7 @@ layers:
                     order: -3
                     color: pink
                     width: 3
-    
+
     buildings:
         data:
             source: osm
@@ -265,7 +264,11 @@ layers:
             walls:
                 order: 9
                 color: Style.color.pseudoRandomColor()
-                extrude: true
+        3d-buildings:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                walls:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
 
     road_labels:
         data: { source: osm, layer: roads }

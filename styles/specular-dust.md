@@ -1,6 +1,6 @@
 Style by [@patriciogv](https://twitter.com/patriciogv)
 
-Source Code: [style](https://github.com/patriciogonzalezvivo/tangram-sandbox/blob/gh-pages/styles/specular-dust.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
+Source Code: [style](https://github.com/tangrams/tangram-sandbox/blob/gh-pages/styles/specular-dust.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
 
 <a href="code.html#shaders/random.frag"><canvas class="canvas" data-fragment-url="shaders/random.frag" width="200px" height="200px"></canvas></a>
 #### Procedural random

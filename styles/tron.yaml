@@ -35,7 +35,7 @@ styles:
                     }
                     float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
                         _pos = fract(_pos*_zoom);
-                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) - 
+                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) -
                                  smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
                         return clamp(g.x+g.y,0.0,1.0);
                     }
@@ -60,14 +60,14 @@ styles:
                         return uv.x*uv.y;
                     }
                     float cross(in vec2 _st, float _size){
-                        return  box(_st, vec2(_size*0.5,_size*0.125)) + 
+                        return  box(_st, vec2(_size*0.5,_size*0.125)) +
                                 box(_st, vec2(_size*0.125,_size*0.5));
                     }
                 filter: |
                     vec2 pos = v_world_position.xy*0.01;
                     float pct = clamp(cross(fract(pos),0.2),0.0,1.0);
                     color.rgb = mix(vec3(0.051,0.071,0.278),vec3(0.654,0.897,1.000),pct);
-                    
+
     walls:
         base: polygons
         texcoords: true
@@ -77,7 +77,7 @@ styles:
                 global: |
                     float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
                         _pos = fract(_pos*_zoom);
-                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) - 
+                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) -
                                  smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
                         return clamp(g.x+g.y,0.0,1.0);
                     }
@@ -87,7 +87,7 @@ styles:
 sources:
     osm:
         type: TopoJSONTiles
-        url:  http://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
 layers:
     earth:
         data:
@@ -103,7 +103,6 @@ layers:
             grid:
                 order: 1
                 color: '#ff00ff'
-                interactive: true
     water:
         data:
             source: osm
@@ -179,15 +178,20 @@ layers:
             walls:
                 order: 6
                 color: [0, 0, 0]
-                extrude: true
             outline:
                 order: 7
                 style: lines
-                blend: add
                 color: [0.654,0.897,1.000]
                 width: 1px
                 tile_edges: true
-                extrude: true
+        3d-buildings:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                walls:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+                outline:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+
     road_labels:
         data: { source: osm, layer: roads }
         filter: { name: true, $zoom: { min: 14 } }
