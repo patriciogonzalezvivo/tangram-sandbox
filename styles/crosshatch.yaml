@@ -17,6 +17,10 @@ lights:
         diffuse: .5
         ambient: .3
 
+scene:
+    background:
+        color: [0.302,0.302,0.306]
+
 styles:
     buildings:
         base: polygons
