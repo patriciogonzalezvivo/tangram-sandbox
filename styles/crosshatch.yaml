@@ -301,18 +301,25 @@ layers:
         filter: { name: true, $zoom: { min: 14 } }
         draw:
             text:
-                order: 5
                 font:
                     typeface: Italic 16px Baskerville
                     fill: [0.976,0.953,0.890]
-                    stroke: black
+                    stroke: { color: black , width: 3 }
     places:
         data: { source: osm }
         filter: { name: true }
         draw:
             text:
-                order: 6
+                font:
+                    typeface: Italic 20px Baskerville
+                    fill: black
+                    stroke: { color: [0.976,0.953,0.890] , width: 7 }
+    landuse_labels:
+        data: { source: osm }
+        filter: { name: true, kind: park, $zoom: { min: 16 } }
+        draw:
+            text:
                 font:
                     typeface: Italic 18px Baskerville
                     fill: black
-                    stroke: { color: [0.976,0.953,0.890] , width: 3 }
+                    stroke: { color: [0.976,0.953,0.890] , width: 7 }
