@@ -260,13 +260,19 @@ layers:
             buildings:
                 order: 4
                 color: Style.color.pseudoRandomColor()
-                extrude: true
             buildings-lines:
                 order: 5
                 color: [0, 0, 0]
                 width: 1.
                 tile_edges: true
-                extrude: true
+        3d-buildings:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                buildings:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+                buildings-lines:
+                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+
     road_labels:
         data: { source: osm, layer: roads }
         filter: { name: true, $zoom: { min: 14 } }
