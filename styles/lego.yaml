@@ -25,7 +25,7 @@ styles:
         material:
             ambient: 0.8
             diffuse: 0.8
-            specular: 0.9
+            specular: 0.4
         shaders:
             blocks:
                 global: |
