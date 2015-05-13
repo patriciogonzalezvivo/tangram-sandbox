@@ -7,7 +7,7 @@ Personal aesthetic experiments using [tangram.js](https://github.com/tangrams/ta
 
 #### Materials & Procedural Textures
 [ ![](styles/patterns.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/patterns)
-[ ![](styles/lego.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/lego)
+[ ![](styles/lego.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/lego#19/40.70533/-74.00975)
 [ ![](styles/tron.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tron)
 [ ![](styles/matrix.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/matrix)
 
