@@ -64,6 +64,14 @@ styles:
                         return  box(_st, vec2(_size*0.5,_size*0.125)) +
                                 box(_st, vec2(_size*0.125,_size*0.5));
                     }
+                    vec2 getConstantPos(vec2 fragCoord){
+                        const float pixel_scale = 695.;
+                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                        vec2 st = fragCoord.xy/pixel_scale;
+                        const float dot_wrap = 1000.;
+                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                        return st;
+                    }
     roads:
         base: lines
         mix: matrix
@@ -92,7 +100,8 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec2 pos = v_world_position.xy*0.01;
+                    //vec2 pos = v_world_position.xy*0.01;
+                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
                     float pct = 0.001+noise(pos+u_time)*0.02*random(pos+u_time*0.5);
                     color.rgb = mix(vec3(0.031,0.047,0.035),vec3(0.643,0.851,0.690),grid(pos,10.,pct));
 
@@ -102,7 +111,8 @@ styles:
         shaders:
             blocks:
                 filter: |
-                    vec2 pos = v_world_position.xy*0.01;
+                    // vec2 pos = v_world_position.xy*0.01;
+                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
                     float pct = clamp(cross(fract(pos),0.2),0.0,1.0);
                     color.rgb = mix(vec3(0.004,0.051,0.008),vec3(0.173,0.235,0.200),pct);
 

@@ -39,8 +39,17 @@ styles:
                                  smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
                         return clamp(g.x+g.y,0.0,1.0);
                     }
+                    vec2 getConstantPos(vec2 fragCoord){
+                        const float pixel_scale = 695.;
+                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                        vec2 st = fragCoord.xy/pixel_scale;
+                        const float dot_wrap = 1000.;
+                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                        return st;
+                    }
                 filter: |
-                    vec2 pos = v_world_position.xy*0.01;
+                    //vec2 pos = v_world_position.xy*0.01;
+                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
                     float b = getBrightness(v_color.rgb);
                     color.rgb = v_color.rgb*grid(pos,10.,0.05+b*0.05)*(1.0-b);
     tiledCross:
@@ -63,8 +72,17 @@ styles:
                         return  box(_st, vec2(_size*0.5,_size*0.125)) +
                                 box(_st, vec2(_size*0.125,_size*0.5));
                     }
+                    vec2 getConstantPos(vec2 fragCoord){
+                        const float pixel_scale = 695.;
+                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                        vec2 st = fragCoord.xy/pixel_scale;
+                        const float dot_wrap = 1000.;
+                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                        return st;
+                    }
                 filter: |
-                    vec2 pos = v_world_position.xy*0.01;
+                    //vec2 pos = v_world_position.xy*0.01;
+                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
                     float pct = clamp(cross(fract(pos),0.2),0.0,1.0);
                     color.rgb = mix(vec3(0.051,0.071,0.278),vec3(0.654,0.897,1.000),pct);
 

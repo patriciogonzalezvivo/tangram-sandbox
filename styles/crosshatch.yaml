@@ -131,7 +131,6 @@ styles:
 
                     const float pixel_scale = 695.;
                     float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-
                     vec2 st = gl_FragCoord.xy/pixel_scale;
                     const float dot_wrap = 1000.;
                     st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
