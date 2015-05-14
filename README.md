@@ -17,6 +17,7 @@ Personal aesthetic experiments using [tangram.js](https://github.com/tangrams/ta
 
 #### Materials & Textures (procedural and files) & Filter
 [ ![](styles/crosshatch.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/crosshatch)
+[ ![](styles/pericoli.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/pericoli)
 [ ![](styles/sandbox-hsb.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-hsb)
 
 #### Materials & Textures (procedural and files) & LookUpTables Filters
