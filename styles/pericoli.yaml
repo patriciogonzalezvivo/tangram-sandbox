@@ -8,38 +8,42 @@ lights:
     light1:
         type: directional
         direction: [0, 1, -.5]
-        diffuse: .5
+        diffuse: .6
         ambient: .3
     # light2:
     #     type: point
-    #     position: [0, -500px, 500px]
+    #     position: [0, 0, 500px]
     #     origin: ground
     #     diffuse: .5
     #     ambient: .3
     lightTopLeft:
         type: point
-        position: [-400px, 0px, 500px]
+        position: [-500px, 200px, 500px]
         origin: ground
-        diffuse: .1
-        ambient: .03
+        diffuse: .35
+        ambient: .1
+        radius: 1000px
     lightTopRight:
         type: point
-        position: [400px, 0px, 500px]
+        position: [500px, 200px, 500px]
         origin: ground
-        diffuse: .1
-        ambient: .03
+        diffuse: .35
+        ambient: .1
+        radius: 1000px
     lightBottomRight:
         type: point
-        position: [400px, -600px, 500px]
+        position: [700px, -800px, 200px]
         origin: ground
-        diffuse: .2
-        ambient: .03
+        diffuse: .35
+        ambient: .1
+        radius: 1000px
     lightBottomLeft:
         type: point
-        position: [-400px, -600px, 500px]
+        position: [-700px, -800px, 200px]
         origin: ground
-        diffuse: .2
-        ambient: .03
+        diffuse: .35
+        ambient: .1
+        radius: 1000px
 
 
 scene:
