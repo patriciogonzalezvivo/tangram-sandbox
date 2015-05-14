@@ -4,8 +4,8 @@ Source Code: [style](https://github.com/tangrams/tangram-sandbox/blob/gh-pages/s
 
 Inspiration: 
 
-	- [@MatteoPericoli’s work](https://twitter.com/MatteoPericoli)
-	- [@thespite cross-hatching](http://www.clicktorelease.com/code/cross-hatching/)
+- [@MatteoPericoli’s work](https://twitter.com/MatteoPericoli)
+- [@thespite cross-hatching](http://www.clicktorelease.com/code/cross-hatching/)
 
 [ ![Lookup Croos Hatch table](styles/imgs/hatch-0002.png) ](code.html#shaders/crosshatch.frag&styles/imgs/hatch-0002.png)
 
