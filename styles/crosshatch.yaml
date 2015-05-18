@@ -301,7 +301,8 @@ layers:
         draw:
             text:
                 font:
-                    typeface: Italic 16px Baskerville
+                    # typeface: Italic 16px Baskerville
+                    typeface: 16px Baskerville
                     fill: [0.976,0.953,0.890]
                     stroke: { color: black , width: 3 }
     places:
@@ -309,8 +310,16 @@ layers:
         filter: { name: true }
         draw:
             text:
+                # text_source: |
+                #     function() {
+                #         //var names = ["Al Marj \u0627\u0644\u0645\u0631\u062c"];
+                #         var names = ["Algiers","Naples","Tripoli","Tunis","Banghazi","Palermo","Valletta","Ghardaia","Sabha","Tamanrasset","Catania","Constantine","Annaba","Misratah","Sousse","Zuwarah","Tmassah","Al Jabal Al Akhdar \u0627\u0644\u062c\u0628\u0644 \u0627\u0644\u0623\u062e\u0636\u0631","Al Jabal Al Gharbi \u0627\u0644\u062c\u0628\u0644 \u0627\u0644\u063a\u0631\u0628\u064a","Al Jifarah \u0627\u0644\u062c\u0641\u0627\u0631\u0629","Al Jufrah \u0627\u0644\u062c\u0641\u0631\u0629","Al Kufrah \u0627\u0644\u0643\u0641\u0631\u0629","Al Margab \u0627\u0644\u0645\u0631\u0642\u0628","Al Marj \u0627\u0644\u0645\u0631\u062c","Al Wahat \u0627\u0644\u0648\u0627\u062d\u0627\u062a","An Niquat Al Khums \u0627\u0644\u0646\u0642\u0627\u0637 \u0627\u0644\u062e\u0645\u0633","Ash Shati \u0648\u0627\u062f\u064a \u0627\u0644\u0634\u0627\u0637\u064a","Az Zawiyah \u0627\u0644\u0632\u0627\u0648\u064a\u0629","Basilicata","Calabria","Campania","Ghat \u063a\u0627\u062a","Ionian Sea","Malta","Mar Balear","Mediterranean Sea","Misratah \u0645\u0635\u0631\u0627\u062a\u0629","Murzuq \u0645\u0631\u0632\u0642","Nalut \u0646\u0627\u0644\u0648\u062a","Sabha \u0633\u0628\u0647\u0627","Sardegna","Sicilia","Surt \u0633\u0631\u062a","Tamanrasset - \u062a\u0645\u0646\u0631\u0627\u0633\u062a","Tripoli \u0637\u0631\u0627\u0628\u0644\u0633","Tunisie \u062a\u0648\u0646\u0633","Tyrrhenian Sea","Wadi Al Hayaa \u0648\u0627\u062f\u064a \u0627\u0644\u062d\u064a\u0627\u0629","\u0627\u0644\u062c\u0632\u0627\u0626\u0631  Alg\u00e9rie","\u0628\u0646\u063a\u0627\u0632\u064a","\u0644\u064a\u0628\u064a\u0627","\u0395\u03bb\u03bb\u03ac\u03b4\u03b1"];
+                #         return names[Math.floor(Math.random() * names.length)];
+                #         //return "London";
+                #     }
                 font:
                     typeface: Italic 20px Baskerville
+                    # typeface: 20px Baskerville
                     fill: black
                     stroke: { color: [0.976,0.953,0.890] , width: 7 }
     landuse_labels:
@@ -320,5 +329,6 @@ layers:
             text:
                 font:
                     typeface: Italic 18px Baskerville
+                    # typeface: 18px Baskerville
                     fill: black
                     stroke: { color: [0.976,0.953,0.890] , width: 7 }
