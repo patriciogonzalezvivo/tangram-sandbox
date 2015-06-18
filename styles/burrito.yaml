@@ -30,7 +30,8 @@ styles:
         material:
             normal:
                 texture: imgs/normal-0004.jpg
-                mapping: uv
+                mapping: triplanar
+                scale: 0.001
             diffuse:
                 texture: imgs/sem-sky-0001.jpg
                 mapping: spheremap
