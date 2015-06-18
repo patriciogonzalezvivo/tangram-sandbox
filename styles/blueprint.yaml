@@ -184,7 +184,7 @@ layers:
         filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
 
         highway:
-            filter: { kind: highway, $zoom: { min: 7 } }
+            filter: { kind: highway, $zoom: { min: 13 } }
             draw:
                 text:
                     font:
