@@ -18,29 +18,9 @@ styles:
         base: polygons
         shaders:
             blocks:
-                extensions: [OES_standard_derivatives]
                 global: |
-                    float aastep(float threshold, float value) {
-                      #ifdef GL_OES_standard_derivatives
-                        float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
-                        return smoothstep(threshold-afwidth, threshold+afwidth, value);
-                      #else
-                        return step(threshold, value);
-                      #endif  
-                    }
-                    
                     float getIntensity(vec3 a){ return (a.x+a.y+a.z)/3.0; }
-                    
-                    float hash(float n) { return fract(sin(n) * 1e4); }
                     float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
-
-                    float noise(float x) {
-                        float i = floor(x);
-                        float f = fract(x);
-                        float u = f * f * (3.0 - 2.0 * f);
-                        return mix(hash(i), hash(i + 1.0), u);
-                    }
-
                     float noise(vec2 x) {
                         vec2 i = floor(x);
                         vec2 f = fract(x);
@@ -53,12 +33,10 @@ styles:
                         vec2 u = f * f * (3.0 - 2.0 * f);
                         return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
                     }
-
                     float fbm( in vec2 p ){
                         float s = 0.0;
                         float m = 0.0;
                         float a = 0.5;
-
                         for(int i=0; i<2; i++ ){
                             s += a * noise(p);
                             m += a;
@@ -67,12 +45,10 @@ styles:
                         }
                         return s/m;
                     }
-                    
                     bool grid(vec2 _pos, float _res){
                         vec2 grid = fract(_pos*_res);
                         return grid.x < _res || grid.y < _res;
                     }
-                    
                     vec3 BluePrint(vec2 _pos){
                         vec2 st = _pos/u_resolution.xy-vec2(.5);
                         vec3 background = mix(  vec3(0.,0.5,0.8), 
@@ -107,7 +83,7 @@ styles:
                 color: |
                     if (dot(v_normal,vec3(0.,0.,1.)) == 0.0){
                         float lineWidth = 0.003*(u_tile_origin.z/20.0);
-                        color.rgb = 1.0-vec3(aastep(lineWidth,v_texcoord.x)-aastep(1.0-lineWidth,v_texcoord.x));
+                        color.rgb = 1.0-vec3(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
                     }
     buildingsLines:
         base: lines
@@ -132,7 +108,7 @@ styles:
             blocks:
                 color: |
                     float lineWidth = 0.1;
-                    float pct = 1.0-(aastep(lineWidth,v_texcoord.x)-aastep(1.0-lineWidth,v_texcoord.x));
+                    float pct = 1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
                     color.rgb = vec3(0.14+pct*0.1); 
 sources:
     osm:
