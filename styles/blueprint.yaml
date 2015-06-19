@@ -103,7 +103,7 @@ styles:
         shaders:
             blocks:
                 position: |
-                    position.z *= pow(2.0, max(1.0,(1.0-(u_map_position.z/20.0))*5.0) );
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 color: |
                     if (dot(v_normal,vec3(0.,0.,1.)) == 0.0){
                         float lineWidth = 0.003*(u_tile_origin.z/20.0);
@@ -116,12 +116,12 @@ styles:
         shaders:
             blocks:
                 width: |
-                    width *= min(pow(10.,position.z*0.001),1.2);
+                    width *= 0.2+min(pow(position.z*0.006,2.),.6);
                 position: |
-                    position.z *= pow(2.0, max(1.0,(1.0-(u_map_position.z/20.0))*5.0) );
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 filter: |
                     color.rgb = mix(BluePrint(gl_FragCoord.xy),
-                                    vec3(0.757,0.827,0.863),
+                                    vec3(1.),
                                     min(max(0.001,(u_map_position.z-13.))/3.,1.0) );
     roads:
         base: lines
@@ -193,9 +193,6 @@ layers:
                 buildingsLines:
                     order: 6
                     color: white
-                    width: 1px
-#                     width: function () { return  (1.0-Math.min(feature.height*.005,1.0)); }
-#                     width: function () { return  (5.0-Math.min(feature.height*.005,5.0)) * (16317.189204226 / Math.pow(2, $zoom)) ; }
                     width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
                     extrude: true
     road_labels:
@@ -214,5 +211,5 @@ layers:
             draw:
                 text:
                     font:
-                        fill: white
-                        typeface: 100 14px Helvetica
+                        fill: [0.940,0.958,0.966]
+                        typeface: 100 12px Helvetica
