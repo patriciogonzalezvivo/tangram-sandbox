@@ -8,26 +8,57 @@ lights:
     light1:
         type: directional
         direction: [0, 1, -.5]
-        diffuse: .5
+        diffuse: .6
         ambient: .3
-    light2:
+    # light2:
+    #     type: point
+    #     position: [0, 0, 500px]
+    #     origin: ground
+    #     diffuse: .5
+    #     ambient: .3
+    lightTopLeft:
         type: point
-        position: [0, -500px, 500px]
+        position: [-500px, 200px, 500px]
         origin: ground
-        diffuse: .5
-        ambient: .3
+        diffuse: .35
+        ambient: .1
+        radius: 1000px
+    lightTopRight:
+        type: point
+        position: [500px, 200px, 500px]
+        origin: ground
+        diffuse: .35
+        ambient: .1
+        radius: 1000px
+    lightBottomRight:
+        type: point
+        position: [700px, -800px, 200px]
+        origin: ground
+        diffuse: .35
+        ambient: .1
+        radius: 1000px
+    lightBottomLeft:
+        type: point
+        position: [-700px, -800px, 200px]
+        origin: ground
+        diffuse: .35
+        ambient: .1
+        radius: 1000px
+
 
 scene:
     background:
-        color: [0.302,0.302,0.306]
+        color: [0.788,0.773,0.765]
 
 styles:
     buildings:
         base: polygons
         texcoords: true
         material:
-            ambient: 1.
             diffuse: 1.
+            ambient:
+                texture: imgs/sem-pericoli.png
+                mapping: spheremap
         shaders:
             uniforms:
                 u_hatchmap: imgs/hatch-0002.png
@@ -88,7 +119,8 @@ styles:
                         uv *= 5.00;
                         pattern = 1.-hatch(u_hatchmap,uv,b);
                     }
-                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
+                    color.rgb = clamp(color.rgb+noise(v_texcoord*5.)*0.2,0.,1.);
+                    color.rgb *= mix(vec3(0.271,0.267,0.243),vec3(0.949,0.957,0.949),pattern);
     ink-lines:
         base: lines
         texcoords: true
@@ -122,38 +154,39 @@ styles:
         lighting: false
         shaders:
             uniforms:
-                    u_hatch: imgs/hatch_0.png
+                    u_hatch: imgs/hatch_1.png
             blocks:
+                global: |
+                    vec2 constCoord(in vec2 _st){
+                        const float pixel_scale = 695.;
+                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                        vec2 st = _st/pixel_scale;
+                        const float dot_wrap = 1000.;
+                        return st + mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                    }
                 filter: |
                     //float zoom = 1.0-(u_map_position.z/21.);
                     //float scale = 0.1*pow(0.0001,zoom*1.570796);
                     //vec2 st = v_world_position.xy*0.01*scale;
 
-                    const float pixel_scale = 695.;
-                    float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                    vec2 st = gl_FragCoord.xy/pixel_scale;
-                    const float dot_wrap = 1000.;
-                    st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                    st *= 4.00;
-
+                    vec2 st = constCoord(gl_FragCoord.xy)*4.00;
                     float pattern = 1.0-texture2D( u_hatch, fract(st) ).a;
-                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
+                    color.rgb = mix(vec3(0.271,0.267,0.243),vec3(0.949,0.957,0.949),pattern);
     landuse-hatch:
         base: polygons
         mix: earth-hatch
         shaders:
             uniforms:
                     u_hatch: imgs/hatch_2.png
-    paper:
+    water-hatch:
         base: polygons
-        texcoords: true
-        material:
-            normal:
-                texture: imgs/normal-0031.jpg
-                mapping: planar
-                scale: 0.001
-            ambient: 1.
-            diffuse: 1.
+        mix: earth-hatch
+        shaders:
+            uniforms:
+                    u_hatch: imgs/hatch_0.png
+            blocks:
+                filter: |
+                    color.rgb = mix(vec3(0.396,0.867,1.000),vec3(0.271,0.267,0.243),pattern);
 
 sources:
     osm:
@@ -168,11 +201,7 @@ layers:
         draw:
             earth-hatch:
                 order: 0
-                color: [[14,[1.,1.,1.]],[18,[1.,1.,1.]]]
-            outlines:
-                style: lines
-                color: [0.302,0.302,0.306]
-                width: 2
+                color: [0.271,0.267,0.243]
     landuse:
         data:
             source: osm
@@ -180,27 +209,22 @@ layers:
         draw:
             landuse-hatch:
                 order: 1
-                color: [0.302,0.302,0.306]
-                # color: | 
-                #     function () {
-                #         var zoom = $zoom;
-                #         zoom = 1.0-(zoom/21.);
-                #         var scale = Math.pow(0.0001,zoom*1.570796);
-                #         return [scale*10., 1, 1];
-                #     }
-            outline:
+                color: [0.271,0.267,0.243]
+            outlines:
+                order: 2
                 style: lines
-                color: [0.302, 0.302, 0.306]
-                width: 2
+                color: [0.949,0.957,0.949]
+                width: 5px
 
     water:
         data:
             source: osm
             layer: water
         draw:
-            paper:
-                order: 2
-                color: '#343434'
+            water-hatch:
+                order: 3
+                color: [0.271,0.267,0.243]
+            
 
     roads:
         data:
@@ -208,7 +232,7 @@ layers:
             layer: roads
         draw:
             ink-lines:
-                order: 3
+                order: 4
                 color: '#343434'
                 width: 8
             outline:
@@ -229,15 +253,10 @@ layers:
         tunnel:
             filter:
                 is_tunnel: yes
-            draw:
-                ink-lines:
-                    color: '#343434'
             rail:
                 filter:
                     kind: rail
-                draw:
-                    lines:
-                        width: 0
+                visible: false
         minor_road:
             filter:
                 kind: minor_road
@@ -264,14 +283,18 @@ layers:
             filter:
                 kind: rail
                 is_tunnel: no
-            draw:
-                ink-lines:
-                    color: '#343434'
-                    width: 3
-                outline:
-                    style: lines
-                    color: [0.976,0.953,0.890]
-                    width: 4
+            rail:
+                filter:
+                    kind: rail
+                visible: false
+            # draw:
+            #     ink-lines:
+            #         color: '#343434'
+            #         width: 3
+            #     outline:
+            #         style: lines
+            #         color: [0.976,0.953,0.890]
+            #         width: 4
     buildings:
         data:
             source: osm
@@ -279,14 +302,14 @@ layers:
         draw:
             buildings:
                 order: 4
-                color: Style.color.pseudoRandomColor()
+                # color: Style.color.pseudoRandomColor()
+                color: white
             outline:
                 style: lines
                 order: 5
                 color: [0.302,0.302,0.306]
                 width: 1px
                 extrude: true
-                tile_edges: true
         3d-buildings:
             filter: { $zoom: { min: 15 } }
             draw:
@@ -302,8 +325,9 @@ layers:
             text:
                 font:
                     typeface: Italic 16px Baskerville
-                    fill: [0.976,0.953,0.890]
-                    stroke: { color: black , width: 3 }
+                    fill: black
+                    stroke: { color: white , width: 3 }
+
     places:
         data: { source: osm }
         filter: { name: true }
@@ -312,7 +336,7 @@ layers:
                 font:
                     typeface: Italic 20px Baskerville
                     fill: black
-                    stroke: { color: [0.976,0.953,0.890] , width: 7 }
+                    stroke: { color: white , width: 7 }
     landuse_labels:
         data: { source: osm }
         filter: { name: true, kind: park, $zoom: { min: 16 } }
@@ -321,4 +345,4 @@ layers:
                 font:
                     typeface: Italic 18px Baskerville
                     fill: black
-                    stroke: { color: [0.976,0.953,0.890] , width: 7 }
+                    stroke: { color: white , width: 7 }

@@ -252,7 +252,7 @@ layers:
                 font:
                     typeface: Bold 14px Helvetica
                     fill: white
-                    stroke: black
+                    stroke: { color: black , width: 3 }
     places:
         data: { source: osm }
         filter: { name: true }

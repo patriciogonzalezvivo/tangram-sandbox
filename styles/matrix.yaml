@@ -64,6 +64,14 @@ styles:
                         return  box(_st, vec2(_size*0.5,_size*0.125)) +
                                 box(_st, vec2(_size*0.125,_size*0.5));
                     }
+                    vec2 getConstantPos(vec2 fragCoord){
+                        const float pixel_scale = 695.;
+                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                        vec2 st = fragCoord.xy/pixel_scale;
+                        const float dot_wrap = 1000.;
+                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                        return st;
+                    }
     roads:
         base: lines
         mix: matrix
@@ -71,14 +79,17 @@ styles:
             blocks:
                 color: |
                     vec2 st = v_texcoord.xy;
-                    vec2 rows = vec2(2.,20.);
-                    vec2 ipos = floor(st*rows);
+                    vec2 rows = vec2(1.,20.);
                     float t = u_time*12.;
-                    if (fract(st.x*rows.x * 0.5) > 0.5){
-                        ipos -= vec2(.0,floor(t));
-                    } else {
-                        ipos += vec2(.0,floor(t));
+                    vec2 ipos = vec2(0.);
+                    if ( v_color.r < 0.5) {
+                        rows.x = 2.;
+                        if (fract(st.x*rows.x * 0.5) < 0.5){
+                            t *= -1.0;
+                        } 
                     }
+                    ipos = floor(st*rows);
+                    ipos.y -= floor(t);
                     vec2 fpos = fract(st*rows);
                     vec2 center = (.5-fpos);
                     float pct = random(ipos);
@@ -92,7 +103,8 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec2 pos = v_world_position.xy*0.01;
+                    //vec2 pos = v_world_position.xy*0.01;
+                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
                     float pct = 0.001+noise(pos+u_time)*0.02*random(pos+u_time*0.5);
                     color.rgb = mix(vec3(0.031,0.047,0.035),vec3(0.643,0.851,0.690),grid(pos,10.,pct));
 
@@ -102,7 +114,8 @@ styles:
         shaders:
             blocks:
                 filter: |
-                    vec2 pos = v_world_position.xy*0.01;
+                    // vec2 pos = v_world_position.xy*0.01;
+                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
                     float pct = clamp(cross(fract(pos),0.2),0.0,1.0);
                     color.rgb = mix(vec3(0.004,0.051,0.008),vec3(0.173,0.235,0.200),pct);
 
@@ -175,13 +188,15 @@ layers:
                 order: 4
                 color: [0, 0, 0]
                 width: 8
+        oneway:
+            filter: { oneway: yes }
+            draw: { roads: { color: red } }
         highway:
             filter:
                 kind: highway
             draw:
                 roads:
                     order: 5
-                    color: [0, 0, 0]
                     width: 12
                 outline:
                     style: lines
@@ -203,14 +218,12 @@ layers:
                 kind: minor_road
             draw:
                 roads:
-                    color: [0,0,0]
                     width: 5
         path:
             filter:
                 kind: path
             draw:
                 roads:
-                    color: [0, 0, 0]
                     width: 3
         rail:
             filter:
@@ -218,7 +231,6 @@ layers:
                 is_tunnel: no
             draw:
                 roads:
-                    color: [0, 0, 0]
                     width: 3
     buildings:
         data:

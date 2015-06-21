@@ -4,13 +4,13 @@ body {
     padding: 0px;
 
     font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 #content {
     position: fixed;
     left: 0px;
-    top: 0px;
+    top: 50px;
     z-index: 1;
     background: white;
     opacity: 0.9;
@@ -35,29 +35,33 @@ body {
 }
 
 h1 {
-    font-size: 46px;
+    font-size: 40px;
     margin-top: 30px;
     margin-bottom: 0px;
     font-style: italic;
+    color: #575857;
 }
 
 h2 {
-    font-size: 34px;
+    font-size: 24px;
     margin-top: 20px;
     margin-bottom: 0px;
     font-style: italic;
+    color: #575857;
 }
 
 h3 {
-    font-size: 28px;
+    font-size: 20px;
     margin-top: 24px;
     margin-bottom: 0px;
+    color: #575857;
 }
 
 h4 {
     font-style: italic;
     font-size: 14px;
     text-align: center;
+    color: #575857;
 }
 
 h1, h2, h3, h4 {
