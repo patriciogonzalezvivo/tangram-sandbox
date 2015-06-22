@@ -1,6 +1,6 @@
 Style by [@patriciogv](https://twitter.com/patriciogv)
 
-Source Code: [style](https://github.com/tangrams/tangram-sandbox/blob/gh-pages/styles/sandbox-nashville.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
+Source Code: [style](http://tangrams.github.io/tangram-play/?style=https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/sandbox-nashville.yaml) | [tangram](https://github.com/tangrams/tangram)
 
 Inspiration: [sandbox](http://collegeadmissions.testmasters.com/wp-content/uploads/2015/01/Girl-in-her-sandbox.jpg)
 
