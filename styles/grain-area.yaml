@@ -1,4 +1,6 @@
-﻿cameras:
+﻿# Author @patriciogv - 2015
+
+cameras:
     perspective:
         type: perspective
         vanishing_point: [0, -500]
@@ -118,7 +120,7 @@ layers:
         filter: { $zoom: { min: 10 } }
         draw:
             polygons:
-                order: 50
+                order: 4
                 color: '#999'
         extruded:
             filter: { $zoom: { min: 10 } }
@@ -131,22 +133,9 @@ layers:
         filter: { not: { highway: service, kind: rail } }
         draw:
             flatlines:
-                order: 7
+                order: 3
                 color: [0.83, 0.83, 0.83]
                 width: function () { return Math.log($zoom); }
-    buildings:
-        data: { source: osm }
-        filter: { $zoom: { min: 14 } }
-        draw:
-            polygons:
-                order: 50
-                color: '#999'
-        extruded:
-            filter: { $zoom: { min: 15 } }
-            draw:
-                polygons:
-                    style: buildings
-                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
     roads:
         data: { source: osm }
         properties: { width: 3 }
@@ -155,42 +144,3 @@ layers:
                 order: 2
                 color: '#777'
                 width: 5
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
-
-        highway:
-            filter: { kind: highway, $zoom: { min: 5 } }
-            draw:
-                text:
-                    font:
-                        fill: '#666'
-                        typeface: 100 12px Helvetica
-                        stroke: { color: white, width: 3 }
-
-        not_highway:
-            filter: { not: { kind: highway }, $zoom: { min: 13 } }
-            draw:
-                text:
-                    font:
-                        fill: '#666'
-                        stroke: { color: white, width: 3 }
-                        typeface: 100 12px Helvetica
-
-            major_road:
-                filter: { kind: major_road, $zoom: { min: 14 } }
-                draw:
-                    text:
-                        font:
-                            typeface: 100 16px Helvetica
-                            stroke: { color: white, width: 3 }
-            minor_road:
-                filter: { kind: minor_road, railway: false, $zoom: { min: 15 } }
-                draw:
-                    text:
-                        font:
-                            typeface: 100 12px Helvetica
-                            stroke: { color: white, width: 3 }
-            small:
-                filter: { highway: [residential, unclassified], $zoom: { max: 15 } }
-                visible: false
