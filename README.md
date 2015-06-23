@@ -7,6 +7,9 @@ Personal experiments using [tangram.js](https://github.com/tangrams/tangram) 2D/
 
 #### Materials & Procedural Textures
 [ ![](styles/blueprint.png) ](tangram.html?styles/blueprint#16.575/40.70321/-74.00666)
+[ ![](styles/grain.png) ](tangram.html?styles/grain#16.575/40.70321/-74.00666)
+[ ![](styles/grain-roads.png) ](tangram.html?styles/grain-roads#16.575/40.70321/-74.00666)
+[ ![](styles/grain-area.png) ](tangram.html?styles/grain-area#16.575/40.70321/-74.00666)
 [ ![](styles/patterns.png) ](tangram.html?styles/patterns#17.375/40.70361/-74.01181)
 [ ![](styles/lego.png) ](tangram.html?styles/lego#19/40.70533/-74.00975)
 [ ![](styles/tron.png) ](tangram.html?styles/tron#16.975/40.70411/-74.00930)
