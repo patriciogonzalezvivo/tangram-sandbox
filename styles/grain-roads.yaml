@@ -1,4 +1,6 @@
-﻿cameras:
+﻿# Authors @patriciogv & @meetar - 2015
+
+cameras:
     perspective:
         type: perspective
         vanishing_point: [0, -500]
@@ -120,7 +122,7 @@ layers:
         filter: { $zoom: { min: 10 } }
         draw:
             polygons:
-                order: 50
+                order: 100
                 color: '#999'
         extruded:
             filter: { $zoom: { min: 10 } }
@@ -202,19 +204,6 @@ layers:
                 flatlines:
                     # let roads sort themselves past zoom 14
                     order: function() { return 6 + feature.sort_key; }
-    buildings:
-        data: { source: osm }
-        filter: { $zoom: { min: 14 } }
-        draw:
-            polygons:
-                order: 50
-                color: '#999'
-        extruded:
-            filter: { $zoom: { min: 15 } }
-            draw:
-                polygons:
-                    style: buildings
-                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
     road_labels:
         data: { source: osm, layer: roads }
         filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
@@ -224,18 +213,18 @@ layers:
             draw:
                 text:
                     font:
-                        fill: '#666'
-                        typeface: 100 12px Helvetica
-                        stroke: { color: white, width: 3 }
+                        fill: black
+                        typeface: 600 16px Helvetica
+                        stroke: { color: white, width: 5 }
 
         not_highway:
             filter: { not: { kind: highway }, $zoom: { min: 13 } }
             draw:
                 text:
                     font:
-                        fill: '#666'
+                        fill: black
                         stroke: { color: white, width: 3 }
-                        typeface: 100 12px Helvetica
+                        typeface: 500 16px Helvetica
 
             major_road:
                 filter: { kind: major_road, $zoom: { min: 14 } }
@@ -243,13 +232,13 @@ layers:
                     text:
                         font:
                             typeface: 100 16px Helvetica
-                            stroke: { color: white, width: 3 }
+                            stroke: { color: white, width: 5 }
             minor_road:
                 filter: { kind: minor_road, railway: false, $zoom: { min: 15 } }
                 draw:
                     text:
                         font:
-                            typeface: 100 12px Helvetica
+                            typeface: 100 14px Helvetica
                             stroke: { color: white, width: 3 }
             small:
                 filter: { highway: [residential, unclassified], $zoom: { max: 15 } }
