@@ -1,6 +1,6 @@
 Style by [@patriciogv](https://twitter.com/patriciogv)
 
-Source Code: [style](http://tangrams.github.io/tangram-play/?style=https://rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/blueprint.yaml#17.125/40.70463/-74.01009) | [tangram](https://github.com/tangrams/tangram)
+Source Code: [style](http://tangrams.github.io/tangram-play/?style=https://rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/grain.yaml#17.125/40.70463/-74.01009) | [tangram](https://github.com/tangrams/tangram)
 
 #### Procedural Grid and Grain
 

@@ -29,7 +29,7 @@
 
   <body>
     <div id="map"></div>
-    <div id="content"></div>
+    <div id="content" class="tag" ></div>
 
     <!-- 3rd party libraries -->
     <script src="src/leaflet/leaflet.js"></script>
@@ -96,7 +96,9 @@
 
     function loadMarkdown( url_file ){
         var mdText = fetchHTTP(url_file);
-        document.getElementById('content').innerHTML = marked(mdText);
+        var content = document.getElementById('content');
+        content.className = "full";
+        content.innerHTML = marked(mdText);
         captionizeImages();
 
         // Load codes tags that have "src" attributes
@@ -146,7 +148,7 @@
         }
 
         if (info_file != '' && window.self == window.top){
-            document.getElementById('content').innerHTML = '<div class="info" onclick="loadMarkdown(\''+info_file+'\')"> [+info] </div>';
+            document.getElementById('content').innerHTML = '<div class="info" onclick="loadMarkdown(\''+info_file+'\')"> More Info about this style </div>';
             //loadMarkdown(info_file);
         }
 
@@ -192,10 +194,7 @@
         if (window.self !== window.top) {
           map.scrollWheelZoom.disable();
         }
-
-        // window.onload = function(){
         return map;
-        // };
     }());
 
     MPZN.bug({

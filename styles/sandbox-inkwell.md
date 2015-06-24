@@ -1,8 +1,6 @@
 Style by [@patriciogv](https://twitter.com/patriciogv)
 
-Source Code: [style](https://github.com/tangrams/tangram-sandbox/blob/gh-pages/styles/sandbox-inkwell.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
-
-Inspiration: [sandbox](http://collegeadmissions.testmasters.com/wp-content/uploads/2015/01/Girl-in-her-sandbox.jpg)
+Source Code: [style](https://github.com/tangrams/tangram-sandbox/blob/gh-pages/styles/sandbox-inkwell.yaml) | [tangram](https://github.com/tangrams/tangram)
 
 <a href="code.html#shaders/wood.frag"><canvas class="canvas" data-fragment-url="shaders/wood.frag" width="200px" height="200px"></canvas></a>
 #### Procedural 3D Wood Textures

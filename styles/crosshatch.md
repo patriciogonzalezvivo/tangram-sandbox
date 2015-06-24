@@ -1,6 +1,6 @@
 Style by [@patriciogv](https://twitter.com/patriciogv)
 
-Source Code: [style](https://github.com/tangrams/tangram-sandbox/blob/gh-pages/styles/crosshatch.yaml) | [tangram](https://github.com/tangrams/tangram)| [patterns](http://tangrams.github.io/ProceduralTextures/)
+Source Code: [style](http://tangrams.github.io/tangram-play/?style=https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/crosshatch.yaml) | [tangram](https://github.com/tangrams/tangram)
 
 Inspiration: [@thespite cross-hatching](http://www.clicktorelease.com/code/cross-hatching/)
 
