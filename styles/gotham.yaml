@@ -256,11 +256,6 @@ layers:
             polygons:
                 order: 50
                 color: '#999'
-        modern:
-            filter: { kind: museum, $zoom: { min: 10 } }
-            draw:
-                polygons:
-                    style: modern-buildings
         offices:
             filter: function(){ return feature.height > 100; }
             draw:
@@ -273,4 +268,9 @@ layers:
                 polygons:
                     style: buildings
                     extrude: function () { return feature.height > 0 || $zoom >= 16; }
+        modern:
+            filter: { kind: museum, $zoom: { min: 10 } }
+            draw:
+                polygons:
+                    style: modern-buildings
         
