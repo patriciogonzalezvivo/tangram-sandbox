@@ -35,7 +35,7 @@ lights:
 styles:
     water:
         base: polygons
-        animated: true
+        animated: false
         material:
             ambient: 0.8
             diffuse: 1
@@ -51,12 +51,11 @@ styles:
                     }
                 color: |
                     vec2 pos = v_world_position.xy*0.1;
-                    float t = u_time*0.005;
+                    float t = 0.; //u_time*0.005;
                     vec2 ipos = floor(pos);
                     float rnd = random(ipos+t);
                     material.specular *= rnd*rnd;
     rainbow:
-        animated: true
         texcoords: true
         base: polygons
         material:
