@@ -78,7 +78,7 @@ styles:
         material:
             ambient: .7
             diffuse:
-                texture: imgs/sem-sky-0001.jpg
+                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/sem-sky-0001.jpg
                 mapping: spheremap
         shaders:
             blocks:
@@ -90,7 +90,7 @@ styles:
         texcoords: true
         material:
             normal:
-                texture: imgs/normal-0015.jpg
+                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/normal-0015.jpg
                 mapping: planar
                 scale: 0.01
             ambient: 1.8
@@ -110,7 +110,7 @@ styles:
         base: polygons
         material:
             normal:
-                texture: imgs/normal-0015.jpg
+                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/normal-0015.jpg
                 mapping: planar
                 scale: 0.01
             ambient: 0.8
@@ -120,7 +120,7 @@ styles:
         base: polygons
         material:
             normal:
-                texture: imgs/normal-0021.jpg
+                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/normal-0021.jpg
                 mapping: uv
             ambient: 0.8
             diffuse: 1
