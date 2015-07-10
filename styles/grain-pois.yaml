@@ -103,14 +103,30 @@ styles:
                     }
                 color: |
                     color.rgb = vec3(1.,0.,0.);
-                    color = vec4(cross(v_texcoord.xy,0.6));
-                    
+                    color = vec4(cross(v_texcoord.xy,0.6)); 
     pois_text:
+        mix: tools
         base: text
+        animated: true
         shaders:
             blocks:
                 position: |
                     position.y -= 14.0* u_meters_per_pixel;
+                color: |
+                    vec4 sum = vec4(0.0);
+                    vec2 st = v_texcoord;
+                    float time = u_time*random(u_tile_origin.xy);
+                    float rows = 300.;
+                    vec3 col = vec3(0.);
+                    col.r = texture2D(u_texture, vec2(st.x+0.003,st.y)).r;
+                    col.g = texture2D(u_texture, vec2(st.x+0.000,st.y)).g;
+                    col.b = texture2D(u_texture, vec2(st.x-0.003,st.y)).b;
+                    col = clamp(col * 0.5 + 0.5 * col * col * 1.2,0.0,1.0);
+                    col *= 0.7 + 0.3 * 20.0 * st.x * (1.0-st.x) * st.y * (1.0-st.y);
+                    col *= vec3(.5,.9,.8);
+                    col *= 0.9 + 0.1 * sin(10.0 * time + st.y * rows);
+                    col *= 0.97 + 0.03 * sin(110.0 * time);
+                    color = vec4(col,max(col.x,max(col.y,col.z)));
 sources:
     osm:
         type: TopoJSONTiles
