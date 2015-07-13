@@ -1,0 +1,166 @@
+﻿cameras:
+    perspective:
+        type: perspective
+sources:
+    osm:
+        type: TopoJSONTiles
+        url: //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
+lights:
+    light1:
+        type: directional
+        direction: [0, 1, -.5]
+        diffuse: .5
+        ambient: .1
+    light2:
+        type: point
+        position: [0, 200, 200px]
+        origin: ground
+        ambient: .15
+        diffuse: .15
+        specular: [1.000,1.000,0.058]
+    light3:
+        type: point
+        position: [200, -100, 200px]
+        origin: ground
+        ambient: .15
+        diffuse: .15
+        specular: [.0,0.4,.9]
+    light4:
+        type: point
+        position: [-200, -100, 200px]
+        origin: ground
+        ambient: .15
+        diffuse: .15
+        specular: [.5,0.,.5]
+styles:
+    water:
+        base: polygons
+        animated: false
+        material:
+            ambient: 0.8
+            diffuse: 1
+            specular: 1
+            shininess: 2.0
+        shaders:
+            blocks:
+                global: |
+                    float random(in vec2 _st){
+                        return fract(sin(dot(_st.xy,
+                                             vec2(12.9898,78.233)))*
+                            43758.5453123);
+                    }
+                color: |
+                    vec2 pos = v_world_position.xy*0.1;
+                    float t = 0.; //u_time*0.005;
+                    vec2 ipos = floor(pos);
+                    float rnd = random(ipos+t);
+                    material.specular *= rnd*rnd;
+    rainbow:
+        texcoords: true
+        base: polygons
+        material:
+            ambient: 0.8
+            diffuse: 1
+            specular: 1
+            shininess: 5.0
+        shaders:
+            blocks:
+                global: |
+                   vec3 hsb2rgb(in float hue, in float sat, in float bri) {
+                        vec3 rgb = clamp(abs(mod(hue*6.0+vec3(0.0,4.0,2.0), 6.0)-3.0)-1.0, 0.0, 1.0);
+                        rgb = rgb*rgb*(3.0-2.0*rgb);
+                        return bri * mix(vec3(1.0), rgb, sat);
+                    }
+                    float random(in vec3 _st){
+                        return fract(sin(dot(_st.xyz,
+                                             vec3(12.9898,78.233,32.4355)))*
+                            43758.5453123);
+                    }
+                color: |
+                    color.rgb *= hsb2rgb(abs(floor(v_texcoord.y * 10.0) / 10.0), .9, 1.);
+                    vec3 pos = v_world_position.xyz*0.5;
+                    vec3 ipos = floor(pos);
+                    float rnd = random(ipos);
+                    material.specular *= rnd*rnd;
+layers:
+    earth:
+        data:
+            source: osm
+            layer: earth
+        draw:
+            polygons:
+                order: 0
+                color: '#ddeeee'
+    landuse:
+        data:
+            source: osm
+            layer: landuse
+        draw:
+            rainbow:
+                order: 1
+                color: [1.000,1.000,1.000]
+
+    water:
+        data:
+            source: osm
+            layer: water
+        draw:
+            water:
+                order: 2
+                color: '#88bbee'
+
+    roads:
+        data:
+            source: osm
+            layer: roads
+        draw:
+            lines:
+                order: 3
+                color: gray
+                width: 8
+        highway:
+            filter:
+                kind: highway
+                draw:
+                    lines:
+                        color: [0.855,0.463,0.255]
+                        width: 12
+                    outline:
+                        style: lines
+                        color: grey
+                        width: 18
+        tunnel:
+            filter:
+                is_tunnel: yes
+            draw:
+                lines:
+                    color: tan
+        minor_road:
+            filter:
+                kind: minor_road
+            draw:
+                lines:
+                    color: lightgrey
+                    width: 5
+        path:
+            filter:
+                kind: path
+            draw:
+                lines:
+                    color: [0.8, 0.8, 0.8]
+                    width: 3
+        rail:
+            filter:
+                kind: rail
+                is_tunnel: no
+            draw:
+                lines:
+                    color: pink
+                    width: 3
+    buildings:
+        data: { source: osm }
+        draw:
+            rainbow:
+                order: 2
+                color: '#fff'
+                extrude: true

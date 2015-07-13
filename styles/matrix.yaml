@@ -1,4 +1,4 @@
-# Author @patriciogv - 2015
+﻿# Author @patriciogv - 2015
 
 cameras:
     camera1:
@@ -12,28 +12,29 @@ styles:
         shaders:
             blocks:
                 global: |
-                    float random(in float x){
-                        return fract(sin(x)*43758.5453);
+                    // GridTile
+                    //=============================
+                    varying vec3 v_pos;
+                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
+                    bool TileGrid(vec2 st, float res, float press){
+                        vec2 grid = fract(st*res);
+                        return grid.x < res*press || grid.y < res*press;
                     }
-                    float random(in vec2 st){
-                        return fract(sin(dot(st.xy ,vec2(12.9898,78.233))) * 43758.5453);
+                    float TileGrid(float res){
+                        vec2 st = TileCoords()*100.*res;
+                        float pct = 0.0;
+                        float press = 0.4+(1.0-fract(u_map_position.z))*0.1;
+                        if (TileGrid(st,0.01,press)) pct += 0.5;
+                        if (TileGrid(st,0.1,press)) pct += 0.1;
+                        return pct;
                     }
-                    float noise (in vec2 _st) {
-                        vec2 i = floor(_st);
-                        vec2 f = fract(_st);
-
-                        // Four corners in 2D of a tile
-                        float a = random(i);
-                        float b = random(i + vec2(1.0, 0.0));
-                        float c = random(i + vec2(0.0, 1.0));
-                        float d = random(i + vec2(1.0, 1.0));
-
-                        vec2 u = f * f * (3.0 - 2.0 * f);
-
-                        return mix(a, b, u.x) +
-                                (c - a)* u.y * (1.0 - u.x) +
-                                (d - b) * u.x * u.y;
-                    }
+                    float TileGrid(){ return mix(TileGrid(1.),TileGrid(2.),fract(u_map_position.z)); }
+                    // Random
+                    //=============================
+                    float random(float x){ return fract(sin(x)*43758.5453);}
+                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+                    //  Matrix
+                    //=============================
                     float randomChar(in vec2 outer,in vec2 inner){
                         float grid = 5.;
                         vec2 margin = vec2(.2,.05);
@@ -41,15 +42,16 @@ styles:
                         vec2 borders = step(margin,inner)*step(margin,1.-inner);
                         return step(.5,random(outer*seed+floor(inner*grid))) * borders.x * borders.y;
                     }
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
+                    //  Grid
+                    //=============================
                     float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
                         _pos = fract(_pos*_zoom);
                         vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) -
                                  smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
                         return clamp(g.x+g.y,0.0,1.0);
                     }
+                    //  Crosses
+                    //=============================
                     float box(in vec2 _st, in vec2 _size){
                         _size = vec2(0.5) - _size*0.5;
                         vec2 uv = smoothstep(_size,
@@ -64,14 +66,9 @@ styles:
                         return  box(_st, vec2(_size*0.5,_size*0.125)) +
                                 box(_st, vec2(_size*0.125,_size*0.5));
                     }
-                    vec2 getConstantPos(vec2 fragCoord){
-                        const float pixel_scale = 695.;
-                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                        vec2 st = fragCoord.xy/pixel_scale;
-                        const float dot_wrap = 1000.;
-                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                        return st;
-                    }
+                position: |
+                    // GridTile
+                    v_pos = a_position;
     roads:
         base: lines
         mix: matrix
@@ -103,10 +100,7 @@ styles:
         shaders:
             blocks:
                 color: |
-                    //vec2 pos = v_world_position.xy*0.01;
-                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
-                    float pct = 0.001+noise(pos+u_time)*0.02*random(pos+u_time*0.5);
-                    color.rgb = mix(vec3(0.031,0.047,0.035),vec3(0.643,0.851,0.690),grid(pos,10.,pct));
+                    color.rgb = mix(vec3(0.031,0.047,0.035),color.rgb,TileGrid());
 
     tiledCross:
         base: polygons
@@ -115,9 +109,12 @@ styles:
             blocks:
                 filter: |
                     // vec2 pos = v_world_position.xy*0.01;
-                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
-                    float pct = clamp(cross(fract(pos),0.2),0.0,1.0);
-                    color.rgb = mix(vec3(0.004,0.051,0.008),vec3(0.173,0.235,0.200),pct);
+                    vec2 pos = (TileCoords()+vec2(.5));
+                    float pct = clamp(cross(fract(pos),0.1),0.0,1.0);
+                    color *= pct;
+                    pos = (TileCoords()*10.+vec2(.5));
+                    pct = clamp(cross(fract(pos),0.3),0.0,0.8);
+                    color.rgb += vec3(0.173,0.235,0.200)*pct;
 
     buildings:
         base: polygons
@@ -147,33 +144,59 @@ styles:
                         // Roof
                         color.rgb = vec3(0.);
                     }
+    places_icons:
+        base: points
+        mix: matrix
+        shaders:
+            blocks:
+                color: |
+                    color *= clamp(cross(v_texcoord.xy,1.),0.,1.)*.9;
+    places_label:
+        base: text
+        animated: true
+        shaders:
+            blocks:
+                position: |
+                    position.y -= 10.0* u_meters_per_pixel;
+                color: |
+                    vec4 sum = vec4(0.0);
+                    vec2 st = v_texcoord;
+                    float time = u_time;
+                    float rows = 300.;
+                    vec3 col = vec3(0.);
+                    col.r = texture2D(u_texture, vec2(st.x+0.003,st.y)).r;
+                    col.g = texture2D(u_texture, vec2(st.x+0.000,st.y)).g;
+                    col.b = texture2D(u_texture, vec2(st.x-0.003,st.y)).b;
+                    col = clamp(col * 0.5 + 0.5 * col * col * 1.2,0.0,1.0);
+                    col *= 0.7 + 0.3 * 20.0 * st.x * (1.0-st.x) * st.y * (1.0-st.y);
+                    col *= vec3(0.643,0.851,0.690)*1.5;
+                    col *= 0.9 + 0.1 * sin(10.0 * time + st.y * rows);
+                    col *= 0.97 + 0.03 * sin(110.0 * time);
+                    color = vec4(col,max(col.x,max(col.y,col.z)));
 sources:
     osm:
         type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-x4i7gmA
 layers:
     earth:
-        data:
-            source: osm
-        draw:
-            polygons:
-                order: 0
-                color: [0.031,0.051,0.035]
-    landuse:
-        data:
-            source: osm
-        draw:
-            grid:
-                order: 1
-                color: [0.545,0.565,0.494]
-
-    water:
-        data:
-            source: osm
+        data: { source: osm }
         draw:
             tiledCross:
+                order: 0
+                color: [0.201,0.481,0.264]
+    landuse:
+        data: { source: osm }
+        draw:
+            tiledCross:
+                order: 1
+                color: [0.643,0.851,0.690]
+
+    water:
+        data: { source: osm }
+        draw:
+            grid:
                 order: 3
-                color: [0,0,0]
+                color: [0.201,0.481,0.264]
             outline:
                 order: 2
                 style: lines
@@ -181,8 +204,7 @@ layers:
                 width: 1px
                 tile_edges: false
     roads:
-        data:
-            source: osm
+        data: { source: osm }
         draw:
             roads:
                 order: 4
@@ -233,8 +255,7 @@ layers:
                 roads:
                     width: 3
     buildings:
-        data:
-            source: osm
+        data: { source: osm }
         draw:
             buildings:
                 order: 7
@@ -243,8 +264,7 @@ layers:
                 order: 6
                 style: lines
                 color: [0.643,0.851,0.690]
-                width: 1px
-                tile_edges: true
+                width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
         3d-buildings:
             filter: { $zoom: { min: 15 } }
             draw:
@@ -257,7 +277,7 @@ layers:
         data: { source: osm, layer: roads }
         filter: { name: true, not: { kind: rail }, $zoom: { min: 14 } }
         draw:
-            text:
+            label_effect:
                 font:
                     typeface: 14px Courier
                     fill: white
@@ -266,8 +286,12 @@ layers:
         data: { source: osm }
         filter: { name: true }
         draw:
-            text:
+            places_label:
                 font:
-                    typeface: Bold 18px Helvetica
-                    fill: black
-                    stroke: { color: white , width: 6 }
+                    typeface: Bold 20px Courier
+                    fill: white
+                    stroke: { color: black , width: 6 }
+            places_icons:
+                color: [0.643,0.851,0.690]
+                size: [[13, 12px], [15, 18px]]
+                interactive: true

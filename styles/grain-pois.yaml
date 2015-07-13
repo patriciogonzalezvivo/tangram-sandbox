@@ -70,8 +70,6 @@ styles:
         mix: tools
         shaders:
             blocks:
-                global: |
-                    
                 filter: |
                     color.rgb += vec3(.2)*TileGrid();
                     color.rgb -= grain(gl_FragCoord.xy)*0.3;
@@ -84,10 +82,44 @@ styles:
                 color: |
                     color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
                     color.rgb -= grain(gl_FragCoord.xy)*0.3;
+    icons:
+        mix: tools
+        base: points
+        shaders:
+            blocks:
+                global: |
+                    float box(in vec2 _st, in vec2 _size){
+                        _size = vec2(0.5) - _size*0.5;
+                        vec2 uv = smoothstep(_size,
+                                            _size+vec2(0.001),
+                                            _st);
+                        uv *= smoothstep(_size,
+                                        _size+vec2(0.001),
+                                        vec2(1.0)-_st);
+                        return uv.x*uv.y;
+                    }
+                    float cross(in vec2 _st, float _size){
+                        return  box(_st, vec2(_size,_size/6.)) + 
+                                box(_st, vec2(_size/6.,_size));
+                    }
+                color: |
+                    color.rgb = vec3(1.,0.,0.);
+                    color = vec4(clamp(cross(v_texcoord.xy,0.6),0.,1.)); 
+                    color -= grain(gl_FragCoord.xy);
+    pois_text:
+        mix: tools
+        base: text
+        animated: true
+        shaders:
+            blocks:
+                position: |
+                    position.y -= 14.0* u_meters_per_pixel;
+                color: |
+                    color -= grain(gl_FragCoord.xy);
 sources:
     osm:
         type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-x4i7gmA
 layers:
     water:
         data: { source: osm }
@@ -128,21 +160,18 @@ layers:
                 polygons:
                     style: buildings
                     extrude: function () { return feature.height > 0 || $zoom >= 16; }
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
-
-        highway:
-            filter: { kind: highway, $zoom: { min: 7 } }
-            draw:
-                text:
-                    font:
-                        fill: white
-                        typeface: 500 12px Helvetica
-        not_highway:
-            filter: { not: { kind: highway }, $zoom: { min: 13 } }
-            draw:
-                text:
-                    font:
-                        fill: white
-                        typeface: 100 11px Helvetica
+    poi_labels:
+        data: { source: osm, layer: pois }
+        filter: { name: true, not: { kind: [peak, viewpoint, bicycle_rental, car_sharing] } }
+        draw:
+            pois_text:
+                font:
+                    fill: white
+                    typeface: 500 12px Helvetica
+    poi_icons:
+        data: { source: osm, layer: pois }
+        filter: { name: true, not: { kind: [peak, viewpoint, bicycle_rental, car_sharing] }}
+        draw:
+            icons:
+                size: [[13, 12px], [15, 18px]]
+                interactive: true

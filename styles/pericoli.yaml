@@ -57,11 +57,11 @@ styles:
         material:
             diffuse: 1.
             ambient:
-                texture: imgs/sem-pericoli.png
+                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/sem-pericoli.png
                 mapping: spheremap
         shaders:
             uniforms:
-                u_hatchmap: imgs/hatch-0002.png
+                u_hatchmap: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch-0002.png
             blocks:
                 global: |
                     float random(in vec2 _st){
@@ -154,7 +154,7 @@ styles:
         lighting: false
         shaders:
             uniforms:
-                    u_hatch: imgs/hatch_1.png
+                    u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_1.png
             blocks:
                 global: |
                     vec2 constCoord(in vec2 _st){
@@ -177,13 +177,13 @@ styles:
         mix: earth-hatch
         shaders:
             uniforms:
-                    u_hatch: imgs/hatch_2.png
+                    u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_2.png
     water-hatch:
         base: polygons
         mix: earth-hatch
         shaders:
             uniforms:
-                    u_hatch: imgs/hatch_0.png
+                    u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_0.png
             blocks:
                 filter: |
                     color.rgb = mix(vec3(0.396,0.867,1.000),vec3(0.271,0.267,0.243),pattern);
