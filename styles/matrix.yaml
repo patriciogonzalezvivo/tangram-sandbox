@@ -109,13 +109,12 @@ styles:
         shaders:
             blocks:
                 filter: |
-                    // vec2 pos = v_world_position.xy*0.01;
                     vec2 pos = (TileCoords()+vec2(.5));
                     float pct = clamp(cross(fract(pos),0.1),0.0,1.0);
-                    color *= pct;
+                    color.rgb *= pct;
                     pos = (TileCoords()*10.+vec2(.5));
                     pct = clamp(cross(fract(pos),0.3),0.0,0.8);
-                    color.rgb += vec3(0.173,0.235,0.200)*pct;
+                    color.rgb = clamp(color.rgb+vec3(0.173,0.235,0.200)*pct,vec3(0.0),vec3(1.0));
 
     buildings:
         base: polygons
