@@ -90,9 +90,8 @@ styles:
                     vec2 fpos = fract(st*rows);
                     vec2 center = (.5-fpos);
                     float pct = random(ipos);
-                    float glow = (1.-dot(center,center)*3.)*2.0;
-                    color.rgb = vec3(0.757,0.784,0.710) * ( randomChar(ipos,fpos) * pct );
-                    color.rgb +=  vec3(0.027,0.180,0.063) * pct * glow;
+                    color.rgb = vec3(0.7,0.999,0.780) * ( randomChar(ipos,fpos) * pct * 1.5 );
+
 
     grid:
         base: polygons
@@ -142,7 +141,7 @@ styles:
                         float glow = (1.-dot(center,center)*3.)*2.0;
 
                         color.rgb = vec3(0.643,0.851,0.690) * ( randomChar(ipos,fpos) * pct )* 0.5;
-                        color.rgb += (vec3(0.027,0.180,0.063) * pct * glow)*0.5;
+                        color.rgb += (vec3(0.027,0.180,0.063) * pct * glow)*0.25;
                     } else {
                         // Roof
                         color.rgb = vec3(0.);
