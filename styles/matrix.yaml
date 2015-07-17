@@ -127,6 +127,8 @@ styles:
         animated: true
         shaders:
             blocks:
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 color: |
                     vec3 pos = v_world_position.xyz*0.01;
                     vec2 uv = v_texcoord.xy;
@@ -146,6 +148,16 @@ styles:
                         color.rgb = vec3(0.643,0.851,0.690) * ( randomChar(ipos,fpos) * pct )* 0.5;
                         color.rgb += (vec3(0.027,0.180,0.063) * pct * glow)*0.25;               
                     }
+    buildingsLines:
+        base: lines
+        mix: matrix
+        lighting: false
+        shaders:
+            blocks:
+                width: |
+                    width *= 0.2+min(pow(position.z*0.006,2.),.6);
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
     places_icons:
         base: points
         mix: matrix
@@ -274,18 +286,16 @@ layers:
             buildings:
                 order: 7
                 color: [0, 0, 0]
-            outline:
-                order: 6
-                style: lines
-                color: [0.643,0.851,0.690]
-                width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
         3d-buildings:
-            filter: { $zoom: { min: 15 } }
+            filter: { $zoom: { min: 13 } }
             draw:
                 buildings:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
-                outline:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+                    extrude: true
+                buildingsLines:
+                    order: 8
+                    color: [0.643,0.851,0.690]
+                    width: [[12, .1px], [14, 0.5px], [15, 1.5px], [17, 1.5px], [18, 2px]]
+                    extrude: true
 
     road_labels:
         data: { source: osm, layer: roads }
