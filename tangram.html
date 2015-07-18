@@ -22,8 +22,7 @@
 
     <!-- My stuff -->
     <link type='text/css' rel='stylesheet' href="css/style.css">
-    <script type="text/javascript" src="src/glslCanvas.js"></script>
-
+    <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/build/GlslCanvas.min.js"></script>
 
   </head>
 
@@ -57,12 +56,26 @@
         return response;
     }
 
-    function insertAfter(newElement,targetElement) {
-        var parent = targetElement.parentNode;
-        if (parent.lastChild == targetElement) {
-          parent.appendChild(newElement);
-        } else {
-          parent.insertBefore(newElement,targetElement.nextSibling);
+    window.requestAnimFrame = (function() {
+        return  window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+                    return window.setTimeout(callback, 1000/60);
+             };
+    })();
+    // Keep track of the mouse
+    var mouse = {x: 0, y: 0};
+    document.addEventListener('mousemove', function(e){ 
+        mouse.x = e.clientX || e.pageX; 
+        mouse.y = e.clientY || e.pageY 
+    }, false);
+    function removeElementsByClass(className){
+        var elements = document.getElementsByClassName(className);
+        while(elements.length > 0){
+            elements[0].parentNode.removeChild(elements[0]);
         }
     }
 
@@ -94,6 +107,15 @@
         }
     }
 
+    function insertAfter(newElement,targetElement) {
+        var parent = targetElement.parentNode;
+        if (parent.lastChild == targetElement) {
+          parent.appendChild(newElement);
+        } else {
+          parent.insertBefore(newElement,targetElement.nextSibling);
+        }
+    }
+
     function loadMarkdown( url_file ){
         var mdText = fetchHTTP(url_file);
         var content = document.getElementById('content');
@@ -112,7 +134,25 @@
                 hljs.highlightBlock(list[i]);
             }
         }
-        loadShaders();
+
+        loadCanvas();
+    }
+
+    var billboards = []; 
+    function loadCanvas() {
+        var canvas = document.getElementsByClassName("canvas");
+        console.log(canvas);
+        for (var i = 0; i < canvas.length; i++){
+            billboards.push(new GlslCanvas(canvas[i]));
+        }
+    }
+
+    function renderCanvas() {
+        for(var i = 0; i < billboards.length; i++){
+            billboards[i].setMouse(mouse);
+            billboards[i].render();
+        }
+        window.requestAnimFrame(renderCanvas);
     }
 
     var map = (function () {
@@ -187,7 +227,7 @@
         window.addEventListener('load', function () {
             // Scene initialized
             layer.addTo(map);
-            renderShaders();
+            renderCanvas();
         });
 
         //disable mousewheel zoom if iframed

@@ -1,4 +1,4 @@
-# Author @patriciogv - 2015
+﻿# Author @patriciogv - 2015
 
 cameras:
     camera1:
@@ -22,17 +22,50 @@ scene:
         color: [0.302,0.302,0.306]
 
 styles:
-    buildings:
+    earth-hatch:
+        base: polygons
+        lighting: false
+        mix: tools 
+        shaders:
+            uniforms:
+                    u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_0.png
+            blocks:
+                color: |
+                    vec2 st = TileCoords()*3.0 ;
+                    float pattern = 1.0-texture2D( u_hatch, fract(st) ).a;
+                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
+
+    landuse-hatch:
+        base: polygons
+        mix: earth-hatch
+        shaders:
+            uniforms:
+                    u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_2.png
+    paper:
         base: polygons
         texcoords: true
         material:
+            normal:
+                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/normal-0031.jpg
+                mapping: planar
+                scale: 0.001
             ambient: 1.
             diffuse: 1.
+    tools:
         shaders:
-            uniforms:
-                u_hatchmap: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch-0002.png
-            blocks:
+            blocks: 
                 global: |
+                    // Coord System
+                    //================================
+                    varying vec3 v_pos;
+                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
+                    // Color
+                    //================================
+                    float getBrightness(in vec3 _rgb){
+                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
+                    }
+                    // Random & Noise
+                    //================================
                     float random(in vec2 _st){
                         return fract(sin(dot(_st.xy,
                                              vec2(12.9898,78.233)))*
@@ -50,9 +83,8 @@ styles:
                                 (c - a)* u.y * (1.0 - u.x) +
                                 (d - b) * u.x * u.y;
                     }
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
+                    // Cross Hatch LUT
+                    //==============================
                     float hatch( sampler2D hatchmap, vec2 st, float brightness ){
                         st  = fract(st)/3.;
                         brightness = clamp(brightness,0.,0.9999999);
@@ -65,6 +97,31 @@ styles:
                                    texture2D( hatchmap,fract(pos2) ).a,
                                    1.0-fract(brightness*9.0));
                     }
+                position: |
+                    v_pos = a_position;
+    ink-lines:
+        base: lines
+        mix: tools
+        texcoords: true
+        lighting: false
+        shaders:
+            blocks:
+                color: |
+                    vec2 uv = v_texcoord;
+                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
+    buildings:
+        base: polygons
+        mix: tools
+        texcoords: true
+        material:
+            ambient: 1.
+            diffuse: 1.
+        shaders:
+            uniforms:
+                u_hatchmap: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch-0002.png
+            blocks:
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 filter: |
                     vec2 uv = v_texcoord;
                     float b = getBrightness(light_accumulator_diffuse.rgb);
@@ -89,221 +146,64 @@ styles:
                         pattern = 1.-hatch(u_hatchmap,uv,b);
                     }
                     color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
-    ink-lines:
+    buildingsLines:
         base: lines
-        texcoords: true
         lighting: false
         shaders:
             blocks:
-                global: |
-                    float random(in vec2 _st){
-                        return fract(sin(dot(_st.xy,
-                                             vec2(12.9898,78.233)))*
-                            43758.5453123);
-                    }
-                    float noise (in vec2 _st) {
-                        vec2 i = floor(_st);
-                        vec2 f = fract(_st);
-                        float a = random(i);
-                        float b = random(i + vec2(1.0, 0.0));
-                        float c = random(i + vec2(0.0, 1.0));
-                        float d = random(i + vec2(1.0, 1.0));
-                        vec2 u = f * f * (3.0 - 2.0 * f);
-                        return mix(a, b, u.x) +
-                                (c - a)* u.y * (1.0 - u.x) +
-                                (d - b) * u.x * u.y;
-                    }
-                color: |
-                    vec2 uv = v_texcoord;
-                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
-
-    earth-hatch:
-        base: polygons
-        lighting: false
-        shaders:
-            uniforms:
-                    u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_0.png
-            blocks:
-                filter: |
-                    //float zoom = 1.0-(u_map_position.z/21.);
-                    //float scale = 0.1*pow(0.0001,zoom*1.570796);
-                    //vec2 st = v_world_position.xy*0.01*scale;
-
-                    const float pixel_scale = 695.;
-                    float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                    vec2 st = gl_FragCoord.xy/pixel_scale;
-                    const float dot_wrap = 1000.;
-                    st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                    st *= 4.00;
-
-                    float pattern = 1.0-texture2D( u_hatch, fract(st) ).a;
-                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
-    landuse-hatch:
-        base: polygons
-        mix: earth-hatch
-        shaders:
-            uniforms:
-                    u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_2.png
-    paper:
-        base: polygons
-        texcoords: true
-        material:
-            normal:
-                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/normal-0031.jpg
-                mapping: planar
-                scale: 0.001
-            ambient: 1.
-            diffuse: 1.
-
+                width: |
+                    width *= 0.2+min(pow(position.z*0.006,2.),.6);
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
 sources:
     osm:
         type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-x4i7gmA
 
 layers:
     earth:
-        data:
-            source: osm
-            layer: earth
+        data: { source: osm }
         draw:
             earth-hatch:
                 order: 0
                 color: [[14,[1.,1.,1.]],[18,[1.,1.,1.]]]
-            outlines:
-                style: lines
-                color: [0.302,0.302,0.306]
-                width: 2
     landuse:
-        data:
-            source: osm
-            layer: landuse
+        data: { source: osm }
         draw:
             landuse-hatch:
                 order: 1
                 color: [0.302,0.302,0.306]
-                # color: | 
-                #     function () {
-                #         var zoom = $zoom;
-                #         zoom = 1.0-(zoom/21.);
-                #         var scale = Math.pow(0.0001,zoom*1.570796);
-                #         return [scale*10., 1, 1];
-                #     }
-            outline:
-                style: lines
-                color: [0.302, 0.302, 0.306]
-                width: 2
-
     water:
-        data:
-            source: osm
-            layer: water
+        data: { source: osm }
         draw:
             paper:
                 order: 2
                 color: '#343434'
-
     roads:
-        data:
-            source: osm
-            layer: roads
+        data: { source: osm }
+        filter: { not: { highway: service, kind: rail } }
+        properties: { width: 3 }
         draw:
             ink-lines:
                 order: 3
                 color: '#343434'
                 width: 8
-            outline:
-                style: lines
-                color: [0.976,0.953,0.890]
-                width: 10
-        highway:
-            filter:
-                kind: highway
-            draw:
-                ink-lines:
-                    color: '#343434'
-                    width: 12
-                outline:
-                    style: lines
-                    color: [0.976,0.953,0.890]
-                    width: 14
-        tunnel:
-            filter:
-                is_tunnel: yes
-            draw:
-                ink-lines:
-                    color: '#343434'
-            rail:
-                filter:
-                    kind: rail
-                draw:
-                    lines:
-                        width: 0
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                ink-lines:
-                    color: '#343434'
-                    width: 5
-                outline:
-                    style: lines
-                    color: [0.976,0.953,0.890]
-                    width: 6
-        path:
-            filter:
-                kind: path
-            draw:
-                ink-lines:
-                    color: '#343434'
-                    width: 3
-                outline:
-                    style: lines
-                    color: [0.976,0.953,0.890]
-                    width: 4
-        rail:
-            filter:
-                kind: rail
-                is_tunnel: no
-            draw:
-                ink-lines:
-                    color: '#343434'
-                    width: 3
-                outline:
-                    style: lines
-                    color: [0.976,0.953,0.890]
-                    width: 4
     buildings:
-        data:
-            source: osm
-            layer: buildings
+        data: { source: osm }
         draw:
             buildings:
                 order: 4
                 color: Style.color.pseudoRandomColor()
-            outline:
-                style: lines
-                order: 5
-                color: [0.302,0.302,0.306]
-                width: 1px
-                extrude: true
-                tile_edges: true
-        3d-buildings:
-            filter: { $zoom: { min: 15 } }
+        extruded:
+            filter: { $zoom: { min: 13 } }
             draw:
                 buildings:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
-                outline:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
-
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, $zoom: { min: 14 } }
-        draw:
-            text:
-                font:
-                    typeface: Italic 16px Baskerville
-                    fill: [0.976,0.953,0.890]
-                    stroke: { color: black , width: 3 }
+                    extrude: true
+                buildingsLines:
+                    order: 6
+                    width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
+                    extrude: true
+                    color: [0.217,0.217,0.217]
     places:
         data: { source: osm }
         filter: { name: true }

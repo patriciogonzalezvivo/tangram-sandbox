@@ -7,7 +7,6 @@ cameras:
         vanishing_point: [-250, -250] # relative to center of screen, in pixels
 styles:
     matrix:
-        animated: true
         texcoords: true
         shaders:
             blocks:
@@ -66,12 +65,17 @@ styles:
                         return  box(_st, vec2(_size*0.5,_size*0.125)) +
                                 box(_st, vec2(_size*0.125,_size*0.5));
                     }
+                    float cross(in vec2 _st, vec2 _size){
+                        return  box(_st, vec2(_size.x*0.5,_size.y*0.125)) +
+                                box(_st, vec2(_size.y*0.125,_size.x*0.5));
+                    }
                 position: |
                     // GridTile
                     v_pos = a_position;
     roads:
         base: lines
         mix: matrix
+        animated: true
         shaders:
             blocks:
                 color: |
@@ -90,13 +94,13 @@ styles:
                     vec2 fpos = fract(st*rows);
                     vec2 center = (.5-fpos);
                     float pct = random(ipos);
-                    float glow = (1.-dot(center,center)*3.)*2.0;
-                    color.rgb = vec3(0.757,0.784,0.710) * ( randomChar(ipos,fpos) * pct );
-                    color.rgb +=  vec3(0.027,0.180,0.063) * pct * glow;
+                    color.rgb = vec3(0.7,0.999,0.780) * ( randomChar(ipos,fpos) * pct * 1.5 );
+
 
     grid:
         base: polygons
         mix: matrix
+        animated: false
         shaders:
             blocks:
                 color: |
@@ -105,28 +109,31 @@ styles:
     tiledCross:
         base: polygons
         mix: matrix
+        animated: false
         shaders:
             blocks:
-                filter: |
-                    // vec2 pos = v_world_position.xy*0.01;
+                color: |
                     vec2 pos = (TileCoords()+vec2(.5));
                     float pct = clamp(cross(fract(pos),0.1),0.0,1.0);
-                    color *= pct;
+                    color.rgb *= pct;
                     pos = (TileCoords()*10.+vec2(.5));
                     pct = clamp(cross(fract(pos),0.3),0.0,0.8);
-                    color.rgb += vec3(0.173,0.235,0.200)*pct;
+                    color.rgb = clamp(color.rgb+vec3(0.173,0.235,0.200)*pct,vec3(0.0),vec3(1.0));
 
     buildings:
         base: polygons
         mix: matrix
         blend: add
+        animated: true
         shaders:
             blocks:
-                filter: |
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
+                color: |
                     vec3 pos = v_world_position.xyz*0.01;
                     vec2 uv = v_texcoord.xy;
                     float pct = grid(v_texcoord,10.,0.1)*0.5;
-                    if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
+                    {
                         // Wall
                         vec2 st = v_texcoord.xy;
                         float rows = 30.0;
@@ -139,21 +146,40 @@ styles:
                         float glow = (1.-dot(center,center)*3.)*2.0;
 
                         color.rgb = vec3(0.643,0.851,0.690) * ( randomChar(ipos,fpos) * pct )* 0.5;
-                        color.rgb += (vec3(0.027,0.180,0.063) * pct * glow)*0.5;
-                    } else {
-                        // Roof
-                        color.rgb = vec3(0.);
+                        color.rgb += (vec3(0.027,0.180,0.063) * pct * glow)*0.25;               
                     }
+    buildingsLines:
+        base: lines
+        mix: matrix
+        lighting: false
+        shaders:
+            blocks:
+                width: |
+                    width *= 0.2+min(pow(position.z*0.006,2.),.6);
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
     places_icons:
         base: points
         mix: matrix
+        animated: false
         shaders:
             blocks:
+                global: |
+                    mat2 rotate2d(float _angle){
+                        return mat2(cos(_angle),-sin(_angle),
+                                    sin(_angle),cos(_angle));
+                    }
                 color: |
-                    color *= clamp(cross(v_texcoord.xy,1.),0.,1.)*.9;
+                    vec2 st = v_texcoord.xy;
+                    st -= vec2(0.5);
+                    st = rotate2d(0.78539816339)*st;
+                    st += vec2(0.5);
+                    color.rgb = vec3(0.0);
+                    color.a = clamp(cross(st,vec2(.7,1.)),0.,1.)*.9;
+                    color += v_color * clamp(cross(st,.5),0.,1.)*.9;
     places_label:
         base: text
-        animated: true
+        animated: false
         shaders:
             blocks:
                 position: |
@@ -176,7 +202,7 @@ styles:
 sources:
     osm:
         type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-x4i7gmA
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?
 layers:
     earth:
         data: { source: osm }
@@ -260,18 +286,16 @@ layers:
             buildings:
                 order: 7
                 color: [0, 0, 0]
-            outline:
-                order: 6
-                style: lines
-                color: [0.643,0.851,0.690]
-                width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
         3d-buildings:
-            filter: { $zoom: { min: 15 } }
+            filter: { $zoom: { min: 13 } }
             draw:
                 buildings:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
-                outline:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+                    extrude: true
+                buildingsLines:
+                    order: 8
+                    color: [0.643,0.851,0.690]
+                    width: [[12, .1px], [14, 0.5px], [15, 1.5px], [17, 1.5px], [18, 2px]]
+                    extrude: true
 
     road_labels:
         data: { source: osm, layer: roads }
@@ -293,5 +317,5 @@ layers:
                     stroke: { color: black , width: 6 }
             places_icons:
                 color: [0.643,0.851,0.690]
-                size: [[13, 12px], [15, 18px]]
+                size: [[13, 40px], [15, 60px]]
                 interactive: true
