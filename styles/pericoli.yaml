@@ -178,7 +178,7 @@ styles:
 sources:
     osm:
         type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-x4i7gmA
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-JUsa0Gc
 layers:
     earth:
         data: { source: osm }
