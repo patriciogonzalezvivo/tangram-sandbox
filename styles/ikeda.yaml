@@ -93,9 +93,11 @@ styles:
                     position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 color: |
                     if (dot(v_normal,vec3(0.,0.,1.)) == 0.){
+                        float r = random(color.gb);
                         float amount = 0.5+random(color.rg)*0.5;
+                        
                         vec2 st = vec2(v_texcoord.x,v_world_position.z*0.005); 
-                        if ( random(color.gb) > .5) {
+                        if ( r > .3) {
                             // Grid
                             vec2 grid = vec2(100.0,50.);
                             st *= grid;
@@ -174,9 +176,10 @@ layers:
     landuse:
         data: { source: osm }
         draw:
-            draw:
+            lines:
                 order: 1
-                color: [0.536,0.536,0.536]
+                color: [0.703,0.703,0.703]
+                width: 1px
     water:
         data: { source: osm }
         draw:
