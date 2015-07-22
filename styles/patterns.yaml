@@ -1,11 +1,10 @@
-# Author @patriciogv - 2015
+﻿# Author @patriciogv - 2015
 
 cameras:
     camera1:
         type: perspective
         focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
         vanishing_point: [-250, -250] # relative to center of screen, in pixels
-
 lights:
     light1:
         type: directional
@@ -26,9 +25,20 @@ styles:
         shaders:
             blocks:
                 global: |
+                    // Random
+                    //=============================
                     float random( in float _x){
                         return fract(sin(_x)*1e4);
                     }
+                    // Color
+                    //=============================
+                    float getBrightness(in vec3 _rgb){
+                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
+                    }
+                    // Space
+                    //=============================
+                    varying vec3 v_pos;
+                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
                     vec2 rotate2D(vec2 _st, float _angle){
                       _st -= 0.5;
                       _st =  mat2(cos(_angle),-sin(_angle),
@@ -47,19 +57,21 @@ styles:
                         }
                         return fract(_st);
                     }
+                    // Shapes
+                    //=============================
                     float circle(vec2 _st, float _radius){
                       vec2 pos = vec2(0.5)-_st;
                       return smoothstep(1.0-_radius,1.0-_radius+_radius*0.2,1.-dot(pos,pos)*3.14);
                     }
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
-                    float getHatch(in vec2 _pos, float _angle, float _brigtness){
+                    float stripes(in vec2 _pos, float _angle, float _brigtness){
                         float scale = 20.0;
                         _pos *= scale;
                         _pos = rotate2D( _pos, _angle );
                         return smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
                     }
+                position: |
+                    // GridTile
+                    v_pos = a_position;
     plain:
         base: polygons
         mix: patterns
@@ -69,10 +81,10 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec2 st = v_world_position.xy*0.01;
+                    vec2 st = TileCoords()*5.;
+                    // st = v_world_position.xy*0.01;
                     float b = 1.0-getBrightness(color.rgb);
-                    float pattern = 0.0;
-                    pattern = getHatch(st,3.1415*b,b);
+                    float pattern = stripes(st,3.1415*b,b);
                     color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
     buildings:
         base: polygons
@@ -80,6 +92,8 @@ styles:
         texcoords: true
         shaders:
             blocks:
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 color: |
                     vec2 st = v_texcoord.xy;
                     float b = random(getBrightness(color.rgb));
@@ -105,9 +119,8 @@ styles:
                         }
                         float gradient = floor(b*10.)*0.1;
                         float angle = 3.1415 * gradient;
-                        pattern = getHatch(st,angle,gradient);
+                        pattern = stripes(st,angle,gradient);
                     }
-                    //pattern *= clamp(v_world_position.z*0.1,0.,1.);
                     color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
     buildings-lines:
         base: lines
@@ -115,19 +128,21 @@ styles:
         texcoords: true
         shaders:
             blocks:
+                width: |
+                    width *= 0.2+min(pow(position.z*0.006,2.),.6);
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 color: |
                     vec2 st = v_texcoord.xy;
                     color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),smoothstep(0.4,0.5,st.x));
 sources:
     osm:
         type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-JUsa0Gc
 
 layers:
     earth:
-        data:
-            source: osm
-            layer: earth
+        data: { source: osm }
         draw:
             plain:
                 order: 1
@@ -138,9 +153,7 @@ layers:
                 color: [0.204,0.204,0.204]
                 width: 2
     landuse:
-        data:
-            source: osm
-            layer: landuse
+        data: { source: osm }
         draw:
             plain:
                 order: 1
@@ -152,18 +165,13 @@ layers:
                 width: 2
 
     water:
-        data:
-            source: osm
-            layer: water
+        data: { source: osm }
         draw:
             polygons:
                 order: 3
                 color: '#343434'
-
     roads:
-        data:
-            source: osm
-            layer: roads
+        data: { source: osm }
         draw:
             lines:
                 order: 5
@@ -227,28 +235,27 @@ layers:
                 outline:
                     color: '#FDF5E6'
                     width: 4
-
     buildings:
-        data:
-            source: osm
-            layer: buildings
+        data: { source: osm }
         draw:
             buildings:
-                order: 6
+                order: 7
                 color: Style.color.pseudoRandomColor()
             outline:
-                order: 7
-                style: buildings-lines
-                color: [0]
-                width: 2
-                tile_edges: true
-        3d-buildings:
-            filter: { $zoom: { min: 15 } }
+                style: lines
+                order: 6
+                color: white
+                width: [[12, .1px], [14, 1px], [15, 2px], [17, 4px], [18, 5px]]
+        extruded:
+            filter: { $zoom: { min: 13 } }
             draw:
                 buildings:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
-                outline:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+                    extrude: true
+                buildings-lines:
+                    order: 8
+                    color: white
+                    width: [[12, .1px], [14, 1px], [15, 2px], [17, 4px], [18, 5px]]
+                    extrude: true
 
     road_labels:
         data: { source: osm, layer: roads }

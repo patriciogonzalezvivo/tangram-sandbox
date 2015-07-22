@@ -4,7 +4,7 @@
 sources:
     osm:
         type: TopoJSONTiles
-        url: //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
+        url: //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 lights:
     light1:
         type: directional

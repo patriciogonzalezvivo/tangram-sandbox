@@ -1,13 +1,96 @@
-# Author @patriciogv - 2015
+﻿# Author @patriciogv - 2015
 
 cameras:
     camera1:
         type: perspective
 styles:
+    tools:
+        lighting: false
+        shaders:
+            blocks:
+                global: |
+                    // Coord Systems
+                    //=============================
+                    varying vec3 v_pos;
+                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
+                    vec2 getConstantPos(vec2 fragCoord){
+                        const float pixel_scale = 695.;
+                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                        vec2 st = fragCoord.xy/pixel_scale;
+                        const float dot_wrap = 1000.;
+                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                        return st;
+                    }
+                    // Grids
+                    //=============================
+                    bool TileGrid(vec2 st, float res, float press){
+                        vec2 grid = fract(st*res);
+                        return grid.x < res*press || grid.y < res*press;
+                    }
+                    float TileGrid(float res){
+                        vec2 st = TileCoords()*100.*res;
+                        float pct = 0.0;
+                        float press = 0.4+(1.0-fract(u_map_position.z))*0.1;
+                        if (TileGrid(st,0.01,press)) pct += 0.5;
+                        if (TileGrid(st,0.1,press)) pct += 0.1;
+                        return pct;
+                    }
+                    float TileGrid(){ return mix(TileGrid(1.),TileGrid(2.),fract(u_map_position.z)); }
+                    float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
+                        _pos = fract(_pos*_zoom);
+                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) -
+                                 smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
+                        return clamp(g.x+g.y,0.0,1.0);
+                    }
+                    // Random
+                    //=============================
+                    float random(float x){ return fract(sin(x)*43758.5453);}
+                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+                    //  Crosses
+                    //=============================
+                    float box(in vec2 _st, in vec2 _size){
+                        _size = vec2(0.5) - _size*0.5;
+                        vec2 uv = smoothstep(_size,
+                                            _size+vec2(0.001),
+                                            _st);
+                        uv *= smoothstep(_size,
+                                        _size+vec2(0.001),
+                                        vec2(1.0)-_st);
+                        return uv.x*uv.y;
+                    }
+                    float cross(in vec2 _st, float _size){
+                        return  box(_st, vec2(_size*0.5,_size*0.125)) +
+                                box(_st, vec2(_size*0.125,_size*0.5));
+                    }
+                    float cross(in vec2 _st, vec2 _size){
+                        return  box(_st, vec2(_size.x*0.5,_size.y*0.125)) +
+                                box(_st, vec2(_size.y*0.125,_size.x*0.5));
+                    }
+                position: |
+                    // GridTile
+                    v_pos = a_position;
+    grid:
+        base: polygons
+        mix : tools
+        shaders:
+            blocks:
+                color: |
+                    vec2 pos = TileCoords()*4.;
+                    color.rgb = v_color.rgb*grid(pos,10.,0.05);
+    tiledCross:
+        base: polygons
+        mix: tools
+        shaders:
+            blocks:
+                color: |
+                    vec2 pos = TileCoords()*3.;
+                    float pct = clamp(cross(fract(pos),0.2),0.0,1.0);
+                    color.rgb = mix(vec3(0.051,0.071,0.278),vec3(0.654,0.897,1.000),pct);
     roads:
         base: lines
         animated: true
         texcoords: true
+        lighting: false
         shaders:
             blocks:
                 global: |
@@ -27,106 +110,46 @@ styles:
                     }
                     float pattern = getHatch( u_time*dir+st.xy*0.5, 3.1415*0.5, 0.5);
                     color.rgb = vec3(1.000,0.865,0.387)* pattern*sin(smoothstep(0.0,1.,st.x)*3.1415);
-
-    grid:
-        base: polygons
-        shaders:
-            blocks:
-                global: |
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
-                    float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
-                        _pos = fract(_pos*_zoom);
-                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) -
-                                 smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
-                        return clamp(g.x+g.y,0.0,1.0);
-                    }
-                    vec2 getConstantPos(vec2 fragCoord){
-                        const float pixel_scale = 695.;
-                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                        vec2 st = fragCoord.xy/pixel_scale;
-                        const float dot_wrap = 1000.;
-                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                        return st;
-                    }
-                filter: |
-                    //vec2 pos = v_world_position.xy*0.01;
-                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
-                    float b = getBrightness(v_color.rgb);
-                    color.rgb = v_color.rgb*grid(pos,10.,0.05+b*0.05)*(1.0-b);
-    tiledCross:
-        base: polygons
-        texcoords: true
-        shaders:
-            blocks:
-                global: |
-                    float box(in vec2 _st, in vec2 _size){
-                        _size = vec2(0.5) - _size*0.5;
-                        vec2 uv = smoothstep(_size,
-                                            _size+vec2(0.001),
-                                            _st);
-                        uv *= smoothstep(_size,
-                                        _size+vec2(0.001),
-                                        vec2(1.0)-_st);
-                        return uv.x*uv.y;
-                    }
-                    float cross(in vec2 _st, float _size){
-                        return  box(_st, vec2(_size*0.5,_size*0.125)) +
-                                box(_st, vec2(_size*0.125,_size*0.5));
-                    }
-                    vec2 getConstantPos(vec2 fragCoord){
-                        const float pixel_scale = 695.;
-                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                        vec2 st = fragCoord.xy/pixel_scale;
-                        const float dot_wrap = 1000.;
-                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                        return st;
-                    }
-                filter: |
-                    //vec2 pos = v_world_position.xy*0.01;
-                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
-                    float pct = clamp(cross(fract(pos),0.2),0.0,1.0);
-                    color.rgb = mix(vec3(0.051,0.071,0.278),vec3(0.654,0.897,1.000),pct);
-
     walls:
         base: polygons
+        mix: tools
         texcoords: true
         blend: add
         shaders:
             blocks:
-                global: |
-                    float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
-                        _pos = fract(_pos*_zoom);
-                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) -
-                                 smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
-                        return clamp(g.x+g.y,0.0,1.0);
-                    }
-                filter: |
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
+                color: |
                     float pct = grid(v_texcoord,10.,0.1)*0.5;
                     color.rgb = mix(vec3(0.051,0.071,0.278)*0.8,vec3(0.239,0.431,0.718)*0.6,pct)*0.5;
+    walls-outline:
+        base: lines
+        lighting: false
+        shaders:
+            blocks:
+                width: |
+                    width *= 0.2+min(pow(position.z*0.006,2.),.6);
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
 sources:
     osm:
         type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-JUsa0Gc
 layers:
     earth:
-        data:
-            source: osm
+        data: { source: osm }  
         draw:
             grid:
                 order: 0
-                color: '#ddeeee'
+                color: [0.101,0.203,0.203]
     landuse:
-        data:
-            source: osm
+        data: { source: osm }
         draw:
             grid:
                 order: 1
                 color: '#ff00ff'
     water:
-        data:
-            source: osm
+        data: { source: osm }
         draw:
             tiledCross:
                 order: 2
@@ -138,8 +161,7 @@ layers:
                 width: 1px
                 tile_edges: false
     roads:
-        data:
-            source: osm
+        data: { source: osm }
         draw:
             roads:
                 order: 4
@@ -188,26 +210,30 @@ layers:
                 roads:
                     width: 3
     buildings:
-        data:
-            source: osm
+        data: { source: osm }
         draw:
             walls:
                 order: 6
                 color: [0, 0, 0]
-            outline:
-                order: 7
+            baseline:
                 style: lines
+                order: 5
+                width: [[12, .1px], [18, 0.5m]]
+                color: [0.654,0.897,1.000]
+            walls-outline:
+                order: 7
                 color: [0.654,0.897,1.000]
                 width: 1px
-                tile_edges: true
-        3d-buildings:
-            filter: { $zoom: { min: 15 } }
+        extruded:
+            filter: { $zoom: { min: 13 } }
             draw:
                 walls:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
-                outline:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
-
+                    extrude: true
+                walls-outline:
+                    order: 7
+                    width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
+                    extrude: true
+                    color: [0.654,0.897,1.000]
     road_labels:
         data: { source: osm, layer: roads }
         filter: { name: true, $zoom: { min: 14 } }
@@ -216,7 +242,7 @@ layers:
                 font:
                     typeface: Italic 12px Helvetica
                     fill: [.9,.9,1.]
-                    stroke: { color: black , width: 3 }
+                    stroke: { color: black , width: 3 }                    
     places:
         data: { source: osm }
         filter: { name: true }
