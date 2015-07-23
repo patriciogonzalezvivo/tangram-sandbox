@@ -76,19 +76,18 @@ styles:
                     }
                 color: |
                     vec2 st = v_texcoord.xy;
-                    float freq = random(floor(u_time))+random(floor(u_tile_origin.xy*.001))+abs(atan(u_time)*0.1);
-                    float t = 60.+u_time*(1.0-freq)*100.;
+                    float t = 24.*u_time;
+                    float freq = 100.;
                     if ( v_color.r < 0.5) {
                         float cols = 2.;
                         if (fract(st.x*cols* 0.5) < 0.5){
                             t *= -1.0;
                         }
                     }
-                    freq += random(floor(st.x));
                     float offset = 0.025;
-                    color.r = randomSerie(st.y, freq*100., t+offset);
-                    color.g = randomSerie(st.y, freq*100., t);
-                    color.b = randomSerie(st.y, freq*100., t-offset);
+                    color.r = randomSerie(st.y, freq, t+offset);
+                    color.g = randomSerie(st.y, freq, t);
+                    color.b = randomSerie(st.y, freq, t-offset);
                     color.rgb *= step(0.1,st.x)-step(0.9,st.x);
     simple-grid:
         base: polygons
@@ -195,27 +194,28 @@ styles:
                         
                         if ( r > .3) {
                             // DeFrag
-                            vec2 st = v_texcoord.xy; 
-                            vec2 grid = vec2(50.0,10.);
-                            st *= grid;
-
+                            vec2 st = v_texcoord.xy;
+                            st.y *= 1.+amount*2.;
+                            st.y = fract(st.y);
+                            st *= vec2(50.0,10.);
+                            
                             vec2 ipos = floor(st);
-
+                            ipos += vec2(0.,floor(v_texcoord.y*(1.+amount*5.)));
+                            
                             // Random Cells
-                            vec2 vel = floor(vec2(u_time*10.)); // time
+                            vec2 vel = floor(vec2(u_time*6.)); // time
                             vel *= vec2(-1.,0.); // direction
                             vel *= (step(1., mod(ipos.y,2.0))-0.5)*2.; // Oposite directions
                             vel *= random(ipos.y); // random speed
 
                             // 100%
-                            float totalCells = grid.x*grid.y;
-                            float t = mod(10.+u_time*(1.+5.*r+5.*amount)*max(grid.x,grid.y),totalCells);
-                            vec2 head = vec2(mod(t,grid.x), floor(t/grid.x));
+                            float t = mod(u_time*20.*(1.+r*.5)+(4324.*amount),500.);
+                            vec2 head = vec2(mod(t,50.), floor(t/50.));
 
                             vec2 offset = vec2(0.1,0.);
                             float pct = 1.0;
-                            pct *= step(grid.y-head.y,ipos.y);// Y
-                            pct += (1.0-step(head.x,ipos.x))*step(grid.y-head.y,ipos.y+1.);   // X
+                            pct *= step(10.-head.y,ipos.y);// Y
+                            pct += (1.0-step(head.x,ipos.x))*step(10.-head.y,ipos.y+1.);   // X
                             pct = clamp(pct,0.,1.);
                             color.rgb = vec3(pct);
                             
