@@ -4,6 +4,7 @@ Personal experiments using [tangram.js](https://github.com/tangrams/tangram) 2D/
 
 #### Materials & Procedural Textures
 
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/ikeda.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/ikeda#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/gotham.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/gotham#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/grain-area.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/grain-area#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/grain-roads.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/grain-roads#16.575/40.70321/-74.00666)
@@ -24,19 +25,3 @@ Personal experiments using [tangram.js](https://github.com/tangrams/tangram) 2D/
 #### Materials & Textures (procedural and files)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/nursery.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/nursery#19.825/40.70688/-74.01136)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox#17.675/40.70507/-74.00552)
-
-#### LookUpTables Filters (on Sandbox style)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-hsb.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-hsb)
-
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-brannan.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-brannan)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-earlybird.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-earlybird)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-gotham.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-gotham)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-hefe.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-hefe)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-inkwell.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-inkwell)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-lomofi.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-lomofi)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-lordkelvin.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-lordkelvin)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-nashville.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-nashville)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-Sutro.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-Sutro)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-Toaster.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-Toaster)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-Walden.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-Walden)
-[ ![](http://tangrams.github.io/tangram-sandbox/styles/sandbox-xPro.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/sandbox-xPro)
