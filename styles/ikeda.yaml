@@ -76,7 +76,7 @@ styles:
                     }
                 color: |
                     vec2 st = v_texcoord.xy;
-                    float t = 24.*u_time;
+                    float t = 12.*u_time;
                     float freq = 100.;
                     if ( v_color.r < 0.5) {
                         float cols = 2.;
