@@ -157,7 +157,7 @@ styles:
                     position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
 sources:
     osm:
-        type: TopoJSONTiles
+        type: TopoJSON
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-JUsa0Gc
 
 layers:
