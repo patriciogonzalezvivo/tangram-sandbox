@@ -144,7 +144,7 @@ styles:
                     color *= clamp(0.6+v_world_position.z*0.007,0.,1.);
 sources:
     osm:
-        type: TopoJSONTiles
+        type: TopoJSON
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 layers:
     earth:
