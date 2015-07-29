@@ -71,7 +71,7 @@ styles:
                     }
                 position: |
                     // GridTile
-                    v_pos = a_position;
+                    v_pos = a_position.xyz * 32767.;
     plain:
         base: polygons
         mix: patterns

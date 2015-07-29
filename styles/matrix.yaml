@@ -71,7 +71,7 @@ styles:
                     }
                 position: |
                     // GridTile
-                    v_pos = a_position;
+                    v_pos = a_position.xyz * 32767.;
     roads:
         base: lines
         mix: matrix
@@ -301,7 +301,7 @@ layers:
         data: { source: osm, layer: roads }
         filter: { name: true, not: { kind: rail }, $zoom: { min: 14 } }
         draw:
-            label_effect:
+            text:
                 font:
                     typeface: 14px Courier
                     fill: white
