@@ -1,0 +1,112 @@
+﻿cameras:
+    perspective:
+        type: perspective
+        vanishing_point: [0, -500]
+lights:
+    directional1:
+        type: directional
+        direction: [.1, .5, -1]
+        diffuse: .7
+        ambient: .5
+styles:
+    dots:
+        base: polygons
+        animated: true
+        shaders:
+            uniforms:
+                u_pattern: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/pixelpattern.png
+                u_pattern_small: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/pixelpattern-small.png
+            blocks:
+                global: |
+                    float circle(vec2 st, float radius){
+                        vec2 pos = vec2(0.5)-st;
+                        radius *= 0.75;
+                        return 1.-smoothstep(radius-(radius*0.01),radius+(radius*0.01),dot(pos,pos)*3.14);
+                    }
+                    float random(in vec2 st){ return fract(sin(dot(st.xy ,vec2(12.9898,78.233))) * 43758.5453); }
+                color: |
+                    // Coord System
+                    vec2 st = v_world_position.xy*0.0005;
+                    
+                    // we make a grid
+                    st *= 10.;
+                    
+                    // We offset 
+                    st.x += step(1.,mod(st.y,2.))*0.5;
+                    
+                    vec2 i_st = floor(st);
+                    vec2 f_st = fract(st);
+                    
+                    float rnd = random(i_st);
+                    
+                    color.rgb += rnd;
+
+    buildings:
+        base: polygons
+        shaders:
+            blocks:
+                color: |
+                    color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
+    
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            dots:
+                order: 2
+                color: '#353535'
+    earth:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 0
+                color: '#555'
+    landuse:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 1
+                color: '#666'
+    roads:
+        data: { source: osm }
+        properties: { width: 3 }
+        draw:
+            lines:
+                order: 2
+                color: '#777'
+                width: 5
+    buildings:
+        data: { source: osm }
+        filter: { $zoom: { min: 14 } }
+        draw:
+            polygons:
+                order: 50
+                color: '#999'
+        extruded:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                polygons:
+                    style: buildings
+                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
+    road_labels:
+        data: { source: osm, layer: roads }
+        filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
+
+        highway:
+            filter: { kind: highway, $zoom: { min: 7 } }
+            draw:
+                text:
+                    font:
+                        fill: white
+                        typeface: 500 12px Helvetica
+        not_highway:
+            filter: { not: { kind: highway }, $zoom: { min: 13 } }
+            draw:
+                text:
+                    font:
+                        fill: white
+                        typeface: 100 11px Helvetica
