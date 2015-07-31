@@ -104,9 +104,8 @@ styles:
                         return mix(texture2D(tex,fract(IN)), texture2D(tex,fract(OUT)), fract(u_map_position.z));
                     }
                 color: |
-                    vec2 st = TileCoords()*3.0 ;
                     float pattern = 1.0-TileTexture(u_hatch,3.).a;
-                    color.rgb = mix(vec3(0.271,0.267,0.243),vec3(0.949,0.957,0.949),pattern);
+                    color.rgb = mix(vec3(0.271,0.267,0.243), vec3(0.949,0.957,0.949), pattern);
     landuse-hatch:
         base: polygons
         mix: earth-hatch
