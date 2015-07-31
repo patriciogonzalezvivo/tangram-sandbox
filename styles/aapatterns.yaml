@@ -147,7 +147,7 @@ styles:
 sources:
     osm:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 
 layers:
     earth:
@@ -254,7 +254,7 @@ layers:
                 style: lines
                 order: 1
                 color: white
-                width: [[12, .1px], [14, 1px], [15, 5px], [17, 15px], [18, 20px]]
+                width: [[12, .1px], [14, 1px], [15, 2px], [17, 4px], [18, 5px]]
         extruded:
             filter: { $zoom: { min: 13 } }
             draw:
