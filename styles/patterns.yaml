@@ -23,6 +23,7 @@ styles:
             ambient: 1
             diffuse: 1
         shaders:
+            extensions: OES_standard_derivatives
             blocks:
                 global: |
                     // Random
@@ -59,16 +60,25 @@ styles:
                     }
                     // Shapes
                     //=============================
-                    float circle(vec2 _st, float _radius){
-                      vec2 pos = vec2(0.5)-_st;
-                      return smoothstep(1.0-_radius,1.0-_radius+_radius*0.2,1.-dot(pos,pos)*3.14);
+                    #ifdef TANGRAM_FRAGMENT_SHADER
+                    float aastep(float threshold, float value) {
+                      #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
+                        float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+                        return smoothstep(threshold-afwidth, threshold+afwidth, value);
+                      #else
+                        return step(threshold, value);
+                      #endif  
                     }
-                    float stripes(in vec2 _pos, float _angle, float _brigtness){
-                        float scale = 20.0;
-                        _pos *= scale;
-                        _pos = rotate2D( _pos, _angle );
-                        return smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
+                    float circle(vec2 st, float radius){
+                      vec2 pos = vec2(0.5)-st;
+                      return 1.0-aastep(radius,dot(pos,pos)*3.14);
                     }
+                    float stripes(vec2 st, float angle, float width){
+                        st = rotate2D(st*20., angle);
+                        return aastep(width,abs(sin(st.x*3.1415)));
+                    }
+                    #endif
+                    
                 position: |
                     // GridTile
                     v_pos = a_position.xyz * 32767.;
@@ -82,10 +92,9 @@ styles:
             blocks:
                 color: |
                     vec2 st = TileCoords()*5.;
-                    // st = v_world_position.xy*0.01;
                     float b = 1.0-getBrightness(color.rgb);
-                    float pattern = stripes(st,3.1415*b,b);
-                    color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
+                    float pattern = stripes(st,3.1415*b,b*5.);
+                    color.rgb = mix(vec3(0.704), vec3(1.000,0.968,0.908), pattern);
     buildings:
         base: polygons
         mix: patterns
@@ -95,8 +104,8 @@ styles:
                 position: |
                     position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 color: |
-                    vec2 st = v_texcoord.xy;
-                    float b = random(getBrightness(color.rgb));
+                    vec2 st = vec2(v_texcoord.x,v_world_position.z*0.01);
+                    float b = 0.1+random(getBrightness(color.rgb))*.9;
                     float pattern = 0.0;
                     if (b > 0.9){
                         if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
@@ -114,7 +123,9 @@ styles:
                         }
                         pattern = 1.0-circle(st,0.1);
                     } else {
-                        if( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
+                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
+                            st = v_texcoord.xy;
+                        } else {
                             st *= 0.5;
                         }
                         float gradient = floor(b*10.)*0.1;
@@ -245,7 +256,7 @@ layers:
                 style: lines
                 order: 6
                 color: white
-                width: [[12, .1px], [14, 1px], [15, 2px], [17, 4px], [18, 5px]]
+                width: [[12, .1px], [14, 1px], [15, 2px], [17, 5px], [18, 10px]]
         extruded:
             filter: { $zoom: { min: 13 } }
             draw:
