@@ -13,16 +13,29 @@ styles:
         base: polygons
         animated: true
         shaders:
+            extensions: OES_standard_derivatives
             uniforms:
                 u_pattern: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/pixelpattern.png
                 u_pattern_small: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/pixelpattern-small.png
             blocks:
                 global: |
+                    // AntiAliased Step
+                    //=============================
+                    #ifdef TANGRAM_FRAGMENT_SHADER
+                    float aastep(float threshold, float value) {
+                      #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
+                        float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+                        return smoothstep(threshold-afwidth, threshold+afwidth, value);
+                      #else
+                        return step(threshold, value);
+                      #endif  
+                    }
                     float circle(vec2 st, float radius){
                         vec2 pos = vec2(0.5)-st;
                         radius *= 0.75;
-                        return 1.-smoothstep(radius-(radius*0.01),radius+(radius*0.01),dot(pos,pos)*3.14);
+                        return 1.-aastep(radius,dot(pos,pos)*3.14);
                     }
+                    #endif
                     float random(in vec2 st){ return fract(sin(dot(st.xy ,vec2(12.9898,78.233))) * 43758.5453); }
                 color: |
                     // Coord System
@@ -39,7 +52,10 @@ styles:
                     
                     float rnd = random(i_st);
                     
-                    color.rgb += rnd;
+                    // color.rgb += rnd;
+                    rnd = floor(rnd*5.)*.25;
+                    color = texture2D(u_pattern_small,vec2(rnd,0.5));
+                    color.rgb *= circle(f_st,random(i_st+floor(u_time*5.*rnd)));
 
     buildings:
         base: polygons
