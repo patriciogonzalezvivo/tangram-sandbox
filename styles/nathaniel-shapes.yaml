@@ -13,7 +13,7 @@ lights:
 
 textures:
     pois:
-        url: images/poi_icons_18@2x.png
+        url: https://cdn.rawgit.com/tangrams/poi-labels-demo/gh-pages/images/poi_icons_18@2x.png
         filtering: mipmap
         sprites:
             # define sprites: [x origin, y origin, width, height]
