@@ -1,0 +1,245 @@
+cameras:
+    perspective:
+        type: isometric
+        vanishing_point: [0, -500]
+        
+styles:
+    flatlines:
+        base: lines
+        lighting: false # ignore lights
+    tools:
+        base: polygons
+        shaders:
+            blocks:
+                global: |
+                    // GridTile
+                    //=============================
+                    varying vec3 v_pos;
+                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
+                    bool grid(vec2 st, float res, float press){
+                        vec2 grid = fract(st*res);
+                        return grid.x < res*press || grid.y < res*press;
+                    }
+                    float TileGrid(float res){
+                        vec2 st = TileCoords()*100.*res;
+                        float pct = 0.0;
+                        float press = 0.4+(1.0-fract(u_map_position.z))*0.2;
+                        if (grid(st,0.01,press)) pct += 0.5;
+                        if (grid(st,0.1,press)) pct += 0.1;
+                        return pct;
+                    }
+                    float TileGrid(){ return mix(TileGrid(1.),TileGrid(2.),fract(u_map_position.z)); }
+                    // Grain
+                    //=============================
+                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+                    float noise(vec2 x) {
+                        vec2 i = floor(x);
+                        vec2 f = fract(x);
+                        float a = random(i);
+                        float b = random(i + vec2(1.0, 0.0));
+                        float c = random(i + vec2(0.0, 1.0));
+                        float d = random(i + vec2(1.0, 1.0));
+                        vec2 u = f * f * (3.0 - 2.0 * f);
+                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                    }
+                    float fbm( in vec2 p ){
+                        float s = 0.0;
+                        float m = 0.0;
+                        float a = 0.5;
+                        for(int i=0; i<2; i++ ){
+                            s += a * noise(p);
+                            m += a;
+                            a *= 0.5;
+                            p *= 2.0;
+                        }
+                        return s/m;
+                    }
+                    float grain(vec2 pos){
+                        vec2 st = pos/u_resolution.xy-vec2(.5);
+                        return dot(st,st)+(fbm(pos*0.6)*0.1);
+                    }
+                    // Stripes
+                    //=============================
+                    mat2 rotate2d(float angle){
+                        return mat2(cos(angle),-sin(angle),
+                                    sin(angle),cos(angle));
+                    }
+                    float stripes(vec2 st){
+                        st = rotate2d(3.14159265358*-0.25 )*st;
+                        //return step(.9,1.0-smoothstep(.5,1.,abs(sin(st.x*3.14159265358))));
+                        return step(.75,1.0-smoothstep(.75,1.,abs(sin(st.x*3.14159265358)))); // more spaced out stripes?
+                    }
+                position: |
+                    // GridTile
+                    v_pos = a_position.xyz * 32767.;
+    color1:
+        base: polygons
+        shaders:
+            blocks:
+                filter: |
+                    // mix white and green on both axes
+                    color.rgb = mix(vec3(1.0), vec3(0.970), gl_FragCoord.x / u_resolution.x + gl_FragCoord.y / u_resolution.y); 
+
+
+    ground:
+        base: polygons
+        mix: tools
+        shaders:
+            blocks:
+                filter: |
+                    //color.rgb -= grain(gl_FragCoord.xy)*0.2;
+
+    coast:
+        base: lines
+        mix: tools
+        lighting: false
+        blend: overlay
+        shaders:
+            blocks:
+                color: |
+                    const float pixel_scale = 695.;
+                    float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                    vec2 st = gl_FragCoord.xy/pixel_scale;
+                    const float dot_wrap = 1000.;
+                    st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                    
+                    //color = mix(color,vec4(0.),stripes(st*100.))*.8;
+                    //color = mix(color,vec4(color.rgb, 0.5),stripes(st*20.))*.8; // stripe from full to transparent
+                    color = mix(vec4(color.rgb, 0.9), vec4(0.), stripes(st*130.))*.8; // transparent stripes
+                    //color = mix(color,vec4(1., 0., 0., 1.),stripes(st*100.))*.8;
+                    
+                    color.rgb -= grain(gl_FragCoord.xy)*0.5;
+                filter: |
+                    color.rgb += vec3(.2)*TileGrid();
+                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
+
+    buildings_grid:
+        base: polygons
+        texcoords: true
+        shaders:
+            blocks:
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    vec2 f_st = fract(st*10.);
+                    vec2 i_st = floor(st*10.);
+                    // color.rg = f_st;
+                    
+                    vec2 pct = step(vec2(0.09),f_st);;
+                    color.rgb += mix(vec3(1.0), vec3(0.0),(1.0-(pct.x * pct.y)));
+                    
+                    if ( dot(vec3(0.,0.,1.),normal) == 1.0 ) {
+                        // If it's a roof
+                        color.rgb = vec3(0.988);
+                    }
+           
+    tiledCross:
+        base: polygons
+        texcoords: true
+        shaders:
+            blocks:
+                global: |
+                    float box(in vec2 _st, in vec2 _size){
+                        _size = vec2(0.5) - _size*0.75;
+                        vec2 uv = smoothstep(_size,
+                                            _size+vec2(0.001),
+                                            _st);
+                        uv *= smoothstep(_size,
+                                        _size+vec2(0.001),
+                                        vec2(1.0)-_st);
+                        return uv.x*uv.y;
+                    }
+                    float cross(in vec2 _st, float _size){
+                        return  box(_st, vec2(_size*0.35,_size*0.35)) +
+                                box(_st, vec2(_size*0.35,_size*0.35));
+                    }
+                    vec2 getConstantPos(vec2 fragCoord){
+                        const float pixel_scale = 75.;
+                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                        vec2 st = fragCoord.xy/pixel_scale;
+                        const float dot_wrap = 10000.;
+                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                        return st;
+                    }
+                filter: |
+                    vec2 pos = getConstantPos(gl_FragCoord.xy)*4.0;
+                    float pct = clamp(cross(fract(pos),0.4),0.0,1.0);
+                    color.rgb = mix(vec3(1.0),vec3(0.8),pct);
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            coast:
+                order: 4
+                width: 4px
+                color: [0.761, 0.761, 0.761]
+            ground:
+                order: 0
+                color: [1.0,1.0,1.0]
+    water:
+        data: { source: osm }
+        draw:
+            color1:
+                order: 1
+                color: [0.8,0.8,0.8]
+                
+    landuse:
+        data: { source: osm }
+        park:
+            filter:
+                kind: park
+            draw:
+                tiledCross:
+                    order: 5
+                    color: [0.200, 0.204, 0.847]
+
+
+    buildings:
+        data: { source: osm }
+        filter: { $zoom: { min: 14 } }
+        draw:
+            polygons:
+                order: 5
+                color: '#999'
+            outline:
+                style: lines
+                order: 6
+                color: [0.624, 0.624, 0.624]
+                width: [[14,0.1px],[16,1px],[18,0.5px]]
+                extrude: true
+                tile_edges: true
+        extruded:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                polygons:
+                    style: buildings_grid
+                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
+
+    osm-roads:
+        data: { source: osm, layer: roads }
+        filter: { not: { highway: service, kind: rail }, $zoom: { min: 8 } }
+
+        highway:
+            filter: { kind: highway }
+            draw:
+                flatlines:
+                    # put highways on top of all other roads
+                    order: 8
+                    color: [0.349, 0.349, 0.349]
+                    width: [[7, 0.25px], [9, 0.35px], [11, 0.5px], [13, 1.0px], [14, 3px], [15, 4px]]
+                    # outline:
+                    #     color: [0.180,0.278,0.600]
+                    #     width: [[7, 1px], [9, 1.5px], [11, 2px], [14, 3.5px]]
+
+            link:
+                filter: { is_link: yes } # on- and off-ramps, etc
+                draw:
+                    flatlines:
+                        color: [0.349, 0.349, 0.349]
+                        width: [[12, 0.5px],[14, 1px]]
+                        # outline:
+                        #     color: [0.180,0.278,0.600]
+                        #     width: [[12, 1px],[14, 4px]]
