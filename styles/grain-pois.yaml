@@ -1,4 +1,4 @@
-﻿# Author @patriciogv - 2015
+# Author @patriciogv - 2015
 
 cameras:
     perspective:
@@ -85,6 +85,7 @@ styles:
     icons:
         mix: tools
         base: points
+        blend: overlay
         shaders:
             blocks:
                 global: |
@@ -152,7 +153,7 @@ layers:
         filter: { $zoom: { min: 10 } }
         draw:
             polygons:
-                order: 50
+                order: 3
                 color: '#999'
         extruded:
             filter: { $zoom: { min: 10 } }
@@ -165,6 +166,7 @@ layers:
         filter: { name: true, not: { kind: [peak, viewpoint, bicycle_rental, car_sharing] } }
         draw:
             pois_text:
+                order: 5
                 font:
                     fill: white
                     typeface: 500 12px Helvetica
@@ -173,5 +175,6 @@ layers:
         filter: { name: true, not: { kind: [peak, viewpoint, bicycle_rental, car_sharing] }}
         draw:
             icons:
+                order: 6
                 size: [[13, 12px], [15, 18px]]
                 interactive: true
