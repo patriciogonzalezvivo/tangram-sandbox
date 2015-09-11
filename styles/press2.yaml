@@ -71,6 +71,16 @@ styles:
                     vec2 st = v_texcoord.xy;
                     float pattern = aastep(.5,pulse(st.x,.7,.1)+pulse(st.x,.35,.25));
                     color.rgb = mix(background,color.rgb,pattern);
+    b_border:
+        base: lines
+        mix: tools
+        texcoords: true
+        shaders:
+            blocks: 
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    float pattern = aastep(.5,pulse(st.x,.5,.2));
+                    color.rgb = mix(background,color.rgb,pattern);
                     
     waves:
         base: polygons
@@ -159,19 +169,27 @@ layers:
         data: { source: osm }
         draw: 
             frame: 
-                order: 0
+                order: 1
                 color: [1.000, 1.000, 1.000]
+            b_border:
+                order: 5
+                cap: round
+                width: 8px
+                color: #464C40
+                width: 5px
+            
     earth:
         data: { source: osm }
         draw:
             waves:
-                order: 1
+                order: 0
                 color: [0.667, 0.675, 0.675]
             border:
                 order: 5
                 color: #464C40
                 cap: round
                 width: 8px
+            
     landuse:
         data: { source: osm }
         draw:
@@ -183,3 +201,30 @@ layers:
                 color: white
                 cap: round
                 width: 2px
+    buildings:
+        data: { source: osm }
+        filter: { $zoom: { min: 10 } }
+        draw:
+            b_border:
+                order: 6
+                color: [[10,[1,1,1]],[15,[1,1,1]],[18,[0.306, 0.306, 0.306]]]
+                width: [[10, 1], [12, 1px],[14, 1px], [16, 2px], [17, 3px], [18, 5px]]
+    roads:
+        data: { source: osm }
+        properties: { width: 3 }
+        draw:
+            lines:
+                order: 4
+                color: white
+                width: [[5, 0.5px],[15, 2px],[85, 50]]
+    
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        draw:
+            text:
+                font:
+                    typeface: Italic 14px Times
+                    fill: black
+                    stroke: { color: white , width: 5 }
+                
