@@ -1,0 +1,166 @@
+﻿cameras:
+    perspective:
+        type: perspective
+lights:
+    directional1:
+        type: directional
+        direction: [.1, .5, -1]
+        diffuse: .7
+        ambient: .5
+scene:
+    background:
+        color: white
+    
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+styles:                
+    tools:
+        shaders:
+            extensions: OES_standard_derivatives
+            blocks: 
+                global: |
+                    // Common Values 
+                    //================================
+                    float radio = 0.05;
+                    vec2 translate = vec2(.0,.0);//22);
+                    vec2 size = vec2(.96,.9);
+                    vec3 background = vec3(0.996,0.996,0.918);
+                    vec3 foreground = vec3(0.275,0.298,0.251);
+                
+                    // Coord System
+                    //================================
+                    varying vec3 v_pos;
+                    
+                    #ifdef TANGRAM_FRAGMENT_SHADER
+                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
+                    
+                    float aastep(float threshold, float value) {
+                      #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
+                        float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+                        return smoothstep(threshold-afwidth, threshold+afwidth, value);
+                      #else
+                        return step(threshold, value);
+                      #endif  
+                    }
+                    
+                    float pulse(float x,float p, float w){
+                        x = abs(x - p);
+                        if( x>w ) return 0.0;
+                        x /= w;
+                        return 1.0 - x*x*(3.0-2.0*x);
+                    }
+                    
+                    float boxDF(vec2 st, vec2 size) {
+                        st = st*2.-1.;
+                        return length(max(abs(st)-size,.0));
+                    }
+                    
+                    #endif
+                position: |
+                    v_pos = a_position.xyz * 32767.;
+                    
+    border:
+        base: lines
+        mix: tools
+        texcoords: true
+        shaders:
+            blocks: 
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    float pattern = aastep(.5,pulse(st.x,.7,.1)+pulse(st.x,.35,.25));
+                    color.rgb = mix(background,color.rgb,pattern);
+                    
+                    float borders = boxDF((gl_FragCoord.xy / u_resolution.xy)-translate,size-radio);
+                    color.rgb = mix(color.rgb,background,step(radio,borders));
+                    
+    waves:
+        base: polygons
+        mix: tools
+        shaders: 
+            blocks: 
+                global: |
+                    #ifdef TANGRAM_FRAGMENT_SHADER
+                    float stripes(vec2 st, float width){
+                        return aastep(width,abs(sin(st.y*3.14159265358)));
+                    }
+                    #endif
+                color: |
+                    vec2 st = (gl_FragCoord.xy / u_resolution.xy);
+                    float aspect = u_resolution.x/u_resolution.y;
+
+                    vec2 pos = st;
+                    pos.x = pos.x*aspect;
+                    pos.y += sin(pos.x*30.)*.01;
+                    color.rgb = mix(color.rgb,background,stripes(pos*200.,.4));
+                    
+                    float borders = boxDF(st-translate,size-radio);
+                    float borders2 = boxDF(st-translate,size*1.016);
+                    color.rgb = mix(color.rgb,background,step(radio,borders));
+                    
+                    color.rgb = mix(color.rgb,foreground,aastep(.5,pulse(borders,.057,.002)));
+                    color.rgb = mix(color.rgb,foreground,aastep(.5,pulse(borders,.065,.004)));
+                    
+                    pos = vec2(0.5)-st;
+                    float a = atan(pos.y,pos.x);
+                    float r = length(pos);
+                    float pattern = 1.0;
+                    pattern = aastep(radio+0.022,borders)-aastep(0.005,borders2);
+                    pattern *= stripes(vec2(r,a)*200.,.2);
+                    color.rgb = mix(color.rgb,foreground, pattern);
+                    
+    hatch:
+        base: polygons
+        mix: tools
+        shaders: 
+            blocks: 
+                global: |
+                    #ifdef TANGRAM_FRAGMENT_SHADER
+                    mat2 rotate2d(float angle){
+                        return mat2(cos(angle),-sin(angle),
+                                    sin(angle),cos(angle));
+                    }
+                    float stripes(vec2 st){
+                        st = rotate2d(.72)*st;
+                        st *= 92.;
+                        return aastep(.3,abs(sin(st.y*3.14159265358)));
+                    }
+                    #endif
+                color: |
+                    vec2 st = (gl_FragCoord.xy / u_resolution.xy);
+                    float aspect = u_resolution.x/u_resolution.y;
+                    color.rgb = mix(color.rgb,background,stripes(st*3.));
+
+                    float borders = boxDF(st-translate,size-radio);
+                    color.rgb = mix(color.rgb,background,step(radio,borders));
+
+layers:
+    water:
+        data: { source: osm }
+        draw: 
+            polygons: 
+                order: 0
+                color: [1.000, 1.000, 1.000]
+    earth:
+        data: { source: osm }
+        draw:
+            waves:
+                order: 1
+                color: [0.667, 0.675, 0.675]
+            border:
+                order: 5
+                color: #464C40
+                cap: round
+                width: 8px
+    landuse:
+        data: { source: osm }
+        draw:
+            hatch:
+                order: 2
+                color: #464C40
+            lines:
+                order: 3
+                color: white
+                cap: round
+                width: 2px
