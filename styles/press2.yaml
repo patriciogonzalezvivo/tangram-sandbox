@@ -72,10 +72,29 @@ styles:
                     float pattern = aastep(.5,pulse(st.x,.7,.1)+pulse(st.x,.35,.25));
                     color.rgb = mix(background,color.rgb,pattern);
                     
-                    float borders = boxDF((gl_FragCoord.xy / u_resolution.xy)-translate,size-radio);
-                    color.rgb = mix(color.rgb,background,step(radio,borders));
-                    
     waves:
+        base: polygons
+        mix: tools
+        shaders: 
+            blocks: 
+                global: |
+                    #ifdef TANGRAM_FRAGMENT_SHADER
+                    float stripes(vec2 st, float width){
+                        return aastep(width,abs(sin(st.y*3.14159265358)));
+                    }
+                    #endif
+                color: |
+                    vec2 st = (gl_FragCoord.xy / u_resolution.xy);
+                    float aspect = u_resolution.x/u_resolution.y;
+
+                    vec2 pos = st;
+                    pos.x = pos.x*aspect;
+                    pos.y += sin(pos.x*30.)*.01;
+                    color.rgb = mix(color.rgb,background,stripes(pos*200.,.4));
+
+                    float borders = boxDF(st-translate,size-radio);
+                    color.rgb = mix(color.rgb,background,step(radio,borders));
+    frame:
         base: polygons
         mix: tools
         shaders: 
@@ -139,7 +158,7 @@ layers:
     water:
         data: { source: osm }
         draw: 
-            polygons: 
+            frame: 
                 order: 0
                 color: [1.000, 1.000, 1.000]
     earth:
