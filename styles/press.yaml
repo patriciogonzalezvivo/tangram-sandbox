@@ -84,8 +84,10 @@ styles:
                     #endif
                 color: |
                     vec2 st = (gl_FragCoord.xy / u_resolution.xy);
-                    float aspect = u_resolution.y/u_resolution.x;
+                    float aspect = u_resolution.x/u_resolution.y;
+
                     vec2 pos = st;
+                    pos.x = pos.x*aspect;
                     pos.y += sin(pos.x*30.)*.01;
                     color.rgb = mix(color.rgb,background,stripes(pos*170.,.4));
                     
@@ -123,6 +125,8 @@ styles:
                     #endif
                 color: |
                     vec2 st = (gl_FragCoord.xy / u_resolution.xy);
+                    float aspect = u_resolution.x/u_resolution.y;
+                    st.x *= aspect;
                     color.rgb = mix(color.rgb,background,stripes(st*3.));
 
                     float borders = boxDF(st-translate,size-radio);
