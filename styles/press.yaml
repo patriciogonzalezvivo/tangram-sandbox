@@ -25,7 +25,7 @@ styles:
                     // Common Values 
                     //================================
                     float radio = 0.05;
-                    vec2 size = vec2(.9,.8);
+                    vec2 size = vec2(.92,.9);
                     vec3 background = vec3(0.996,0.996,0.918);
                     vec3 foreground = vec3(0.275,0.298,0.251);
                 
