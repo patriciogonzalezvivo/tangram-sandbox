@@ -80,11 +80,12 @@ styles:
                 filter: |
                     vec2 xy = gl_FragCoord.xy/u_resolution.xy;
                     xy.x *= u_resolution.x/u_resolution.y;
-  
-                    xy = vec2(0.5)-xy;
+                    xy = xy-vec2(.5*u_resolution.x/u_resolution.y,.5);
                     
                     float t = -u_time*.5;
-                    float radius = dot(xy,xy)*4.;
+                    // float radius = 0.0;
+                    radius = length(xy)*10.;
+                    // radius = dot(xy,xy)*3.;
                     
                     color.rgb = mix(color.rgb,1.-color.rgb,1.0-aastep(.3,sin(fract(radius+t)*3.1415)));
                     
