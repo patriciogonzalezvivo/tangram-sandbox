@@ -8,7 +8,6 @@ cameras:
 styles:
     tilt:
         animated: true
-        base: polygons
         shaders:
             blocks:
                 global: |
@@ -27,6 +26,12 @@ styles:
                 position: |
                     float t = u_time*0.05; 
                     position.xyz = rotateX3D(abs(cos(t))) * rotateZ3D(abs(sin(t))*.5) * position.xyz;
+                color: |
+                    float focalDistance = 500.;
+                    float focalZoom = 1.-min(u_map_position.z/16.,1.);
+                    float focalRange = 2000.+20000.*focalZoom;
+                    float dof = 1.0;
+                    dof = 1.0-((abs((v_position.z)-focalDistance)-v_world_position.z*10.)/focalRange);
     lin:
         base: lines
         mix: tilt
@@ -201,7 +206,6 @@ styles:
     buildings:
         base: polygons
         mix: tools
-        animated: true
         texcoords: true
         shaders:
             blocks:
@@ -214,6 +218,7 @@ styles:
                     if (dot(v_normal,vec3(0.,0.,1.)) == 0.){
                         float r = random(getBrightness(color.rgb));
                         float amount = 0.5+random(color.rg)*0.5;
+                        vec2 offset = vec2(0.,0.);
                         
                         if ( r > .3) {
                             // DeFrag
@@ -235,7 +240,7 @@ styles:
                             float t = mod(u_time*20.*(1.+r*.5)+(4324.*amount),500.);
                             vec2 head = vec2(mod(t,50.), floor(t/50.));
 
-                            vec2 offset = vec2(0.1,0.);
+                            
                             float pct = 1.0;
                             pct *= step(10.-head.y,ipos.y);// Y
                             pct += (1.0-step(head.x,ipos.x))*step(10.-head.y,ipos.y+1.);   // X
@@ -262,9 +267,6 @@ styles:
 
                             vec2 vel = vec2(u_time*max(grid.x,grid.y)); // time
                             vel *= vec2(-1.,0.0) * random(1.0+ipos.y); // direction
-
-                            // Assign a random value base on the integer coord
-                            vec2 offset = vec2(0.1,0.);
 
                             color.r = pattern(st+offset,vel,amount);
                             color.g = pattern(st,vel,amount);
@@ -325,7 +327,7 @@ layers:
         data: { source: osm }
         draw:
             buildings:
-                order: 7
+                order: 8
                 color: Style.color.pseudoRandomColor()
         3d-buildings:
             filter: { $zoom: { min: 13 } }
@@ -333,7 +335,7 @@ layers:
                 buildings:
                     extrude: true
                 lin:
-                    order: 8
+                    order: 7
                     color: [0.687,0.660,0.660]
-                    width: .5px
+                    width: [[13,.5px],[15,1px],[17,2px],[20,3px]]
                     extrude: true
