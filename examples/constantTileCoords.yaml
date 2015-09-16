@@ -1,0 +1,172 @@
+﻿# Author @patriciogv - 2015
+
+cameras:
+    perspective:
+        type: perspective
+        vanishing_point: [0, -500]
+lights:
+    directional1:
+        type: directional
+        direction: [.1, .5, -1]
+        diffuse: .5
+        ambient: .5
+styles:
+    tools:
+        base: polygons
+        shaders:
+            blocks:
+                global: |
+                    // GridTile
+                    //=============================
+                    varying vec3 v_pos;
+                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
+                    bool grid(vec2 st, float res, float press){
+                        vec2 grid = fract(st*res);
+                        return grid.x < res*press || grid.y < res*press;
+                    }
+                    float TileGrid(float res){
+                        vec2 st = TileCoords()*100.*res;
+                        float pct = 0.0;
+                        float press = 0.4+(1.0-fract(u_map_position.z))*0.2;
+                        if (grid(st,0.01,press)) pct += 0.5;
+                        if (grid(st,0.1,press)) pct += 0.1;
+                        return pct;
+                    }
+                    float TileGrid(){ return mix(TileGrid(1.),TileGrid(2.),fract(u_map_position.z)); }
+                    // Grain
+                    //=============================
+                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+                    float noise(vec2 x) {
+                        vec2 i = floor(x);
+                        vec2 f = fract(x);
+                        float a = random(i);
+                        float b = random(i + vec2(1.0, 0.0));
+                        float c = random(i + vec2(0.0, 1.0));
+                        float d = random(i + vec2(1.0, 1.0));
+                        vec2 u = f * f * (3.0 - 2.0 * f);
+                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                    }
+                    float fbm( in vec2 p ){
+                        float s = 0.0;
+                        float m = 0.0;
+                        float a = 0.5;
+                        for(int i=0; i<2; i++ ){
+                            s += a * noise(p);
+                            m += a;
+                            a *= 0.5;
+                            p *= 2.0;
+                        }
+                        return s/m;
+                    }
+                    float grain(vec2 pos){
+                        vec2 st = pos/u_resolution.xy-vec2(.5);
+                        return dot(st,st)+(fbm(pos*0.6)*0.1);
+                    }
+                    // Stripes
+                    //=============================
+                    mat2 rotate2d(float angle){
+                        return mat2(cos(angle),-sin(angle),
+                                    sin(angle),cos(angle));
+                    }
+                    float stripes(vec2 st){
+                        st = rotate2d(3.14159265358*-0.25 )*st;
+                        return step(.9,1.0-smoothstep(.5,1.,abs(sin(st.x*3.14159265358))));
+                    }
+                position: |
+                    // GridTile
+                    v_pos = a_position;
+    grid:
+        base: polygons
+        mix: tools
+        shaders:
+            blocks:
+                filter: |
+                    color.rgb += vec3(.2)*TileGrid();
+                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
+                    
+    buildings:
+        base: polygons
+        mix: tools
+        shaders:
+            blocks:
+                color: |
+                    color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
+                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
+
+    area:
+        base: polygons
+        mix: tools
+        lighting: false
+        blend: overlay
+        shaders:
+            blocks:
+                global: |
+                    mat2 scale(vec2 _scale){
+                        return mat2(_scale.x,0.0,
+                                    0.0,_scale.y);
+                    }
+                color: |
+                    vec2 st = TileCoords();
+                    st += vec2(0.5);
+                    st = scale(vec2(1.+fract(u_map_position.z))) * st;
+                    st -= vec2(0.5);
+           
+                    color = mix(color,vec4(0.),stripes(st*30.))*.8;
+                    
+                    color.rgb -= grain(gl_FragCoord.xy)*0.5;
+                filter: |
+                    color.rgb += vec3(.2)*TileGrid();
+                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
+                    
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-x4i7gmA
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            grid:
+                order: 2
+                color: '#353535'
+    earth:
+        data: { source: osm }
+        draw:
+            grid:
+                order: 0
+                color: [0.348,0.348,0.348]
+    landuse:
+        data: { source: osm }
+        draw:
+            area:
+                order: 1
+                color: [1.000,0.014,0.187]
+    buildings:
+        data: { source: osm }
+        filter: { $zoom: { min: 10 } }
+        draw:
+            polygons:
+                order: 4
+                color: '#999'
+        extruded:
+            filter: { $zoom: { min: 10 } }
+            draw:
+                polygons:
+                    style: buildings
+                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
+    roads:
+        data: { source: osm, layer: roads }
+        filter: { not: { highway: service, kind: rail } }
+        draw:
+            flatlines:
+                order: 3
+                color: [0.83, 0.83, 0.83]
+                width: function () { return Math.log($zoom); }
+    roads:
+        data: { source: osm }
+        properties: { width: 3 }
+        draw:
+            lines:
+                order: 2
+                color: '#777'
+                width: 5

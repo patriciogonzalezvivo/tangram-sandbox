@@ -4,19 +4,26 @@ Personal experiments using [tangram.js](https://github.com/tangrams/tangram) 2D/
 
 #### Materials & Procedural Textures
 
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/radar.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/radar#10.97291/40.7461/-74.0931)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/ikeda.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/ikeda#16.575/40.70321/-74.00666)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/tilt-ikeda.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tilt-ikeda#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/gotham.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/gotham#16.575/40.70321/-74.00666)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/tilt-gotham.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tilt-gotham#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/grain-area.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/grain-area#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/grain-roads.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/grain-roads#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/grain.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/grain#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/blueprint.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/blueprint#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/matrix.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/matrix#18.4/40.71310/-74.00599)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/tilt-matrix.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tilt-matrix#18.4/40.71310/-74.00599)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/tron.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tron#16.975/40.70411/-74.00930)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/tilt-tron.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tilt-tron#16.975/40.70411/-74.00930)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/lego.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/lego#19/40.70533/-74.00975)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/tilt-lego.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tilt-lego#19/40.70533/-74.00975)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/patterns.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/patterns#17.375/40.70361/-74.01181)
 
 #### Materials & Textures (procedural and files) & Filter
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/pericoli.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/pericoli#17.575/40.70495/-74.00486)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/tilt-pericoli.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tilt-pericoli#17.575/40.70495/-74.00486)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/crosshatch.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/crosshatch#17.575/40.70495/-74.00486)
 
 #### Materials & Lights

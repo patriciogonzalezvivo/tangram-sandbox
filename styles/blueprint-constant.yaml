@@ -73,7 +73,7 @@ styles:
                     }
                 position: |
                     // GridTile
-                    v_pos = a_position;
+                    v_pos = a_position.xyz * 32767.;
                 filter: |
                     color.rgb += BluePrint(gl_FragCoord.xy);
     base:
@@ -126,7 +126,7 @@ styles:
                     color.rgb = vec3(0.14+pct*0.1); 
 sources:
     osm:
-        type: TopoJSONTiles
+        type: TopoJSON
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 layers:
     water:

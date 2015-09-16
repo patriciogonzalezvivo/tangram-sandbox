@@ -74,7 +74,7 @@ styles:
                     }
                 position: |
                     // GridTile
-                    v_pos = a_position;
+                    v_pos = a_position.xyz * 32767.;
     grid:
         base: polygons
         mix: tools
@@ -115,7 +115,7 @@ styles:
                     
 sources:
     osm:
-        type: TopoJSONTiles
+        type: TopoJSON
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 layers:
     water:

@@ -15,7 +15,7 @@ styles:
                     //=============================
                     varying vec3 v_pos;
                     vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
-                    bool TileGrid(vec2 st, float res, float press){
+                    bool gridLine(vec2 st, float res, float press){
                         vec2 grid = fract(st*res);
                         return grid.x < res*press || grid.y < res*press;
                     }
@@ -23,8 +23,8 @@ styles:
                         vec2 st = TileCoords()*100.*res;
                         float pct = 0.0;
                         float press = 0.4+(1.0-fract(u_map_position.z))*0.1;
-                        if (TileGrid(st,0.01,press)) pct += 0.5;
-                        if (TileGrid(st,0.1,press)) pct += 0.1;
+                        if (gridLine(st,0.01,press)) pct += 0.5;
+                        if (gridLine(st,0.1,press)) pct += 0.1;
                         return pct;
                     }
                     float TileGrid(){ return mix(TileGrid(1.),TileGrid(2.),fract(u_map_position.z)); }
@@ -71,7 +71,7 @@ styles:
                     }
                 position: |
                     // GridTile
-                    v_pos = a_position;
+                    v_pos = a_position.xyz * 32767.;
     roads:
         base: lines
         mix: matrix
@@ -201,7 +201,7 @@ styles:
                     color = vec4(col,max(col.x,max(col.y,col.z)));
 sources:
     osm:
-        type: TopoJSONTiles
+        type: TopoJSON
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 layers:
     earth:
@@ -301,7 +301,7 @@ layers:
         data: { source: osm, layer: roads }
         filter: { name: true, not: { kind: rail }, $zoom: { min: 14 } }
         draw:
-            label_effect:
+            text:
                 font:
                     typeface: 14px Courier
                     fill: white

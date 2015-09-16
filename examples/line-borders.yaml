@@ -1,0 +1,56 @@
+﻿cameras:
+    perspective:
+        type: flat
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+styles:
+    border:
+        base: lines
+        texcoords: true
+        shaders:
+            extensions: OES_standard_derivatives
+            blocks: 
+                global: |
+                    float pulse(float x,float p, float w){
+                        x = abs(x - p);
+                        if( x>w ) return 0.0;
+                        x /= w;
+                        return 1.0 - x*x*(3.0-2.0*x);
+                    }
+                    // AntiAliased Step
+                    //=============================
+                    #ifdef TANGRAM_FRAGMENT_SHADER
+                    float aastep(float threshold, float value) {
+                      #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
+                        float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+                        return smoothstep(threshold-afwidth, threshold+afwidth, value);
+                      #else
+                        return step(threshold, value);
+                      #endif  
+                    }
+                    #endif
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    float pattern = aastep(.5,pulse(st.x,.6,.1)+pulse(st.x,.2,.2));
+                    color.rgb = mix(color.rgb,vec3(1.),pattern);
+                
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 0
+                color: '#555'
+            border: 
+                order: 10
+                color: '#555'
+                width: 10px
+                cap: round
+    water:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 2
+                color: '#ddd'

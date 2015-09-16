@@ -88,7 +88,7 @@ styles:
                                    1.0-fract(brightness*9.0));
                     }
                 position: |
-                    v_pos = a_position;
+                    v_pos = a_position.xyz * 32767.;
     earth-hatch:
         base: polygons
         mix: tools 
@@ -97,10 +97,15 @@ styles:
             uniforms:
                     u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_1.png
             blocks:
+                global: |
+                    vec4 TileTexture(sampler2D tex, float scale) {
+                        vec2 IN = TileCoords()*scale;
+                        vec2 OUT = TileCoords()*scale*2.;
+                        return mix(texture2D(tex,fract(IN)), texture2D(tex,fract(OUT)), fract(u_map_position.z));
+                    }
                 color: |
-                    vec2 st = TileCoords()*3.0 ;
-                    float pattern = 1.0-texture2D( u_hatch, fract(st) ).a;
-                    color.rgb = mix(vec3(0.271,0.267,0.243),vec3(0.949,0.957,0.949),pattern);
+                    float pattern = 1.0-TileTexture(u_hatch,3.).a;
+                    color.rgb = mix(vec3(0.271,0.267,0.243), vec3(0.949,0.957,0.949), pattern);
     landuse-hatch:
         base: polygons
         mix: earth-hatch
@@ -177,8 +182,8 @@ styles:
                     position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
 sources:
     osm:
-        type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson??api_key=vector-tiles-JUsa0Gc
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 layers:
     earth:
         data: { source: osm }

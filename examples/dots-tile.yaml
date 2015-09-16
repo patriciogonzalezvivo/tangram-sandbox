@@ -1,0 +1,60 @@
+﻿cameras:
+    perspective:
+        type: flat
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+styles:
+    tools:
+        shaders:
+            blocks: 
+                global: |
+                    // Coord System
+                    //================================
+                    varying vec3 v_pos;
+                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
+                position: |
+                    v_pos = a_position.xyz * 32767.;
+    dots:
+        base: polygons
+        mix: tools
+        shaders:
+            blocks: 
+                global: |
+                    vec2 brickTile(vec2 st, float zoom){
+                      st *= zoom;
+                      if (fract(st.y * 0.5) > 0.5){
+                          st.x += 0.5;
+                      }
+                      return fract(st);
+                    }
+                    float circle(vec2 st, float radius){
+                      vec2 pos = vec2(0.5)-st;
+                      radius *= 0.75;
+                      return 1.-smoothstep(radius-(radius*0.01),radius+(radius*0.01),dot(pos,pos)*3.14);
+                    }
+                    float dots(vec2 st, float size){
+                        st = brickTile(st, 2.);
+                        return circle(st, size);
+                    }
+                    float TileDots(float scale, float size) {
+                        vec2 IN = TileCoords()*scale;
+                        vec2 OUT = TileCoords()*scale*2.;
+                        return mix(dots(fract(IN),size), dots(fract(OUT),size), fract(u_map_position.z));
+                    }
+                color: |
+                    color.rgb = mix(color.rgb,vec3(1.),TileDots(10.,.21));
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            dots:
+                order: 0
+                color: '#555'
+    water:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 1
+                color: '#ddd'
