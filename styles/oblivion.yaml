@@ -81,7 +81,7 @@ styles:
 
                     float gridF(vec2 st, float res){
                         vec2 grid = fract(st*res);
-                        return 1.-(step(res,grid.x) * step(res,grid.y));
+                        return 1.-(step(0.005,grid.x) * step(0.005,grid.y));
                     }
 
                     float box(in vec2 st, in vec2 size){
@@ -108,8 +108,8 @@ styles:
                     
                     // Grid
                     vec2 grid_xy = xy*300.;
-                    overlayGrid += vec3(1.000,0.796,0.0)*gridF(grid_xy,0.01)*0.5;
-                    overlayGrid += vec3(1.000,0.796,0.0)*gridF(grid_xy,0.02)*0.25;
+                    overlayGrid += vec3(0.620,0.722,0.694)*gridF(grid_xy,0.01)*0.5;
+                    overlayGrid += vec3(0.620,0.722,0.694)*gridF(grid_xy,0.02)*0.25;
                     // overlayGrid += vec3(0.2)*gridF(grid_xy,0.1);
                     overlayGrid *= .5;
 
@@ -118,28 +118,50 @@ styles:
                     crosses_xy *= 3.;
                     vec2 crosses_xy_f = fract(crosses_xy);
                     overlayGrid *= 1.-cross(crosses_xy_f,vec2(.2,.2));
-                    overlayGrid += vec3(1.000,.7,0.)*cross(crosses_xy_f,vec2(.1,.1));
+                    overlayGrid += vec3(1.000,.7,0.)*cross(crosses_xy_f,vec2(.08,.08));
 
                     // // Digits
-                    vec2 digits_xy = mod(xy*60.,20.);
+                    vec2 digits_xy = mod(xy*90.,30.);
                     vec2 digits_xy_i = floor(digits_xy);
                     if (digits_xy_i.y == 1. &&
-                        digits_xy_i.x > 0. && digits_xy_i.x < 6. ) {
-                        vec2 digits_xy_f = fract(digits_xy);
-                        float x = u_tile_origin.x;//+floor(u_time*20.);
-                        float pct = x/pow(10.,5.-digits_xy_i.x);
-                        // float pct = random(digits_xy_i+floor(crosses_xy)+floor(u_time*20.));
-                        overlayGrid += vec3(char(digits_xy_f,100.*pct));
-                    } else if (digits_xy_i.y == 2. &&
                         digits_xy_i.x > 0. && digits_xy_i.x < 8. ) {
                         vec2 digits_xy_f = fract(digits_xy);
                         float x = u_tile_origin.y;//+floor(u_time*20.);
                         float pct = x/pow(10.,5.-digits_xy_i.x);
                         // float pct = random(digits_xy_i+floor(crosses_xy)+floor(u_time*20.));
-                        overlayGrid += vec3(char(digits_xy_f,100.*pct));
+                        overlayGrid += vec3(0.620,0.722,0.694)*char(digits_xy_f,100.*pct);
+                    } else if (digits_xy_i.y == 2. &&
+                        digits_xy_i.x > 0. && digits_xy_i.x < 6. ) {
+                        vec2 digits_xy_f = fract(digits_xy);
+                        float x = u_tile_origin.x;//+floor(u_time*20.);
+                        float pct = x/pow(10.,5.-digits_xy_i.x);
+                        // float pct = random(digits_xy_i+floor(crosses_xy)+floor(u_time*20.));
+                        overlayGrid += vec3(0.620,0.722,0.694)*char(digits_xy_f,100.*pct);
                     }
                     
-                    color.rgb += overlayGrid*.4;
+                    color.rgb += overlayGrid*.5;
+    overlay_stripes:
+        lighting: false
+        blend: inlay
+        shaders:
+            blocks:
+                global: |
+                    mat2 rotate2d(float angle){
+                        return mat2(cos(angle),-sin(angle),
+                                    sin(angle),cos(angle));
+                    }
+                    float stripes(vec2 st){
+                        st = rotate2d(3.14159265358*-0.25 )*st;
+                        return step(.9,1.0-smoothstep(.5,1.,abs(sin(st.x*3.14159265358))));
+                    }
+                filter: |
+                    const float pixel_scale = 695.;
+                    float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                    vec2 st = gl_FragCoord.xy/pixel_scale;
+                    const float dot_wrap = 1000.;
+                    st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                    
+                    color = mix(color,vec4(0.),stripes(st*100.))*.8;
     grain:
         shaders:
             blocks:
@@ -171,6 +193,8 @@ styles:
                         vec2 st = pos/u_resolution.xy-vec2(.5);
                         return dot(st,st)+(fbm(pos*0.6)*0.1);
                     }
+                filter: |
+                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
                     
     lin:
         base: lines
@@ -178,13 +202,21 @@ styles:
     pol:
         base: polygons
         mix: [tilt,overlay_grid,grain]
+    flat:
+        base: polygons
+        mix: [overlay_grid,grain]
+        shaders:
+            blocks: 
+                position: 
+                    position.z = -3000.;
+                    position.xy *= 100.;
         
     water:
         base: polygons
         mix: pol
         animated: true
         material:
-            ambient: .7
+            ambient: [0.812, 0.812, 0.812]
             diffuse:
                 texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/sem-sky-0001.jpg
                 mapping: spheremap
@@ -247,36 +279,12 @@ styles:
             blocks:
                 color: |
                     color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
-                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
-
+                    
     area:
         base: polygons
-        mix: pol
+        mix: [pol,overlay_stripes]
         lighting: false
         blend: inlay
-        shaders:
-            blocks:
-                global: |
-                    mat2 rotate2d(float angle){
-                        return mat2(cos(angle),-sin(angle),
-                                    sin(angle),cos(angle));
-                    }
-                    float stripes(vec2 st){
-                        st = rotate2d(3.14159265358*-0.25 )*st;
-                        return step(.9,1.0-smoothstep(.5,1.,abs(sin(st.x*3.14159265358))));
-                    }
-                color: |
-                    const float pixel_scale = 695.;
-                    float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                    vec2 st = gl_FragCoord.xy/pixel_scale;
-                    const float dot_wrap = 1000.;
-                    st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                    
-                    color = mix(color,vec4(0.),stripes(st*100.))*.8;
-                    
-                    color.rgb -= grain(gl_FragCoord.xy)*0.5;
-                filter: |
-                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
                     
 sources:
     osm:
@@ -287,26 +295,33 @@ layers:
         data: { source: osm }
         draw:
             water:
-                order: 2
-                color: '#353535'
+                order: 3
+                color: [0.910, 0.910, 0.910]
+            flat:
+                order: 0
+                color: [0.141,0.122,0.129]
     earth:
         data: { source: osm }
         draw:
             pol:
-                order: 0
+                order: 1
                 color: [0.348,0.348,0.348]
+            flat:
+                order: 0
+                color: [0.141,0.122,0.129]
+                
     landuse:
         data: { source: osm }
         draw:
             area:
-                order: 1
-                color: [1.000,0.014,0.187]
+                order: 2
+                color: [0.933, 0.196, 0.208]
     buildings:
         data: { source: osm }
         filter: { $zoom: { min: 10 } }
         draw:
             polygons:
-                order: 4
+                order: 5
                 color: '#999'
         extruded:
             filter: { $zoom: { min: 10 } }
@@ -319,6 +334,6 @@ layers:
         properties: { width: 3 }
         draw:
             lin:
-                order: 3
+                order: 4
                 color: '#777'
                 width: 5
