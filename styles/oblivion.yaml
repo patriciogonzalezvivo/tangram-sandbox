@@ -60,15 +60,15 @@ styles:
 
                         n = floor(mod(n,10.));
                         float digit = 0.0;
-                        if (n < 1. ) { digit = 31600.; } 
-                        else if (n < 2. ) { digit = 9363.0; } 
-                        else if (n < 3. ) { digit = 31184.0; } 
-                        else if (n < 4. ) { digit = 31208.0; } 
-                        else if (n < 5. ) { digit = 23525.0; } 
-                        else if (n < 6. ) { digit = 29672.0; } 
-                        else if (n < 7. ) { digit = 29680.0; } 
-                        else if (n < 8. ) { digit = 31013.0; } 
-                        else if (n < 9. ) { digit = 31728.0; } 
+                        if (n < 1. ) { digit = 31600.; }
+                        else if (n < 2. ) { digit = 9363.0; }
+                        else if (n < 3. ) { digit = 31184.0; }
+                        else if (n < 4. ) { digit = 31208.0; }
+                        else if (n < 5. ) { digit = 23525.0; }
+                        else if (n < 6. ) { digit = 29672.0; }
+                        else if (n < 7. ) { digit = 29680.0; }
+                        else if (n < 8. ) { digit = 31013.0; }
+                        else if (n < 9. ) { digit = 31728.0; }
                         else if (n < 10. ) { digit = 31717.0; }
                         float pct = bin(ipos, digit);
 
@@ -138,30 +138,7 @@ styles:
                         // float pct = random(digits_xy_i+floor(crosses_xy)+floor(u_time*20.));
                         overlayGrid += vec3(0.620,0.722,0.694)*char(digits_xy_f,100.*pct);
                     }
-                    
-                    color.rgb += overlayGrid*.5;
-    overlay_stripes:
-        lighting: false
-        blend: inlay
-        shaders:
-            blocks:
-                global: |
-                    mat2 rotate2d(float angle){
-                        return mat2(cos(angle),-sin(angle),
-                                    sin(angle),cos(angle));
-                    }
-                    float stripes(vec2 st){
-                        st = rotate2d(3.14159265358*-0.25 )*st;
-                        return step(.9,1.0-smoothstep(.5,1.,abs(sin(st.x*3.14159265358))));
-                    }
-                filter: |
-                    const float pixel_scale = 695.;
-                    float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                    vec2 st = gl_FragCoord.xy/pixel_scale;
-                    const float dot_wrap = 1000.;
-                    st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                    
-                    color = mix(color,vec4(0.),stripes(st*100.))*.8;
+                    color.rgb += overlayGrid*.4;
     grain:
         shaders:
             blocks:
@@ -210,7 +187,6 @@ styles:
                 position: 
                     position.z = -3000.;
                     position.xy *= 100.;
-        
     water:
         base: polygons
         mix: pol
@@ -280,16 +256,36 @@ styles:
                 color: |
                     color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
                     
+
     area:
         base: polygons
-        mix: [pol,overlay_stripes]
+        mix: pol
         lighting: false
         blend: inlay
+        shaders:
+            blocks:
+                global: |
+                    mat2 rotate2d(float angle){
+                        return mat2(cos(angle),-sin(angle),
+                                    sin(angle),cos(angle));
+                    }
+                    float stripes(vec2 st){
+                        st = rotate2d(3.14159265358*-0.25 )*st;
+                        return step(.9,1.0-smoothstep(.5,1.,abs(sin(st.x*3.14159265358))));
+                    }
+                color: |
+                    const float pixel_scale = 695.;
+                    float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                    vec2 st = gl_FragCoord.xy/pixel_scale;
+                    const float dot_wrap = 1000.;
+                    st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                    
+                    color = mix(color,vec4(0.),stripes(st*100.))*.8;
                     
 sources:
     osm:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 layers:
     water:
         data: { source: osm }
@@ -299,7 +295,7 @@ layers:
                 color: [0.910, 0.910, 0.910]
             flat:
                 order: 0
-                color: [0.141,0.122,0.129]
+                color: [0.129, 0.129, 0.129]
     earth:
         data: { source: osm }
         draw:
@@ -308,14 +304,13 @@ layers:
                 color: [0.348,0.348,0.348]
             flat:
                 order: 0
-                color: [0.141,0.122,0.129]
-                
+                color: [0.129, 0.129, 0.129]
     landuse:
         data: { source: osm }
         draw:
             area:
                 order: 2
-                color: [0.933, 0.196, 0.208]
+                color: [1.000,0.014,0.187]
     buildings:
         data: { source: osm }
         filter: { $zoom: { min: 10 } }
