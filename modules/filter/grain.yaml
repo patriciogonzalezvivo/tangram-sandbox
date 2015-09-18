@@ -1,0 +1,13 @@
+# Patricio Gonzalez Vivo - 2015
+
+include: .../generative/fbm.yaml
+styles:
+    filter-grain:
+        mix: generative-fbm
+        shaders:
+        	blocks:
+        		global: |
+        			float grain(vec2 pos){
+        				vec2 st = pos/u_resolution.xy-vec2(.5);
+        				return dot(st,st)+(fbm(pos*0.6)*0.1);
+        			}

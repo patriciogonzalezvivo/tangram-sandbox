@@ -1,0 +1,16 @@
+# Patricio Gonzalez Vivo - 2015
+# From Chapter about Random at http://thebookofshaders.com/10/
+
+styles:
+    generative-random:
+        shaders:
+            blocks:
+                global: |
+                    // 1D Random for 1 and 2 dimentions
+                    // ================================
+                    float random (float x) {
+                        return fract(sin(x)*1e4);
+                    }
+                    float random (vec2 xy) {
+                        return fract(sin(dot(xy.xy, vec2(12.9898,78.233)))* 43758.5453123);
+                    }
