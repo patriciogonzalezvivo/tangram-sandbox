@@ -1,13 +1,23 @@
 # Patricio Gonzalez Vivo - 2015
 
+# Apply a lens grain effect to the scene
+# The amount can be set by the GRAIN_AMOUNT define [0.0~1.0]
+
 include: .../generative/fbm.yaml
 styles:
     filter-grain:
         mix: generative-fbm
         shaders:
-        	blocks:
-        		global: |
-        			float grain(vec2 pos){
-        				vec2 st = pos/u_resolution.xy-vec2(.5);
-        				return dot(st,st)+(fbm(pos*0.6)*0.1);
-        			}
+        	define:
+        		GRAIN_AMOUNT: .3
+            blocks:
+                global: |
+                	// Grain fractor on screen space with less concetration in the center
+                	// ================================
+                    float grain(){
+                        vec2 st = gl_FragCoord.xy/u_resolution.xy-vec2(.5);
+                        return dot(st,st)+(fbm(pos*0.6)*0.1);
+                    }
+                filter: |
+                	// Apply the grain in the amount defined on GRAIN_AMOUNT
+                    color.rgb -= grain()*GRAIN_AMOUNT;
