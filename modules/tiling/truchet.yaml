@@ -1,0 +1,72 @@
+# Patricio Gonzalez Vivo - 2015
+# From Chapter about Paterns at http://thebookofshaders.com/09/
+
+include: ../geometry/matrices.yaml
+styles:
+    tiling-truchet:
+        mix: geometry-matrices
+        shaders:
+            defines:
+                PI: 3.14159265358979323846
+            blocks:
+                global: |
+                    // Truchet Patern reference
+                    // ================================
+                    //
+                    //        |
+                    //    0   |   1
+                    //        |
+                    //  --------------
+                    //        |
+                    //    2   |   3
+                    //        |
+                    //
+                    // Mirror tiles acording to a Truchet patern
+                    // ================================
+                    vec2 truchetMirror (vec2 st) {
+                        // Shapes mirror pattern
+                        vec2 f_st = fract(st*2.);
+                        vec2 i_st = floor(st*2.);
+                        // non-even row + non-even col 
+                        float index = 0.0;
+                        index += mod(i_st.x,2.0);
+                        index += mod(i_st.y,2.0)*2.;
+                        // rotate acording
+                        if(index == 1.0){
+                            f_st.x = 1.-f_st.x;
+                        } else if(index == 2.0){
+                            f_st.y = 1.-f_st.y;
+                        } else if(index == 3.0){
+                            f_st.x = 1.-f_st.x;
+                            f_st.y = 1.-f_st.y;
+                        }
+                        return f_st;
+                    }
+                    //
+                    vec2 truchetRotate (vec2 st) {
+                        //  Scale the coordinate system by 2x2 
+                        st *= 2.0;
+                        //
+                        //  Give each cell an index number
+                        //  according to its position
+                        float index = 0.0;
+                        index += step(1., mod(st.x,2.0));
+                        index += step(1., mod(st.y,2.0))*2.0;
+                        //
+                        // Make each cell between 0.0 - 1.0
+                        st = fract(st);
+                        //
+                        // Rotate each cell according to the index
+                        if(index == 1.0){
+                            //  Rotate cell 1 by 90 degrees
+                            st = rotate2D(st,PI*0.5);
+                        } else if(index == 2.0){
+                            //  Rotate cell 2 by -90 degrees
+                            st = rotate2D(st,PI*-0.5);
+                        } else if(index == 3.0){
+                            //  Rotate cell 3 by 180 degrees
+                            st = rotate2D(st,PI);
+                        }
+                        //
+                        return st;
+                    }

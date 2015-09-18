@@ -2,13 +2,11 @@
 # From Chapter about Paterns at http://thebookofshaders.com/09/
 
 styles:
-    tiling-brick:
+    tiling-tile:
         shaders:
             blocks:
                 global: |
-                    vec2 brick(vec2 st, float zoom){
+                    vec2 tile(vec2 st, float zoom){
                         st *= zoom;
-                        // Here is where the offset is happening
-                        st.x += step(1., mod(st.y,2.0)) * 0.5;
                         return fract(st);
                     }

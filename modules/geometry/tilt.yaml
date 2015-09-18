@@ -1,0 +1,12 @@
+ # Patricio Gonzalez Vivo - 2015
+
+include: matrices.yaml
+styles:
+    tilt:
+        mix: matrices.yaml
+        animated: true
+        shaders:
+            blocks:
+                position: |
+                    float t = u_time*0.05; 
+                    position.xyz = rotateX3D(abs(cos(t))) * rotateZ3D(abs(sin(t))) * position.xyz;

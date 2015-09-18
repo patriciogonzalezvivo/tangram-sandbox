@@ -1,0 +1,16 @@
+# Patricio Gonzalez Vivo - 2015
+
+include: ../../space/tile.yaml
+styles:
+    tiling-texture-zoom-fade:
+        mix: space-tile
+        shaders:
+            blocks:
+                global: |
+                    // Tile a texture across zoom by fading between them
+                    // ================================
+                    vec4 TileTexture (sampler2D tex, float scale) {
+                        vec2 IN = getTileCoords()*scale;
+                        vec2 OUT = getTileCoords()*scale*2.;
+                        return mix(texture2D(tex,fract(IN)), texture2D(tex,fract(OUT)), fract(u_map_position.z));
+                    }
