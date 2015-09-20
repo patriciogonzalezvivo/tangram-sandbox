@@ -1,0 +1,12 @@
+# Patricio Gonzalez Vivo - 2015
+# From Chapter about Paterns at http://thebookofshaders.com/09/
+
+styles:
+    tiling-tile:
+        shaders:
+            blocks:
+                global: |
+                    vec2 tile(vec2 st, float zoom){
+                        st *= zoom;
+                        return fract(st);
+                    }

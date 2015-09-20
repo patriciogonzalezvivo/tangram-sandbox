@@ -1,0 +1,152 @@
+﻿cameras:
+    perspective:
+        type: isometric
+        vanishing_point: [0, -500]
+lights:
+    directional1:
+        type: directional
+        direction: [.1, .5, -1]
+        diffuse: .7
+        ambient: .5
+styles:
+    buildings:
+        base: polygons
+        texcoords: true
+        shaders:
+            blocks:
+                global: |
+                    float shape(vec2 st, int N){
+                        st = st *2.-1.;
+                        float a = atan(st.x,st.y)+3.14159265359;
+                        float r = 6.28318530718/float(N);
+                        return cos(floor(.5+a/r)*r-a)*length(st);
+                    }
+                    float zakura(vec2 st, float size) {
+                        vec2 pos = vec2(0.5)-st;
+                        float r = length(pos)*2.0;
+                        float a = atan(pos.y,pos.x);
+
+                        float f = abs(sin(a*3.))*.16+size+0.02;
+                        f *= 1.-abs(pow(sin((a+0.53)*3.),399.))*.5;
+                        f -= 1.0-step(0.05,r);
+                        return step(f,r);
+                    }
+                color: |
+                    vec2 st = v_texcoord.xy;
+
+                    // Shapes mirror pattern
+                    vec2 f_st = fract(st*vec2(16.,10.));
+                    vec2 i_st = floor(st*vec2(16.,10.));
+    
+                    float index = 0.0;    
+                    index += mod(i_st.x,2.0);
+                    index += mod(i_st.y,2.0)*2.;
+                    
+                    if(index == 1.0){
+                        f_st.x = 1.-f_st.x;
+                    } else if(index == 2.0){
+                        f_st.y = 1.-f_st.y;
+                    } else if(index == 3.0){
+                        f_st.x = 1.-f_st.x;
+                        f_st.y = 1.-f_st.y;
+                    }
+                    f_st.x /= 1.6;
+                    
+                    // Color pattern
+                    vec3 light = vec3(0.834,0.910,0.889);
+                    vec3 dark = vec3(0.598,0.655,0.569);
+                    
+                    vec2 big_st = floor((st)*vec2(16.,10.)-vec2(.5,0.));
+                    float b = 0.;
+                    if ( mod(big_st.x,2.) == .0 ){
+                        b = 1.;
+                    } 
+                    
+                    if ( mod(big_st.y,2.) == .0 ){
+                        b = 1.-b;
+                    } 
+                    
+                    vec3 big = mix(dark,light,b);
+                    
+                    vec2 small_s = floor((st)*vec2(16.,10.)-vec2(.5,2.));
+                    float s = 0.;
+                    if ( mod(small_s.x,2.) == .0 ){
+                        s = 1.;
+                    } 
+                    
+                    if ( mod(small_s.y,2.) == .0 ){
+                        s = 1.-b;
+                    } 
+                    vec3 small = mix(dark,light,s);
+                    
+                    color.rgb = vec3(0.438,0.577,0.562); // background
+                    color.rgb = mix(color.rgb, small,1.0-zakura(f_st+vec2(-.12,-0.5),0.1));
+                    color.rgb = mix(color.rgb, small,1.0-zakura(f_st+vec2(.5),0.1));
+                    color.rgb = mix(color.rgb, big,1.0-zakura(f_st+vec2(-.12,0.15),0.5));
+                    color.rgb = mix(color.rgb, big,1.0-zakura(f_st+vec2(.5,-.15),0.5));
+                    
+                    
+                    
+                    
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 2
+                color: '#353535'
+    earth:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 0
+                color: '#555'
+    landuse:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 1
+                color: '#666'
+    roads:
+        data: { source: osm }
+        properties: { width: 3 }
+        draw:
+            lines:
+                order: 2
+                color: '#777'
+                width: 5
+    buildings:
+        data: { source: osm }
+        filter: { $zoom: { min: 14 } }
+        draw:
+            polygons:
+                order: 50
+                color: '#999'
+        extruded:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                polygons:
+                    style: buildings
+                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
+    road_labels:
+        data: { source: osm, layer: roads }
+        filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
+
+        highway:
+            filter: { kind: highway, $zoom: { min: 7 } }
+            draw:
+                text:
+                    font:
+                        fill: white
+                        typeface: 500 12px Helvetica
+        not_highway:
+            filter: { not: { kind: highway }, $zoom: { min: 13 } }
+            draw:
+                text:
+                    font:
+                        fill: white
+                        typeface: 100 11px Helvetica

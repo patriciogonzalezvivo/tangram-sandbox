@@ -1,0 +1,7 @@
+# Patricio Gonzalez Vivo - 2015
+
+styles:
+    generative-random:
+        shaders:
+            blocks:
+                global: |
