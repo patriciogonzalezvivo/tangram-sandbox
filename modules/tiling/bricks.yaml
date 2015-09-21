@@ -6,6 +6,8 @@ styles:
         shaders:
             blocks:
                 global: |
+                    // Repeats a coordinate space (st) in diferent brick-like tiles
+                    // ================================
                     vec2 brick(vec2 st, float zoom){
                         st *= zoom;
                         // Here is where the offset is happening
