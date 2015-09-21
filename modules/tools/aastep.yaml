@@ -9,7 +9,7 @@ styles:
             blocks:
                 global: |
                     // AntiAliased Step function
-                	//=============================
+                    //=============================
                     #ifdef TANGRAM_FRAGMENT_SHADER
                     float aastep(float threshold, float value) {
                       #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
