@@ -1,0 +1,33 @@
+# Patricio Gonzalez Vivo - 2015
+# From Chapter about Paterns at http://thebookofshaders.com/09/
+
+include: [../tiling/brick.yaml, ../space/tile.yaml, ../shapes/circle.yaml]
+styles:
+    patterns-dots:
+        mix: [space-tile, tiling-brick, shapes-circle]
+        shaders:
+            blocks: 
+                global: |
+                    // Interpolated dot patern between zooms attached to tile coords
+                    float TileDots(float scale, float size) {
+                        // Beginning of the transition
+                        vec2 IN = brickTile(getTileCoords()*scale,2.);
+                        float A = circleDF(vec2(0.5)-IN)*1.8;
+                        //
+                        // If over 18. add an end B to transition with
+                        float d = 0.0;
+                        if (u_map_position.z < 18.) {
+                            vec2 OUT = fract(getTileCoords()*scale*2.);
+                            float B = circleDF(vec2(0.25)-OUT)*5.;
+                            B = min(B, circleDF(vec2(0.75,0.25)-OUT)*5.);
+                            B = min(B, circleDF(vec2(0.5,0.75)-OUT)*5.);
+                            B = min(B, circleDF(vec2(0.,0.75)-OUT)*5.);
+                            B = min(B, circleDF(vec2(1.,0.75)-OUT)*5.);
+                            d = mix(A, B, pow(fract(u_map_position.z),10.));
+                        } else {
+                            d = A;
+                        }
+                        //
+                        // Use the antialias step to make a shape from the DF
+                        return aastep(size,d);;
+                    }
