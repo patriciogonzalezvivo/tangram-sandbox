@@ -1,0 +1,19 @@
+ # Patricio Gonzalez Vivo - 2015
+
+include: ../space/tile.yaml
+styles:
+    tilt:
+    	mix: space-tile
+        shaders:
+            blocks:
+                global: |
+                	// Draw a grid in the space a specific resolution and pressition
+                	bool grid(vec2 st, float res, float press){
+                        vec2 grid = fract(st*res);
+                        return grid.x < res*press || grid.y < res*press;
+                    }
+                    //
+                    // Draw a grid in the space a specific resolution
+                    bool grid(vec2 st, float res){
+                        return grid(st, res, 1.0);
+                    }

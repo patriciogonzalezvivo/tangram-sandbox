@@ -2,19 +2,19 @@
 
 include: stripes.yaml
 styles:
-    patterns-waves:
+    patterns-zigzag:
         mix: patterns-stripes
         shaders:
             blocks:
                 global: |
                     // Return a distance function of stripes
-                    float wavesDF (vec2 st, float freq, float amp) {
+                    float zigzagDF (vec2 st, float freq) {
                         vec2 pos = fract(st);
-                        pos.y += sin(pos.x*freq)*amp;
+                        pos.y += mix(fract(pos.x),fract(1.0-pos.x),step(.5,pos.x))*freq;
                         return stripesDF(pos);
                     }
                     //
-                    // Adjustable width waves
-                    float waves (vec2 st, float freq, float amp, float width) {
-                        return aastep(width, zigzagDF(st, freq, amp));
+                    // Adjustable width stripes
+                    float zigzag (vec2 st, float freq, float width) {
+                        return aastep(width, zigzagDF(st, freq));
                     }

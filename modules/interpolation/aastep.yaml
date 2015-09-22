@@ -3,7 +3,7 @@
 # https://github.com/stackgl/glsl-aastep
 
 styles:
-    tools-aastep:
+    interpolation-aastep:
         shaders:
             extensions: OES_standard_derivatives
             blocks:

@@ -1,10 +1,10 @@
 # Patricio Gonzalez Vivo - 2015
 # From Chapter about Shapes at http://thebookofshaders.com/07/
 
-include: ../tools/aastep.yaml
+include: ../interpolation/aastep.yaml
 styles:
     shapes-circle:
-        mix: tools-aastep
+        mix: interpolation-aastep
         shaders:
             defines:
                 PI: 3.14159265358979323846
@@ -19,5 +19,5 @@ styles:
                     // Draw a circle in the middle of the ST space
                     // ================================
                     float circle (vec2 st, float radius) {
-                        return 1.-aastep(radius), circleDF(st-vec2(0.5))*PI);
+                        return 1.-aastep(radius, circleDF(st-vec2(0.5))*PI);
                     }

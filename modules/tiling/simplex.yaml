@@ -1,0 +1,52 @@
+# Patricio Gonzalez Vivo - 2015
+
+styles:
+    tiling-simplex:
+        shaders:
+            blocks:
+                global: |
+                	// Repeats a coordinate space (st) in simplex tiles
+                	// ================================
+                    vec2 simplex (vec2 st) {
+                        vec2 r = vec2(0.0);
+                        r.x = 1.1547*st.x;
+                        r.y = st.y+0.5*r.x;
+                        return r;
+                    }
+                    vec2 unsimplex (vec2 st) {
+                        vec2 r;
+                        r.y=st.y-0.5*st.x;
+                        r.x=st.x/1.1547;
+                        return r;
+                    }
+                    //
+                    // Experimental
+                    // ================================
+                    vec2 simplex2DGrid(vec2 p){
+                        p = fract(simplex(p));
+                        if (p.x>p.y) {
+                            p = vec2(p.x,p.y-p.x);
+                        } else {
+                            p = vec2(p.y,p.x-p.y);
+                        }
+                        return fract(p);
+                    }
+                    vec3 simplex3DGrid(vec2 p) {
+                        vec3 d = vec3(0.0);
+                        p = simplex(p);
+                        vec2 p0=floor(p);
+                        vec2 p1=p0+vec2(1.0,0.0);
+                        vec2 p2=p0+vec2(1.0,1.0);
+                        vec2 p3=p0+vec2(0.0,1.0);
+                        vec2 i=fract(p);
+                        if(i.x>i.y){
+                            d.x=max(1.0-distance(unsimplex(p),unsimplex(p0)),0.0);
+                            d.y=max(1.0-distance(unsimplex(p),unsimplex(p1)),0.0);
+                            d.z=max(1.0-distance(unsimplex(p),unsimplex(p2)),0.0);
+                        }else{
+                            d.x=max(1.0-distance(unsimplex(p),unsimplex(p0)),0.0);
+                            d.y=max(1.0-distance(unsimplex(p),unsimplex(p2)),0.0);
+                            d.z=max(1.0-distance(unsimplex(p),unsimplex(p3)),0.0);
+                        }
+                        return d;
+                    }
