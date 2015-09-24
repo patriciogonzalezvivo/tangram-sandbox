@@ -1,0 +1,72 @@
+﻿cameras:
+    perspective:
+        type: flat
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+styles:
+    border-common:
+        blend: add
+        base: lines
+        shaders:
+            blocks:
+                global: |
+                    varying float ab; 
+                width: |
+                    vec4 pos = u_modelView * position;
+                    pos.xy /= u_resolution;
+                    vec2 dir = vec2(0.0)-pos.xy;
+                    float dist = length(dir);
+                    float zoom = 1.0-(u_map_position.z/20.);
+                    ab = min(dist,10.);
+                    width += pow(ab,2.);
+                color: |
+                    color *= ab*0.03;
+    border-red:
+        mix: border-common
+        shaders: 
+            blocks: 
+                position: |
+                    position.xy += (dir*-5.) * ab;//min(dist,1.1);
+    border-blue:
+        mix: border-common
+        shaders: 
+            blocks: 
+                position: |
+                    position.xy += (dir*-11.) * ab;//min(dist,1.1);
+
+scene:
+    background: 
+        color: [0,0,0]
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            lines:
+                order: 0
+                color: [0.855, 1.000, 0.863]
+                width: 1px
+            border-red:
+                order: 1
+                color: [1,0,0]
+                width: 1px
+            border-blue:
+                order: 2
+                color: [0.0, 0.000, 1.000]
+                width: 1px
+    boundaries:
+        data: { source: osm }
+        draw:
+            lines:
+                order: 2
+                color: [0.855, 1.000, 0.863]
+                width: 1px
+            border-red:
+                order: 3
+                color: [1,0,0]
+                width: 1px
+            border-blue:
+                order: 4
+                color: [0.0, 0.000, 1.000]
+                width: 1px
