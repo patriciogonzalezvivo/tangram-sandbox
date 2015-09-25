@@ -1,0 +1,320 @@
+﻿cameras:
+    perspective:
+        type: perspective
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+styles:
+    color-tools:
+        shaders:
+            blocks:
+                global: |
+                    // Get the intensity of a color
+                    // ================================
+                    float getIntensity (vec3 c) {
+                        return (c.r+c.g+c.b)/3.0;
+                    }
+                    float getIntensity (vec4 c) {
+                        return getIntensity(c.rgb);
+                    }
+                    //
+                    // Get the Brightness of a color
+                    // ================================
+                    float getBrightness (vec3 c) {
+                        return 0.212655 * c.r + 0.715158 * c.g + 0.072187 * c.b;
+                    }
+                    float getBrightness (vec4 c) {
+                        return getBrightness(c.rgb);
+                    }
+    generative-random:
+        shaders:
+            blocks:
+                global: |
+                    // 1D Random for 1 and 2 dimentions
+                    // ================================
+                    float random (float x) {
+                        return fract(sin(x)*1e4);
+                    }
+                    float random (vec2 xy) {
+                        return fract(sin(dot(xy.xy, vec2(12.9898,78.233)))* 43758.5453123);
+                    }
+                    //
+                    // 2D Random for 2 dimentions
+                    // ================================
+                    vec2 random2 (vec2 xy) {
+                        return fract(sin(vec2(dot(xy,vec2(127.1,311.7)),dot(xy,vec2(269.5,183.3))))*43758.5453);
+                    }
+                    //
+                    // 3D Random for 2 dimentions
+                    // ================================
+                    vec3 random3 (vec2 xy) { 
+                        return fract(sin(vec3( dot(xy,vec2(127.1,311.7)), dot(xy,vec2(269.5,183.3)), dot(xy,vec2(419.2,371.9)) ))*43758.5453); 
+                    }
+    filter-tv:
+        shaders: 
+            blocks: 
+                filter: |
+                    vec2 tv_st = gl_FragCoord.xy/u_resolution.xy;
+                    tv_st -= .5;
+                    color *= abs(cos((gl_FragCoord.y*15.+u_time*5.)));
+                    color *= 1.0-dot(tv_st,tv_st);
+                    
+                    
+    border-common:
+        base: lines
+        blend: add
+        mix: [filter-tv]
+        texcoords: true
+        animated: true
+        shaders: 
+            uniforms:
+                u_offset: 1
+                u_offsetColor: [1,1,1]
+            blocks: 
+                width: |
+                    vec2 pos = (u_modelView * position).xy;
+                    vec2 pos_offset = pos.xy*u_offset;
+                    vec2 diff = pos.xy-pos_offset;
+                    float offset = length(diff)*u_meters_per_pixel;
+                    width *= 2.0;//offset;
+                position: |
+                    position.xy += diff;
+                color: |
+                    color.rgb *= u_offsetColor;
+                    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+                    st -= .5;
+                    color *= 1.0-pow(dot(st,st)*.5,.8);
+                    color *= smoothstep(0.,1.,sin(v_texcoord.x*3.1415));
+                    
+    border-red:
+        mix: border-common
+        shaders: 
+            uniforms:
+                u_offset: 1.01
+                u_offsetColor: [1,.5,.5]
+    border-green:
+        mix: border-common
+        shaders:
+            uniforms:
+                u_offsetColor: [.5,1.,.5]
+    border-blue:
+        mix: border-common
+        shaders: 
+            uniforms:
+                u_offset: .99
+                u_offsetColor: [.5,.5,1.]
+    interpolation-aastep:
+        shaders:
+            extensions: OES_standard_derivatives
+            blocks:
+                global: |
+                    // AntiAliased Step function
+                    //=============================
+                    float aastep(float threshold, float value) {
+                        #ifdef TANGRAM_FRAGMENT_SHADER
+                            #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
+                                float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+                                return smoothstep(threshold-afwidth, threshold+afwidth, value);
+                            #else
+                                return step(threshold, value);
+                            #endif  
+                        #else
+                            return step(threshold, value);
+                        #endif
+                    }
+    shapes-polygons:
+        mix: interpolation-aastep
+        shaders:
+            defines:
+                PI: 3.14159265358979323846
+                TWO_PI: 6.283185307
+            blocks:
+                global: |
+                    // get distance field of a polygon in the center
+                    // where N is the number of sides of it
+                    // ================================
+                    float shapeDF (vec2 st, int N) {
+                        st = st *2.-1.;
+                        float a = atan(st.x,st.y)+PI;
+                        float r = TWO_PI/float(N);
+                        return cos(floor(.5+a/r)*r-a)*length(st);
+                    }
+                    
+                    // draw a polygon in the center
+                    // where N is the number of sides of it
+                    // ================================
+                    float shape (vec2 st, int N, float size) {
+                        return 1.-aastep(size,shapeDF(st,N));
+                    }
+                    
+                    // draw the border of a polygon in the center
+                    // where N is the number of sides of it
+                    // ================================
+                    float shapeBorder (vec2 st, int N, float size, float width) {
+                        return shape(st,N,size)-shape(st,N,size-width);
+                    }
+    labels:
+        base: text
+        mix: filter-tv
+    icons:
+        base: points
+        texcoords: true
+        mix: [shapes-polygons, color-conversion, color-tools, filter-tv, generative-random]
+        shaders: 
+            blocks:
+                global: |
+                    float rect (vec2 st, vec2 size){
+                        size = .25-size*.125;
+                        vec2 uv = step(size,st*(1.0-st));
+                        return (uv.x*uv.y);
+                    }
+                    
+                    float cross (vec2 st, float size, float width) {
+                        return  clamp(  rect(st, vec2(size*0.5,width*0.125)) +
+                                        rect(st, vec2(width*0.125,size*0.5)),0.,1.);
+                    }
+                color: |
+                    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+                    
+                    st -= .5;
+                    vec2 dir = normalize(st);
+                    float rad = dot(st,st)*.5;
+                    
+                    vec2 tex_uv = v_texcoord.xy;
+                    vec3 color_offsets = vec3(.5,0.,1.)*rad;
+                    
+                    float bri = getBrightness(color);
+                    float intensity = getIntensity(color);
+                    float rnd = random(bri);
+                    float rnd2 = random(intensity);
+                    
+                    if (rnd < .33333) {
+                        color.rgb = vec3(0.586,0.992,0.833);
+                    } else if (rnd < .66666) {
+                        color.rgb = vec3(0.882,0.218,0.355);
+                    } else {
+                        color.rgb = vec3(0.520,0.914,0.976);
+                    }
+                    
+                    float size = .2+rnd2*.4;
+                    
+                    if (rnd < .1) {
+                        color.r *= cross(tex_uv+dir*color_offsets.r, size*3., size*.5);
+                        color.g *= cross(tex_uv+dir*color_offsets.g, size*3., size*.5);
+                        color.b *= cross(tex_uv+dir*color_offsets.b, size*3., size*.5);
+                    } else {
+                        int sides = int(3.+mod(rnd*10.,5.));
+                        if (sides == 3){
+                            // Scale and translate triangle
+                            size *= .7;
+                            tex_uv += vec2(0.,.2);
+                        } else if (sides == 6) {
+                            // Rotate hexagon
+                            tex_uv = tex_uv.yx; 
+                        } else if (sides == 7) {
+                            // Make circle
+                            sides = 360; 
+                        }
+                        color.r *= shapeBorder(tex_uv+dir*color_offsets.r, sides, size,.2);
+                        color.g *= shapeBorder(tex_uv+dir*color_offsets.g, sides, size,.2);
+                        color.b *= shapeBorder(tex_uv+dir*color_offsets.b, sides, size,.2);
+                    }
+                    
+                    color.a = max(color.r,max(color.g,color.b))*(1.0-rad);
+scene:
+    background: 
+        color: [0.012, 0.012, 0.106]
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            border-red:
+                order: 0
+                color: [0.757, 0.961, 1.000]
+                width: 1px
+            border-green:
+                order: 0
+                color: [0.757, 0.961, 1.000]
+                width: 1px
+            border-blue:
+                order: 0
+                color: [0.757, 0.961, 1.000]
+                width: 1px
+    water:
+        data: { source: osm }
+        filter: { kind: lake }
+        draw:
+            border-red:
+                order: 0
+                color: [0.757, 0.961, 1.000]
+                width: .8px
+            border-green:
+                order: 0
+                color: [0.757, 0.961, 1.000]
+                width: .8px
+            border-blue:
+                order: 0
+                color: [0.757, 0.961, 1.000]
+                width: .8px
+    # landuse:
+    #     data: { source: osm }
+    #     draw:
+    #         border-red:
+    #             order: 0
+    #             color: [0.451, 0.573, 0.596]
+    #             width: .7px
+    #         border-green: 
+    #             order: 0
+    #             color: [0.451, 0.573, 0.596]
+    #             width: .7px
+    #         border-blue: 
+    #             order: 0
+    #             color: [0.451, 0.573, 0.596]
+    #             width: .7px
+    boundaries:
+        data: { source: osm }
+        draw:
+            border-red:
+                order: 0
+                color: [0.451, 0.573, 0.596]
+                width: .4px
+            border-green: 
+                order: 0
+                color: [0.451, 0.573, 0.596]
+                width: .4px
+            border-blue: 
+                order: 0
+                color: [0.451, 0.573, 0.596]
+                width: .4px
+    roads:
+        data: { source: osm }
+        draw:
+            border-red:
+                order: 0
+                color: [0.451, 0.573, 0.596]
+                width: .3px
+            border-green: 
+                order: 0
+                color: [0.451, 0.573, 0.596]
+                width: .3px
+            border-blue: 
+                order: 0
+                color: [0.451, 0.573, 0.596]
+                width: .3px
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        draw:
+            # labels:
+            #     font:
+            #         family: arial
+            #         size: 14px
+            #         fill: [0.722, 0.808, 0.859]
+            #         stroke: 
+            #             color: [0.012, 0.012, 0.106]
+            #             width: 4
+            icons:
+                color: Style.color.pseudoRandomColor()
+                size: [[13, 20px], [15, 40px]]
+                interactive: true
