@@ -6,6 +6,7 @@ Personal experiments using [tangram.js](https://github.com/tangrams/tangram) 2D/
 
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/9845C.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/9845C#10.97291/40.7461/-74.0931)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/radar.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/radar#10.97291/40.7461/-74.0931)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/press.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/press#10.97291/40.7461/-74.0931)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/ikeda.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/ikeda#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/tilt-ikeda.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tilt-ikeda#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/gotham.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/gotham#16.575/40.70321/-74.00666)
