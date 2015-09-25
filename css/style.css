@@ -1,3 +1,8 @@
+@font-face {
+    font-family: larabie;
+    src: url(styles/fonts/larabie.ttf);
+}
+
 body {
     margin: 0px;
     border: 0px;

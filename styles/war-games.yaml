@@ -1,4 +1,6 @@
-﻿cameras:
+﻿# Author @patriciogv - 2015
+
+cameras:
     perspective:
         type: perspective
 sources:
@@ -157,6 +159,10 @@ styles:
     labels:
         base: text
         mix: filter-tv
+        shaders:
+            blocks:
+                position: |
+                    position.y -= 10.0* u_meters_per_pixel;
     icons:
         base: points
         texcoords: true
@@ -308,9 +314,9 @@ layers:
         draw:
             # labels:
             #     font:
-            #         family: arial
-            #         size: 14px
-            #         fill: [0.722, 0.808, 0.859]
+            #         family: larabie, arial
+            #         size: 16px
+            #         fill: white
             #         stroke: 
             #             color: [0.012, 0.012, 0.106]
             #             width: 4
