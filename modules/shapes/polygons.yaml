@@ -25,5 +25,9 @@ styles:
                     // where N is the number of sides of it
                     // ================================
                     float shape (vec2 st, int N, float width) {
-                        return aastep(width,shapeDF(st,N));
+                        return 1.0-aastep(width,shapeDF(st,N));
                     }
+                    
+                    // draw the border of a polygon in the center
+                    // where N is the number of sides of it
+                    // ================================
