@@ -1,0 +1,20 @@
+# Patricio Gonzalez Vivo - 2015
+
+include: stripes.yaml
+styles:
+    patterns-zigzag:
+        mix: patterns-stripes
+        shaders:
+            blocks:
+                global: |
+                    // Return a distance function of stripes
+                    float zigzagDF (vec2 st, float freq) {
+                        vec2 pos = fract(st);
+                        pos.y += mix(fract(pos.x),fract(1.0-pos.x),step(.5,pos.x))*freq;
+                        return stripesDF(pos);
+                    }
+                    //
+                    // Adjustable width stripes
+                    float zigzag (vec2 st, float freq, float width) {
+                        return aastep(width, zigzagDF(st, freq));
+                    }

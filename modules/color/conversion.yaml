@@ -6,9 +6,9 @@ styles:
         shaders:
             blocks:
                 global: |
-                	// Convert from RGB to HSB
-                	// ================================
-                	vec3 rgb2hsb (vec3 c) {
+                    // Convert from RGB to HSB
+                    // ================================
+                    vec3 rgb2hsb (vec3 c) {
                         vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
                         vec4 p = mix(vec4(c.bg, K.wz),
                                      vec4(c.gb, K.xy),
@@ -23,7 +23,7 @@ styles:
                                     q.x);
                     }
                     vec3 rgb2hsb (vec4 c) {
-                    	return rgb2hsb(c.rgb);
+                        return rgb2hsb(c.rgb);
                     }
                     //
                     // Convert from HSB to RGB by Iñigo Quiles ( https://www.shadertoy.com/view/MsS3Wc )

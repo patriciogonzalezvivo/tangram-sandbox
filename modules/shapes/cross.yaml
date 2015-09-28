@@ -1,0 +1,15 @@
+# Patricio Gonzalez Vivo - 2015
+# From Chapter about Shapes at http://thebookofshaders.com/07/
+
+include: rect.yaml
+styles:
+    shapes-cross:
+        mix: shapes-rect
+        shaders:
+            blocks:
+                global: |
+                    // Draw a Cross in the middle of the ST space
+                    float cross (vec2 st, float size, float width) {
+                        return  clamp(  rect(st, vec2(size*0.5,width*0.125)) +
+                                        rect(st, vec2(width*0.125,size*0.5)),0.,1.);
+                    }

@@ -1,0 +1,47 @@
+# Patricio Gonzalez Vivo - 2015
+# From Chapter about Shapes at http://thebookofshaders.com/07/
+
+include: ../interpolation/aastep.yaml
+styles:
+    shapes-rect:
+        mix: interpolation-aastep
+        shaders:
+            blocks:
+                global: |
+                    // get distance field of a rectangle in the center
+                    // ================================
+                    float rectDF(vec2 st, vec2 size) {
+                        //float aspect = u_resolution.x/u_resolution.y;
+                        st = st*2.-1.;
+                        //st.x *= aspect;
+                        return length(max(abs(st)-size,.0));
+                    }
+                    float rectDF(vec2 st, float size) {
+                        //float aspect = u_resolution.x/u_resolution.y;
+                        st = st*2.-1.;
+                        //st.x *= aspect;
+                        return length(max(abs(st)-size,.0));
+                    }
+                    
+                    // Draw a round corners rectangle in the center
+                    // ================================
+                    float rect(vec2 st, vec2 size, float radio) {
+                        radio = max(.000001, radio);
+                        return 1.0-step(radio, rectDF(st, size-radio));
+                    }
+                    
+                    float rect(vec2 st, float size, float radio) {
+                        return rect(st,vec2(size),radio);
+                    }
+                    
+                    // Draw a rectangle in the center
+                    // ================================
+                    float rect(vec2 st, vec2 size){
+                        size = .25-size*.125;
+                        vec2 uv = step(size,st*(1.0-st));
+                        return (uv.x*uv.y);
+                    }
+                    
+                    float rect(vec2 st, float size){
+                        return rect(st,vec2(size));
+                    }

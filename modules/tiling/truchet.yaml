@@ -21,7 +21,10 @@ styles:
                     //    2   |   3
                     //        |
                     //
-                    // Mirror tiles acording to a Truchet patern
+                    // Repeats a coordinate space (st) in diferent tiles acording to a Truchet patern.
+                    // There is two way to do this: by mirroring the spaces or rotating them 
+                    //
+                    // A- Mirror tiles acording to a Truchet patern
                     // ================================
                     vec2 truchetMirror (vec2 st) {
                         // Shapes mirror pattern
@@ -43,6 +46,8 @@ styles:
                         return f_st;
                     }
                     //
+                    // B- Rotate tiles acording to a Truchet patern
+                    // ================================
                     vec2 truchetRotate (vec2 st) {
                         //  Scale the coordinate system by 2x2 
                         st *= 2.0;

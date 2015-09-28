@@ -12,7 +12,7 @@ styles:
                         return (c.r+c.g+c.b)/3.0;
                     }
                     float getIntensity (vec4 c) {
-                        return getBrighness(c.rgb);
+                        return getIntensity(c.rgb);
                     }
                     //
                     // Get the Brightness of a color
