@@ -1,5 +1,9 @@
 ﻿# Author @patriciogv - 2015
 
+sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 cameras:
     perspective:
         type: perspective
@@ -8,37 +12,117 @@ lights:
     directional1:
         type: directional
         direction: [.1, .5, -1]
-        diffuse: .5
+        diffuse: .7
         ambient: .5
 styles:
-    tools:
-        base: polygons
+    space-tile:
+        shaders:
+            defines:
+                TILE_SCALE: 0.0002445
+                NORMALIZED_SHORT(x): (x * 32767.)
+            blocks:
+                global: |
+                    // Variant to be add to both vertex and fragments shaders
+                    varying vec3 v_pos;
+                    //
+                    // Get the coordinates in tile space
+                    // ================================
+                    vec2 getTileCoords () {
+                        return fract(v_pos.xy*TILE_SCALE);
+                    }
+                position: |
+                    // Normalize the attribute position of a vertex
+                    v_pos = NORMALIZED_SHORT(a_position.xyz);
+    space-constant:
         shaders:
             blocks:
                 global: |
-                    // GridTile
-                    //=============================
-                    varying vec3 v_pos;
-                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
+                    // Get the constant coordinates (glitches on zooms)
+                    // ================================
+                    vec2 getConstantCoords () {
+                        #ifdef TANGRAM_FRAGMENT_SHADER
+                        const float pixel_scale = 695.;
+                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
+                        vec2 st = gl_FragCoord.xy/pixel_scale;
+                        const float dot_wrap = 1000.;
+                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
+                        return st;
+                        #else
+                        return vec2(0.0,0.0);
+                        #endif
+                    }
+    grids-grid:
+        shaders:
+            blocks:
+                global: |
+                    // Draw a grid in the space a specific resolution and pressition
                     bool grid(vec2 st, float res, float press){
                         vec2 grid = fract(st*res);
                         return grid.x < res*press || grid.y < res*press;
                     }
-                    float TileGrid(float res){
-                        vec2 st = TileCoords()*100.*res;
+                    //
+                    // Draw a grid in the space a specific resolution
+                    bool grid(vec2 st, float res){
+                        return grid(st, res, 1.0);
+                    }
+    grids-tile:
+        mix: [space-tile,grids-grid]
+        shaders:
+            blocks:
+                global: |
+                    // Draw a grid using tile coordenates in a specific resolution
+                    float tileGrid(float res){
+                        vec2 st = getTileCoords()*100.*res;
                         float pct = 0.0;
-                        float press = 0.4+(1.0-fract(u_map_position.z))*0.2;
+                        float press = 0.4+(1.0-fract(u_map_position.z))*0.1;
                         if (grid(st,0.01,press)) pct += 0.5;
                         if (grid(st,0.1,press)) pct += 0.1;
                         return pct;
                     }
-                    float TileGrid(){ return mix(TileGrid(1.),TileGrid(2.),fract(u_map_position.z)); }
-                    // Grain
-                    //=============================
-                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
-                    float noise(vec2 x) {
-                        vec2 i = floor(x);
-                        vec2 f = fract(x);
+                    // Draw two grid that smoothly interpolates acording to zooms
+                    float tileGrid(){ 
+                        return mix(tileGrid(1.),tileGrid(2.),fract(u_map_position.z)); 
+                    }
+    generative-random:
+        shaders:
+            blocks:
+                global: |
+                    // 1D Random for 1 and 2 dimentions
+                    // ================================
+                    float random (float x) {
+                        return fract(sin(x)*1e4);
+                    }
+                    float random (vec2 xy) {
+                        return fract(sin(dot(xy.xy, vec2(12.9898,78.233)))* 43758.5453123);
+                    }
+                    //
+                    // 2D Random for 2 dimentions
+                    // ================================
+                    vec2 random2 (vec2 xy) {
+                        return fract(sin(vec2(dot(xy,vec2(127.1,311.7)),dot(xy,vec2(269.5,183.3))))*43758.5453);
+                    }
+                    //
+                    // 3D Random for 2 dimentions
+                    // ================================
+                    vec3 random3 (vec2 xy) { 
+                        return fract(sin(vec3( dot(xy,vec2(127.1,311.7)), dot(xy,vec2(269.5,183.3)), dot(xy,vec2(419.2,371.9)) ))*43758.5453); 
+                    }
+    generative-noise:
+        mix: generative-random
+        shaders:
+            blocks:
+                global: |
+                    // 1D Value Noise for 1, 2 and 3 dimentions
+                    // ================================
+                    float noise (in float x) {
+                        float i = floor(x);
+                        float f = fract(x);
+                        float u = f * f * (3.0 - 2.0 * f);
+                        return mix(random(i), random(i + 1.0), u);
+                    }
+                    float noise (vec2 xy) {
+                        vec2 i = floor(xy);
+                        vec2 f = fract(xy);
                         float a = random(i);
                         float b = random(i + vec2(1.0, 0.0));
                         float c = random(i + vec2(0.0, 1.0));
@@ -46,78 +130,154 @@ styles:
                         vec2 u = f * f * (3.0 - 2.0 * f);
                         return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
                     }
-                    float fbm( in vec2 p ){
-                        float s = 0.0;
-                        float m = 0.0;
-                        float a = 0.5;
-                        for(int i=0; i<2; i++ ){
-                            s += a * noise(p);
-                            m += a;
-                            a *= 0.5;
-                            p *= 2.0;
-                        }
-                        return s/m;
+                    float noise (vec3 xyz) {
+                        const vec3 step = vec3(110.0, 241.0, 171.0);
+                        vec3 i = floor(xyz);
+                        vec3 f = fract(xyz);
+                        float n = dot(i, step);
+                        vec3 u = f * f * (3.0 - 2.0 * f);
+                        return mix( mix(mix(random(n + dot(step, vec3(0,0,0))),
+                                            random(n + dot(step, vec3(1,0,0))),
+                                            u.x),
+                                        mix(random(n + dot(step, vec3(0,1,0))),
+                                            random(n + dot(step, vec3(1,1,0))),
+                                            u.x),
+                                        u.y),
+                                    mix(mix(random(n + dot(step, vec3(0,0,1))),
+                                        random(n + dot(step, vec3(1,0,1))),
+                                        u.x),
+                                        mix(random(n + dot(step, vec3(0,1,1))),
+                                            random(n + dot(step, vec3(1,1,1))),
+                                            u.x),
+                                    u.y),
+                                u.z);
                     }
-                    float grain(vec2 pos){
+    generative-fbm:
+        mix: generative-noise
+        shaders:
+            defines:
+                NUM_OCTAVES: 5
+            blocks:
+                global: |
+                    // Fractional Brownian motion for 1 and 2 dimensions
+                    float fbm (float x) {
+                        float v = 0.0;
+                        float a = 0.5;
+                        float shift = float(100.0);
+                        for (int i = 0; i < int(NUM_OCTAVES); ++i) {
+                            v += a * noise(x);
+                            x = x * 2.0 + shift;
+                            a *= 0.5;
+                        }
+                        return v;
+                    }
+                    float fbm (vec2 xy) {
+                        float v = 0.0;
+                        float a = 0.5;
+                        vec2 shift = vec2(100.0);
+                        mat2 rot = mat2(cos(0.5), sin(0.5), 
+                                        -sin(0.5), cos(0.50));
+                        for (int i = 0; i < int(NUM_OCTAVES); ++i) {
+                            v += a * noise(xy);
+                            xy = rot * xy * 2.0 + shift;
+                            a *= 0.5;
+                        }
+                        return v;
+                    }
+    filter-grain:
+        mix: generative-fbm
+        shaders:
+            defines:
+                GRAIN_AMOUNT: .3
+                NUM_OCTAVES: 2
+            blocks:
+                global: |
+                    // Grain fractor on screen space with less concetration in the center
+                    // ================================
+                    float grain(){
+                        #ifdef TANGRAM_FRAGMENT_SHADER
+                        vec2 pos = gl_FragCoord.xy;
                         vec2 st = pos/u_resolution.xy-vec2(.5);
                         return dot(st,st)+(fbm(pos*0.6)*0.1);
+                        #else
+                        return 0.0;
+                        #endif
                     }
-                    // Stripes
+                filter: |
+                    // Apply the grain in the amount defined on GRAIN_AMOUNT
+                    color.rgb -= grain()*GRAIN_AMOUNT;
+    functions-aastep:
+        shaders:
+            extensions: OES_standard_derivatives
+            blocks:
+                global: |
+                    // AntiAliased Step function
                     //=============================
-                    mat2 rotate2d(float angle){
-                        return mat2(cos(angle),-sin(angle),
-                                    sin(angle),cos(angle));
+                    float aastep(float threshold, float value) {
+                        #ifdef TANGRAM_FRAGMENT_SHADER
+                            #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
+                                float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+                                return smoothstep(threshold-afwidth, threshold+afwidth, value);
+                            #else
+                                return step(threshold, value);
+                            #endif  
+                        #else
+                            return step(threshold, value);
+                        #endif
                     }
-                    float stripes(vec2 st){
-                        st = rotate2d(3.14159265358*-0.25 )*st;
-                        return step(.9,1.0-smoothstep(.5,1.,abs(sin(st.x*3.14159265358))));
+    patterns-stripes:
+        mix: functions-aastep
+        shaders:
+            defines:
+                PI: 3.14159265358979323846
+            blocks:
+                global: |
+                    // Return a distance function of stripes
+                    float stripesDF (vec2 st) {
+                        return abs(sin(st.y*PI));
                     }
-                position: |
-                    // GridTile
-                    v_pos = a_position.xyz * 32767.;
+                    
+                    // Adjustable width stripes
+                    float stripes (vec2 st, float width) {
+                        return aastep(width,stripesDF(st));
+                    }
+                    
+                    // Faster optimisation of diagonal stripes
+                    float diagonalStripes (vec2 st) {
+                        vec2 i_st = floor(st);
+                        vec2 f_st = fract(st);
+                        if (mod(i_st.y,2.) - mod(i_st.x,2.) == 0.) {
+                            return 1.0 - aastep(f_st.x,f_st.y);
+                        } else {
+                            return aastep(f_st.x,f_st.y);
+                        }
+                    }
     grid:
         base: polygons
-        mix: tools
+        mix: [grids-tile, filter-grain]
         shaders:
             blocks:
-                filter: |
-                    color.rgb += vec3(.2)*TileGrid();
-                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
-                    
+                color: |
+                    color.rgb += vec3(.2)*tileGrid();
     buildings:
         base: polygons
-        mix: tools
+        mix: filter-grain
         shaders:
             blocks:
                 color: |
-                    color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
-                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
-
+                    color.rgb *= vec3(min((v_world_position.z*.001+.5),1.));
     area:
         base: polygons
-        mix: tools
+        mix: [patterns-stripes, space-constant, grid]
         lighting: false
-        blend: overlay
+        blend: inlay
         shaders:
+            defines:
+                GRAIN_AMOUNT: 2.
+                NUM_OCTAVES: 2
             blocks:
                 color: |
-                    const float pixel_scale = 695.;
-                    float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                    vec2 st = gl_FragCoord.xy/pixel_scale;
-                    const float dot_wrap = 1000.;
-                    st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                    
-                    color = mix(color,vec4(0.),stripes(st*30.))*.8;
-                    
-                    color.rgb -= grain(gl_FragCoord.xy)*0.5;
-                filter: |
-                    color.rgb += vec3(.2)*TileGrid();
-                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
-                    
-sources:
-    osm:
-        type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+                    color = mix(color,vec4(0.),diagonalStripes( getConstantCoords()*33.))*.8;
 layers:
     water:
         data: { source: osm }
