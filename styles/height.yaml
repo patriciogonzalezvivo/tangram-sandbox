@@ -1,0 +1,87 @@
+﻿sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+cameras:
+    perspective:
+        
+        type: flat
+        
+styles:
+    geometry-projection:
+        shaders:
+            defines:
+                EARTH_RADIUS: 6378137.0
+                HALF_EARTH_CIRCUMFERENCE: 20037508.342789244
+                PI: 3.14159265358979323846
+                HALF_PI: 1.570796327
+                QUATER_PI: .785398163
+                deg2rad(d): (((d)*3.14159265358979323846)/180.0)
+                rad2deg(d): (((d)*180.0)/3.14159265358979323846)
+            blocks:
+                global: |
+                    //
+                    //    The following functions take or return there results in degrees
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_d (float y) { return rad2deg(2.0 * atan(exp( deg2rad(y) ) ) - HALF_PI); }
+                    float x2lon_d (float x) { return x; }
+                    float lat2y_d (float lat) { return rad2deg(log(tan(QUATER_PI+ deg2rad(lat)/2.0))); }
+                    float lon2x_d (float lon) { return lon; }
+                    //
+                    //    The following functions take or return there results in something close to meters, along the equator 
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_m (float y) { return rad2deg(2.0 * atan(exp( (y / EARTH_RADIUS ) )) - HALF_PI); }
+                    float x2lon_m (float x) { return rad2deg(x / EARTH_RADIUS); }
+                    float lat2y_m (float lat) { return EARTH_RADIUS * log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
+                    float lon2x_m (float lon) { return deg2rad(lon) * EARTH_RADIUS; }
+                    
+                    //    https://github.com/tangrams/tangram/blob/master/src/geo.js
+                    //
+                    vec2 metersToLatLng (vec2 m) {
+                        m /= HALF_EARTH_CIRCUMFERENCE;
+                        m.y = (2.0*atan(exp(m.y*PI))-(HALF_PI)) / PI;
+                        m *= 180.;
+                        return m;
+                    }
+                    
+                    vec2 latLngToMeters (vec2 lat_lon) {
+                        // Latitude
+                        lat_lon.y = log(tan(lat_lon.y*PI/360.0 + QUATER_PI)) / PI;
+                        lat_lon.y *= HALF_EARTH_CIRCUMFERENCE;
+                        // Longitude
+                        lat_lon.x *= HALF_EARTH_CIRCUMFERENCE / 180.0;
+                        return lat_lon;
+                    }
+    clouds:
+        base: polygons
+        mix: geometry-projection
+        shaders:
+            uniforms:
+                u_map: imgs/earth-elevation.jpg
+            blocks:
+                global: |
+                    varying vec2 v_spherical_mercator;
+                position: |
+                    v_spherical_mercator = (u_model * position).xy;
+                color: |
+                    vec2 st = u_map_position.xy+v_position.xy;
+                    vec2 pos = metersToLatLng(st.yx);//vec2(y2lat_m(st.y),y2lat_m(st.x));
+                    pos /= vec2(90.,180.);
+                    pos += 1.;
+                    pos *= .5;
+                    color.rgb += texture2D(u_map,pos.yx).r;
+                    
+                
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            clouds:
+                order: 0
+                color: '#555'
+    water:
+        data: { source: osm }
+        draw:
+            clouds:
+                order: 1
+                color: '#ddd'

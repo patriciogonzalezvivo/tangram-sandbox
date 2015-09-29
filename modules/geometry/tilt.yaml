@@ -2,7 +2,7 @@
 
 include: matrices.yaml
 styles:
-    tilt:
+    geometry-tilt:
         mix: matrices.yaml
         animated: true
         shaders:
