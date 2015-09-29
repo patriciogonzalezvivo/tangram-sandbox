@@ -1,10 +1,8 @@
 # By Inigo Quiles
 # http://www.iquilezles.org/www/articles/functions/functions.htm
 
-include: cubic.yaml
 styles:
-    interpolation-pulse:
-    	mix: interpolation-cubic
+    functions-pulse:
         shaders:
             blocks:
                 global: |
@@ -12,5 +10,5 @@ styles:
                         x = abs(x - p);
                         if (x>w) return 0.0;
                         x /= w;
-                        return 1.0 - cubic(x);
+                        return 1.0 - x*x*(3.0-2.0*x);
                     }

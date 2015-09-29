@@ -1,10 +1,10 @@
 # Patricio Gonzalez Vivo - 2015
 # From Chapter about Shapes at http://thebookofshaders.com/07/
 
-include: ../interpolation/aastep.yaml
+include: ../functions/aastep.yaml
 styles:
     shapes-polygons:
-        mix: interpolation-aastep
+        mix: functions-aastep
         shaders:
             defines:
                 PI: 3.14159265358979323846

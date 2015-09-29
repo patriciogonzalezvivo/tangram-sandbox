@@ -1,0 +1,15 @@
+ # Patricio Gonzalez Vivo - 2015
+
+include: ../functions/map.yaml
+styles:
+    geometry-dynamic-height:
+        mix: functions-map
+        shaders:
+            defines:
+                ZOOM_START: 15.0
+                ZOOM_END: 20.0
+                ZOOM_LINEAR_FACTOR: 2.0
+            blocks:
+                position: |
+                    float zoom = map(u_map_position.z,ZOOM_START,ZOOM_END,1.,0.);
+                    position.z *= max(1.,.5+ZOOM_LINEAR_FACTOR*zoom);

@@ -1,9 +1,9 @@
 # Patricio Gonzalez Vivo - 2015
 
-include: ../interpolation/aastep.yaml
+include: ../functions/aastep.yaml
 styles:
     patterns-stripes:
-        mix: interpolation-aastep
+        mix: functions-aastep
         shaders:
             defines:
                 PI: 3.14159265358979323846

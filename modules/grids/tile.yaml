@@ -1,13 +1,13 @@
  # Patricio Gonzalez Vivo - 2015
 
-include: ../space/tile.yaml
+include: [grid.yaml,../space/tile.yaml]
 styles:
-    tilt:
-    	mix: space-tile
+    grids-tile:
+        mix: [space-tile,grids-grid]
         shaders:
             blocks:
                 global: |
-                	// Draw a grid using tile coordenates in a specific resolution
+                    // Draw a grid using tile coordenates in a specific resolution
                     float tileGrid(float res){
                         vec2 st = getTileCoords()*100.*res;
                         float pct = 0.0;
@@ -18,5 +18,5 @@ styles:
                     }
                     // Draw two grid that smoothly interpolates acording to zooms
                     float tileGrid(){ 
-                    	return mix(tileGrid(1.),tileGrid(2.),fract(u_map_position.z)); 
+                        return mix(tileGrid(1.),tileGrid(2.),fract(u_map_position.z)); 
                     }

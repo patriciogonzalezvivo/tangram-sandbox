@@ -1,12 +1,12 @@
 ﻿# Author @patriciogv - 2015
 
+sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 cameras:
     perspective:
         type: perspective
-sources:
-    osm:
-        type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 styles:
     color-tools:
         shaders:
@@ -156,13 +156,6 @@ styles:
                     float shapeBorder (vec2 st, int N, float size, float width) {
                         return shape(st,N,size)-shape(st,N,size-width);
                     }
-    labels:
-        base: text
-        mix: filter-tv
-        shaders:
-            blocks:
-                position: |
-                    position.y -= 10.0* u_meters_per_pixel;
     icons:
         base: points
         texcoords: true
@@ -263,21 +256,6 @@ layers:
                 order: 0
                 color: [0.757, 0.961, 1.000]
                 width: .8px
-    # landuse:
-    #     data: { source: osm }
-    #     draw:
-    #         border-red:
-    #             order: 0
-    #             color: [0.451, 0.573, 0.596]
-    #             width: .7px
-    #         border-green: 
-    #             order: 0
-    #             color: [0.451, 0.573, 0.596]
-    #             width: .7px
-    #         border-blue: 
-    #             order: 0
-    #             color: [0.451, 0.573, 0.596]
-    #             width: .7px
     boundaries:
         data: { source: osm }
         draw:
@@ -312,14 +290,6 @@ layers:
         data: { source: osm }
         filter: { name: true }
         draw:
-            # labels:
-            #     font:
-            #         family: larabie, arial
-            #         size: 16px
-            #         fill: white
-            #         stroke: 
-            #             color: [0.012, 0.012, 0.106]
-            #             width: 4
             icons:
                 color: Style.color.pseudoRandomColor()
                 size: [[13, 20px], [15, 40px]]
