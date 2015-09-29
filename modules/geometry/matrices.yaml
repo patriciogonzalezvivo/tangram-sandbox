@@ -4,7 +4,7 @@
 styles:
     geometry-matrices:
         defines:
-                PI: 3.14159265358979323846
+            PI: 3.14159265358979323846
         shaders:
             global: |
                 // Rotate in 2, 3 and 4 dimensions
