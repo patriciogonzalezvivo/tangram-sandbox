@@ -1,0 +1,92 @@
+﻿sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+cameras:
+    perspective:
+        type: flat
+lights:
+    # directional1:
+    #     type: directional
+    #     direction: [0.2, 0.7, -0.5]
+    #     diffuse: [1., 1., 1.]
+    point1:
+        type: point
+        origin: world
+        position: [0,58,14900000]
+styles:
+    geometry-projection:
+        shaders:
+            defines:
+                EARTH_RADIUS: 6378137.0
+                PI: 3.14159265358979323846
+                HALF_PI: 1.570796327
+                QUATER_PI: .785398163
+                deg2rad(d): (((d)*3.14159265358979323846)/180.0)
+                rad2deg(d): (((d)*180.0)/3.14159265358979323846)
+            blocks:
+                global: |
+                    //
+                    //    The following functions take or return there results in degrees
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_d (float y) { return rad2deg(2.0*atan(exp(deg2rad(y)))-HALF_PI); }
+                    float x2lon_d (float x) { return x; }
+                    float lat2y_d (float lat) { return rad2deg(log(tan(QUATER_PI+ deg2rad(lat)/2.0))); }
+                    float lon2x_d (float lon) { return lon; }
+                    //
+                    //    The following functions take or return there results in something close to meters, along the equator 
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_m (float y) { return rad2deg(2.0*atan(exp((y/EARTH_RADIUS)))-HALF_PI); }
+                    float x2lon_m (float x) { return rad2deg(x/EARTH_RADIUS); }
+                    float lat2y_m (float lat) { return EARTH_RADIUS*log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
+                    float lon2x_m (float lon) { return deg2rad(lon)*EARTH_RADIUS; }
+                    
+                    // Albers
+                    // https://gist.github.com/RandomEtc/476238
+                    vec2 albers(float lat, float lng) {
+                        float lat0 = 66. * (PI/180.);   // Latitude_Of_Origin
+                        float lng0 = 105. * (PI/180.);  // Central_Meridian
+                        float phi1 = 52. * (PI/180.);   // Standard_Parallel_1
+                        float phi2 = 64. * (PI/180.);  // Standard_Parallel_2
+                        float n = 0.5 * (sin(phi1) + sin(phi2));
+                        float c = cos(phi1);
+                        float C = c*c + 2.*n*sin(phi1);
+                        float p0 = sqrt(C - 2.*n*sin(lat0)) / n;
+                        float theta = n * (lng * PI/180. - lng0);
+                        float p = sqrt(C - 2.*n*sin(lat* PI/180.)) / n;
+                        float x = p * sin(theta);
+                        float y = p0 - p * cos(theta);
+                        return vec2(x,y);
+                    }
+    textures:
+        base: polygons
+        mix: [geometry-projection,geometry-matrices,generative-fbm]
+        animated: true
+        shaders:
+            uniforms:
+                u_height_map: imgs/earth-elevation.jpg
+                u_normal_map: imgs/earth-normals.jpg
+                u_cloud_map: imgs/earth-clouds.jpg
+                u_day_map: imgs/earth-texture-day.jpg
+                u_night_map: imgs/earth-texture-night.jpg
+            blocks:
+                position: |
+                    vec2 mercator = u_map_position.xy + position.xy;
+                    vec2 latlon = vec2(y2lat_m(mercator.y),x2lon_m(mercator.x));
+                    vec2 AL = albers(latlon.x,latlon.y)*vec2(-365.,-375.)*10000.+vec2(0.,6378137.*0.7);
+                    position.xy = mix(AL,mercator,.1);
+                    
+                    
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            textures:
+                order: 0
+                color: '#555'
+    water:
+        data: { source: osm }
+        draw:
+            textures:
+                order: 1
+                color: '#ddd'
