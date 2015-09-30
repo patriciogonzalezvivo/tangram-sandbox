@@ -8,8 +8,9 @@ cameras:
 lights:
     directional1:
         type: directional
-        direction: [0.2, 0.7, -0.5]
-        diffuse: [1., 1., 1.]
+        direction: [0.2, 0.9, -0.5]
+        diffuse: .7
+        ambient: .5
 styles:
     geometry-projection:
         shaders:
@@ -36,9 +37,36 @@ styles:
                     float x2lon_m (float x) { return rad2deg(x/EARTH_RADIUS); }
                     float lat2y_m (float lat) { return EARTH_RADIUS*log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
                     float lon2x_m (float lon) { return deg2rad(lon)*EARTH_RADIUS; }
+    functions-map:
+        shaders:
+            defines:
+                EPSILON: 0.0000001
+            blocks:
+                global: |
+                    float map (in float value, in float inputMin, in float inputMax, in float outputMin, in float outputMax, bool clamp) {
+                        if (abs(inputMin - inputMax) < EPSILON){
+                            return outputMin;
+                        } else {
+                            float outVal = ((value - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin);
+                        
+                            if( clamp ){
+                                if(outputMax < outputMin){
+                                    if( outVal < outputMax ) outVal = outputMax;
+                                    else if( outVal > outputMin ) outVal = outputMin;
+                                }else{
+                                    if( outVal > outputMax ) outVal = outputMax;
+                                    else if( outVal < outputMin ) outVal = outputMin;
+                                }
+                            }
+                            return outVal;
+                        }
+                    }
+                    float map (in float value, in float inputMin, in float inputMax, in float outputMin, in float outputMax) {
+                        return map(value, inputMin, inputMax, outputMin, outputMax, true); 
+                    }
     textures:
         base: polygons
-        mix: geometry-projection
+        mix: [geometry-projection,functions-map]
         animated: true
         shaders:
             uniforms:
@@ -46,15 +74,16 @@ styles:
                 u_normal_map: imgs/earth-normals.jpg
             blocks:
                 normal: |
+                    float alpha = pow(1.-map(u_map_position.z,3.,10.,0.,1.),5.0);
                     vec2 st = u_map_position.xy+v_position.xy;
                     vec2 pos = vec2(y2lat_m(st.y),x2lon_m(st.x));                    
                     pos /= vec2(90.,180.); // Normalize
                     pos = (pos+1.)*.5; // re-map between 0.0 and 1.0
-                    normal += texture2D(u_normal_map,fract(pos.yx)).rgb*2.-1.;
-                color: |
+                    normal += (texture2D(u_normal_map,fract(pos.yx)).rgb*2.-1.)*alpha;
+                filter: |
                     float height = texture2D(u_height_map,fract(pos.yx)).r;
                     float t = abs(smoothstep(.0,1.,sin(u_time*.1)));
-                    float level = 0.068+t*.035;
+                    float level = 0.07+t*.035;
                     color.rgb = mix(vec3(0.098, 0.467, 0.867),color.rgb,step(level,height));
     buildings:
         base: polygons
@@ -68,7 +97,7 @@ layers:
         draw:
             textures:
                 order: 0
-                color: '#555'
+                color: [0.569, 0.569, 0.569]
             lines:
                 order: 5
                 color: [0.996, 0.745, 0.086]
