@@ -60,15 +60,9 @@ styles:
                     }
     textures:
         base: polygons
-        mix: [geometry-projection,geometry-matrices,generative-fbm]
+        mix: [geometry-projection]
         animated: true
         shaders:
-            uniforms:
-                u_height_map: imgs/earth-elevation.jpg
-                u_normal_map: imgs/earth-normals.jpg
-                u_cloud_map: imgs/earth-clouds.jpg
-                u_day_map: imgs/earth-texture-day.jpg
-                u_night_map: imgs/earth-texture-night.jpg
             blocks:
                 position: |
                     vec2 mercator = u_map_position.xy + position.xy;
