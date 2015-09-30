@@ -26,3 +26,26 @@ styles:
                     float x2lon_m (float x) { return rad2deg(x / EARTH_RADIUS); }
                     float lat2y_m (float lat) { return EARTH_RADIUS * log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
                     float lon2x_m (float lon) { return deg2rad(lon) * EARTH_RADIUS; }
+                    
+                    // ALBERS
+                    // https://gist.github.com/RandomEtc/476238
+                    vec2 latlon2albers(vec2 latlon, float lat0, float lng0, float phi1, float phi2 ) {
+                        latlon.y -= 100.;
+                        lat0 = deg2rad(lat0);    // Latitude_Of_Origin
+                        lng0 = deg2rad(lng0);    // Central_Meridian
+                        phi1 = deg2rad(phi1);    // Standard_Parallel_1
+                        phi2 = deg2rad(phi2);    // Standard_Parallel_2
+                        float n = 0.5 * (sin(phi1) + sin(phi2));
+                        float c = cos(phi1);
+                        float C = c*c + 2.*n*sin(phi1);
+                        float p0 = sqrt(C - 2.*n*sin(lat0)) / n;
+                        float theta = n * (deg2rad(latlon.y)-lng0);
+                        float p = sqrt(C - 2.*n*sin(deg2rad(latlon.x))) / n;
+                        float x = p * sin(theta);
+                        float y = p0 - p * cos(theta);
+                        return vec2(x,y)*vec2(-365.,-375.)*12000.+vec2(0.,6378137.)+vec2(-.2,1.)*400000.*u_map_position.z;
+                    }
+                    
+                    vec2 latlon2USAlbers(vec2 latlon){
+                        return latlon2albers(latlon,66.,105.,52.,64.);
+                    }

@@ -26,7 +26,7 @@ styles:
                 rad2deg(d): (((d)*180.0)/3.14159265358979323846)
             blocks:
                 global: |
-                    //
+                    // MERCATOR
                     //    The following functions take or return there results in degrees
                     //    http://wiki.openstreetmap.org/wiki/Mercator
                     float y2lat_d (float y) { return rad2deg(2.0*atan(exp(deg2rad(y)))-HALF_PI); }
@@ -41,46 +41,61 @@ styles:
                     float lat2y_m (float lat) { return EARTH_RADIUS*log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
                     float lon2x_m (float lon) { return deg2rad(lon)*EARTH_RADIUS; }
                     
-                    // Albers
+                    // ALBERS
                     // https://gist.github.com/RandomEtc/476238
-                    vec2 albers(float lat, float lng) {
-                        float lat0 = 66. * (PI/180.);   // Latitude_Of_Origin
-                        float lng0 = 105. * (PI/180.);  // Central_Meridian
-                        float phi1 = 52. * (PI/180.);   // Standard_Parallel_1
-                        float phi2 = 64. * (PI/180.);  // Standard_Parallel_2
+                    vec2 latlon2albers(vec2 latlon, float lat0, float lng0, float phi1, float phi2 ) {
+                        latlon.y -= 100.;
+                        lat0 = deg2rad(lat0);    // Latitude_Of_Origin
+                        lng0 = deg2rad(lng0);    // Central_Meridian
+                        phi1 = deg2rad(phi1);    // Standard_Parallel_1
+                        phi2 = deg2rad(phi2);    // Standard_Parallel_2
                         float n = 0.5 * (sin(phi1) + sin(phi2));
                         float c = cos(phi1);
                         float C = c*c + 2.*n*sin(phi1);
                         float p0 = sqrt(C - 2.*n*sin(lat0)) / n;
-                        float theta = n * (lng * PI/180. - lng0);
-                        float p = sqrt(C - 2.*n*sin(lat* PI/180.)) / n;
+                        float theta = n * (deg2rad(latlon.y)-lng0);
+                        float p = sqrt(C - 2.*n*sin(deg2rad(latlon.x))) / n;
                         float x = p * sin(theta);
                         float y = p0 - p * cos(theta);
-                        return vec2(x,y);
+                        return vec2(x,y)*vec2(-365.,-375.)*12000.+vec2(0.,6378137.)+vec2(-.2,1.)*400000.*u_map_position.z;
                     }
-    textures:
-        base: polygons
+                    
+                    vec2 latlon2USAlbers(vec2 latlon){
+                        return latlon2albers(latlon,66.,105.,52.,64.);
+                    }
+    toAlbers:
         mix: [geometry-projection]
         animated: true
         shaders:
             blocks:
                 position: |
-                    vec2 mercator = u_map_position.xy + position.xy;
+                    vec2 mercator = position.xy;
                     vec2 latlon = vec2(y2lat_m(mercator.y),x2lon_m(mercator.x));
-                    vec2 AL = albers(latlon.x,latlon.y)*vec2(-365.,-375.)*10000.+vec2(0.,6378137.*0.7);
-                    position.xy = mix(AL,mercator,.1);
-                    
-                    
+                    vec2 AL = latlon2USAlbers(latlon);
+                    position.xy = mix(AL,mercator,abs(sin(u_time*0.3)));
+    poly:
+        base: polygons
+        mix: toAlbers
+    line:
+        base: lines  
+        mix: toAlbers
 layers:
     earth:
         data: { source: osm }
         draw:
-            textures:
+            poly:
                 order: 0
                 color: '#555'
     water:
         data: { source: osm }
         draw:
-            textures:
+            poly:
                 order: 1
                 color: '#ddd'
+    boundaries:
+        data: { source: osm }
+        draw:
+            line:
+                order: 2
+                color: [0.000, 0.000, 0.000]
+                width: 1px
