@@ -29,23 +29,38 @@ styles:
                     
                     // ALBERS
                     // https://gist.github.com/RandomEtc/476238
-                    vec2 latlon2albers(vec2 latlon, float lat0, float lng0, float phi1, float phi2 ) {
-                        latlon.y -= 100.;
+                    vec2 latlon2albers(float lat, float lon, float lat0, float lng0, float phi1, float phi2 ) {
                         lat0 = deg2rad(lat0);    // Latitude_Of_Origin
                         lng0 = deg2rad(lng0);    // Central_Meridian
                         phi1 = deg2rad(phi1);    // Standard_Parallel_1
                         phi2 = deg2rad(phi2);    // Standard_Parallel_2
+                        
                         float n = 0.5 * (sin(phi1) + sin(phi2));
                         float c = cos(phi1);
                         float C = c*c + 2.*n*sin(phi1);
                         float p0 = sqrt(C - 2.*n*sin(lat0)) / n;
-                        float theta = n * (deg2rad(latlon.y)-lng0);
-                        float p = sqrt(C - 2.*n*sin(deg2rad(latlon.x))) / n;
-                        float x = p * sin(theta);
-                        float y = p0 - p * cos(theta);
-                        return vec2(x,y)*vec2(-365.,-375.)*12000.+vec2(0.,6378137.)+vec2(-.2,1.)*400000.*u_map_position.z;
+                        float theta = n * (deg2rad(lon)-lng0);
+                        float p = sqrt(C - 2.*n*sin(deg2rad(lat)))/n;
+                        return vec2(p * sin(theta), p0 - p * cos(theta)) * EARTH_RADIUS;
                     }
                     
-                    vec2 latlon2USAlbers(vec2 latlon){
-                        return latlon2albers(latlon,66.,105.,52.,64.);
+                    vec2 latlon2albers (float lat, float lon, float delta_phi1, float delta_phi2) {
+                        return latlon2albers(lat, 
+                                            lon, 
+                                            y2lat_m(u_map_position.y), 
+                                            x2lon_m(u_map_position.x), 
+                                            y2lat_m(u_map_position.y)+delta_phi1, 
+                                            y2lat_m(u_map_position.y+delta_phi2) );
+                    }
+                    
+                    vec2 latlon2albers (float lat, float lon, float width) {
+                        return latlon2albers(lat, lon, width, -width);
+                    }
+                    
+                    vec2 latlon2albers(float lat, float lon){
+                        return latlon2albers(lat,lon,20.);
+                    }
+                    
+                    vec2 latlon2USalbers(float lat, float lon){
+                        return latlon2albers(lat,lon,23.,-96.,29.,45.);
                     }
