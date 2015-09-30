@@ -54,7 +54,7 @@ styles:
                 color: |
                     float height = texture2D(u_height_map,fract(pos.yx)).r;
                     float t = abs(smoothstep(.0,1.,sin(u_time*.1)));
-                    float level = 0.071+t*.035;
+                    float level = 0.068+t*.035;
                     color.rgb = mix(vec3(0.098, 0.467, 0.867),color.rgb,step(level,height));
     buildings:
         base: polygons
@@ -119,4 +119,4 @@ layers:
                     size: 16px
                     family: helvetica
                     fill: black
-                    stroke: { color: white , width: 3 }
+                    stroke: { color: white , width: 2 }
