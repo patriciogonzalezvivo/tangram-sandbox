@@ -6,10 +6,6 @@ cameras:
     perspective:
         type: flat
 lights:
-    # directional1:
-    #     type: directional
-    #     direction: [0.2, 0.7, -0.5]
-    #     diffuse: [1., 1., 1.]
     point1:
         type: point
         origin: world
@@ -112,118 +108,13 @@ styles:
                     float x2lon_m (float x) { return rad2deg(x/EARTH_RADIUS); }
                     float lat2y_m (float lat) { return EARTH_RADIUS*log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
                     float lon2x_m (float lon) { return deg2rad(lon)*EARTH_RADIUS; }
-    generative-random:
-        shaders:
-            blocks:
-                global: |
-                    // 1D Random for 1 and 2 dimentions
-                    // ================================
-                    float random (float x) {
-                        return fract(sin(x)*1e4);
-                    }
-                    float random (vec2 xy) {
-                        return fract(sin(dot(xy.xy, vec2(12.9898,78.233)))* 43758.5453123);
-                    }
-                    //
-                    // 2D Random for 2 dimentions
-                    // ================================
-                    vec2 random2 (vec2 xy) {
-                        return fract(sin(vec2(dot(xy,vec2(127.1,311.7)),dot(xy,vec2(269.5,183.3))))*43758.5453);
-                    }
-                    //
-                    // 3D Random for 2 dimentions
-                    // ================================
-                    vec3 random3 (vec2 xy) { 
-                        return fract(sin(vec3( dot(xy,vec2(127.1,311.7)), dot(xy,vec2(269.5,183.3)), dot(xy,vec2(419.2,371.9)) ))*43758.5453); 
-                    }
-    generative-noise:
-        mix: generative-random
-        shaders:
-            blocks:
-                global: |
-                    // 1D Value Noise for 1, 2 and 3 dimentions
-                    // ================================
-                    float noise (in float x) {
-                        float i = floor(x);
-                        float f = fract(x);
-                        float u = f * f * (3.0 - 2.0 * f);
-                        return mix(random(i), random(i + 1.0), u);
-                    }
-                    float noise (vec2 xy) {
-                        vec2 i = floor(xy);
-                        vec2 f = fract(xy);
-                        float a = random(i);
-                        float b = random(i + vec2(1.0, 0.0));
-                        float c = random(i + vec2(0.0, 1.0));
-                        float d = random(i + vec2(1.0, 1.0));
-                        vec2 u = f * f * (3.0 - 2.0 * f);
-                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
-                    }
-                    float noise (vec3 xyz) {
-                        const vec3 step = vec3(110.0, 241.0, 171.0);
-                        vec3 i = floor(xyz);
-                        vec3 f = fract(xyz);
-                        float n = dot(i, step);
-                        vec3 u = f * f * (3.0 - 2.0 * f);
-                        return mix( mix(mix(random(n + dot(step, vec3(0,0,0))),
-                                            random(n + dot(step, vec3(1,0,0))),
-                                            u.x),
-                                        mix(random(n + dot(step, vec3(0,1,0))),
-                                            random(n + dot(step, vec3(1,1,0))),
-                                            u.x),
-                                        u.y),
-                                    mix(mix(random(n + dot(step, vec3(0,0,1))),
-                                        random(n + dot(step, vec3(1,0,1))),
-                                        u.x),
-                                        mix(random(n + dot(step, vec3(0,1,1))),
-                                            random(n + dot(step, vec3(1,1,1))),
-                                            u.x),
-                                    u.y),
-                                u.z);
-                    }
-    generative-fbm:
-        mix: generative-noise
-        shaders:
-            defines:
-                NUM_OCTAVES: 5
-            blocks:
-                global: |
-                    // Fractional Brownian motion for 1 and 2 dimensions
-                    float fbm (float x) {
-                        float v = 0.0;
-                        float a = 0.5;
-                        float shift = float(100.0);
-                        for (int i = 0; i < int(NUM_OCTAVES); ++i) {
-                            v += a * noise(x);
-                            x = x * 2.0 + shift;
-                            a *= 0.5;
-                        }
-                        return v;
-                    }
-                    float fbm (vec2 xy) {
-                        float v = 0.0;
-                        float a = 0.5;
-                        vec2 shift = vec2(100.0);
-                        mat2 rot = mat2(cos(0.5), sin(0.5), 
-                                        -sin(0.5), cos(0.50));
-                        for (int i = 0; i < int(NUM_OCTAVES); ++i) {
-                            v += a * noise(xy);
-                            xy = rot * xy * 2.0 + shift;
-                            a *= 0.5;
-                        }
-                        return v;
-                    }
     textures:
         base: polygons
         mix: [geometry-projection,geometry-matrices,generative-fbm]
         animated: true
         shaders:
             uniforms:
-                u_height_map: imgs/earth-elevation.jpg
-                u_normal_map: imgs/earth-normals.jpg
                 u_cloud_map: imgs/earth-clouds.jpg
-                u_day_map: imgs/earth-texture-day.jpg
-                u_night_map: imgs/earth-texture-night.jpg
             blocks:
                 position: |
                     
@@ -231,20 +122,10 @@ styles:
                     vec2 st = u_map_position.xy+v_position.xy;
                     vec2 pos = vec2(y2lat_m(st.y),x2lon_m(st.x));
                     mat3 sphere = rotateY3D(deg2rad(pos.y)) * rotateX3D(deg2rad(pos.x));
-                    // normal = sphere * normal;
-                    
                     pos /= vec2(90.,180.); // Normalize
                     pos = (pos+1.)*.5; // re-map between 0.0 and 1.0
-                    // normal += texture2D(u_normal_map,fract(pos.yx)).rgb*2.-1.;
-                color: |
-                    // vec4 night = texture2D(u_night_map,fract(pos.yx));
-                    // vec4 day = texture2D(u_day_map,fract(pos.yx));
-                    // color += texture2D(u_height_map,fract(pos.yx));
                 filter: |
-                    // color = mix(night,day,light_accumulator_diffuse.r);
-                    float offsetX = 0.0;//fbm(pos.yx*vec2(2.,5.)+u_time*0.1)*0.05;
-                    float offsetY = 0.0;//fbm(pos.xy*10.+u_time*0.1)*.01;
-                    float clouds = texture2D(u_cloud_map,fract(pos.yx+vec2(offsetX,offsetY) ) ).r;
+                    float clouds = texture2D(u_cloud_map,fract(pos.yx) ).r;
                     color = mix(color-clouds,color+clouds,light_accumulator_diffuse.r);
                     
 layers:
