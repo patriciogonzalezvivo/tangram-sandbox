@@ -231,21 +231,21 @@ styles:
                     vec2 st = u_map_position.xy+v_position.xy;
                     vec2 pos = vec2(y2lat_m(st.y),x2lon_m(st.x));
                     mat3 sphere = rotateY3D(deg2rad(pos.y)) * rotateX3D(deg2rad(pos.x));
-                    // normal = sphere * normal;
+                    normal = sphere * normal;
                     
                     pos /= vec2(90.,180.); // Normalize
                     pos = (pos+1.)*.5; // re-map between 0.0 and 1.0
-                    // normal += texture2D(u_normal_map,fract(pos.yx)).rgb*2.-1.;
+                    normal += texture2D(u_normal_map,fract(pos.yx)).rgb*2.-1.;
                 color: |
-                    // vec4 night = texture2D(u_night_map,fract(pos.yx));
-                    // vec4 day = texture2D(u_day_map,fract(pos.yx));
-                    color += texture2D(u_height_map,fract(pos.yx));
+                    vec4 night = texture2D(u_night_map,fract(pos.yx));
+                    vec4 day = texture2D(u_day_map,fract(pos.yx));
+                    // color += texture2D(u_height_map,fract(pos.yx));
                 filter: |
-                    // color = mix(night,day,light_accumulator_diffuse.r);
-                    float offsetX = 0.0;//fbm(pos.yx*vec2(2.,5.)+u_time*0.1)*0.05;
-                    float offsetY = 0.0;//fbm(pos.xy*10.+u_time*0.1)*.01;
-                    // float clouds = texture2D(u_cloud_map,fract(pos.yx+vec2(offsetX,offsetY) ) ).r;
-                    // color = mix(color-clouds,color+clouds,light_accumulator_diffuse.r);
+                    color = mix(night,day,light_accumulator_diffuse.r);
+                    float offsetX = fbm(pos.yx*vec2(2.,5.)+u_time*0.1)*0.05;
+                    float offsetY = fbm(pos.xy*10.+u_time*0.1)*.01;
+                    float clouds = texture2D(u_cloud_map,fract(pos.yx+vec2(offsetX,offsetY) ) ).r;
+                    color = mix(color-clouds,color+clouds,light_accumulator_diffuse.r);
                     
 layers:
     earth:
