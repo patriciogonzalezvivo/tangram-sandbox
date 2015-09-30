@@ -4,7 +4,8 @@
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
 cameras:
     perspective:
-        type: flat
+        type: perspective
+        vanishing_point: [0, -500]
 lights:
     # directional1:
     #     type: directional
@@ -78,17 +79,45 @@ styles:
                     vec2 latlon2USalbers(float lat, float lon){
                         return latlon2albers(lat,lon,23.,-96.,29.,45.);
                     }
+    functions-map:
+        shaders:
+            defines:
+                EPSILON: 0.0000001
+            blocks:
+                global: |
+                    float map (in float value, in float inputMin, in float inputMax, in float outputMin, in float outputMax, bool clamp) {
+                        if (abs(inputMin - inputMax) < EPSILON){
+                            return outputMin;
+                        } else {
+                            float outVal = ((value - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin);
+                        
+                            if( clamp ){
+                                if(outputMax < outputMin){
+                                    if( outVal < outputMax ) outVal = outputMax;
+                                    else if( outVal > outputMin ) outVal = outputMin;
+                                }else{
+                                    if( outVal > outputMax ) outVal = outputMax;
+                                    else if( outVal < outputMin ) outVal = outputMin;
+                                }
+                            }
+                            return outVal;
+                        }
+                    }
+                    float map (in float value, in float inputMin, in float inputMax, in float outputMin, in float outputMax) {
+                        return map(value, inputMin, inputMax, outputMin, outputMax, true); 
+                    }
     toAlbers:
-        mix: [geometry-projection]
+        mix: [geometry-projection, functions-map]
         animated: true
         shaders:
             blocks:
                 position: |
                     // mercator position of the current vertex, u_map_position = center of screen, position.xy = vertex screen position in meters from the center of the screen
+                    float alpha = map(u_map_position.z,7.,12.,0.,1.);
                     vec2 mercator = u_map_position.xy + position.xy;
                     float lat = y2lat_m(mercator.y);
                     float lon = x2lon_m(mercator.x);
-                    position.xy = latlon2albers(lat,lon);
+                    position.xy = mix(latlon2albers(lat,lon),position.xy,alpha);
             
     poly:
         base: polygons
@@ -116,3 +145,23 @@ layers:
                 order: 2
                 color: [0.000, 0.000, 0.000]
                 width: 1px
+    roads:
+        data: { source: osm }
+        properties: { width: 3 }
+        draw:
+            line:
+                order: 4
+                color: gray
+                width: [[5, .25px],[15, .5px],[85, 10]]
+    buildings:
+        data: { source: osm }
+        filter: { $zoom: { min: 14 } }
+        draw:
+            poly:
+                order: 50
+                color: '#999'
+        extruded:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                poly:
+                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
