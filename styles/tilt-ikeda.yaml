@@ -1,5 +1,9 @@
 ﻿# Author @patriciogv - 2015
 
+sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 cameras:
     camera1:
         type: perspective
@@ -26,24 +30,84 @@ styles:
                 position: |
                     float t = u_time*0.05; 
                     position.xyz = rotateX3D(abs(cos(t))) * rotateZ3D(abs(sin(t))*.5) * position.xyz;
-                color: |
-                    float focalDistance = 500.;
-                    float focalZoom = 1.-min(u_map_position.z/16.,1.);
-                    float focalRange = 2000.+20000.*focalZoom;
-                    float dof = 1.0;
-                    dof = 1.0-((abs((v_position.z)-focalDistance)-v_world_position.z*10.)/focalRange);
     lin:
-        base: lines
-        mix: tilt
-    tools:
-        mix: tilt
+         base: lines
+         mix: tilt  
+    space-tile:
+        shaders:
+            defines:
+                TILE_SCALE: 0.0002445
+                NORMALIZED_SHORT(x): (x * 32767.)
+            blocks:
+                global: |
+                    // Variant to be add to both vertex and fragments shaders
+                    varying vec3 v_pos;
+                    //
+                    // Get the coordinates in tile space
+                    // ================================
+                    vec2 getTileCoords () {
+                        return fract(v_pos.xy*TILE_SCALE);
+                    }
+
+                position: |
+                    // Normalize the attribute position of a vertex
+                    v_pos = NORMALIZED_SHORT(a_position.xyz);
+    generative-random:
         shaders:
             blocks:
                 global: |
-                    // Tile Coords System
-                    //=============================
-                    varying vec3 v_pos;
-                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
+                    // 1D Random for 1 and 2 dimentions
+                    // ================================
+                    // float random (float x) {
+                    //     return fract(sin(x)*1e4);
+                    // }
+                    // float random (vec2 xy) {
+                    //     return fract(sin(dot(xy.xy, vec2(12.9898,78.233)))* 43758.5453123);
+                    // }
+                    float random(float x){ return fract(sin(x)*43758.5453);}
+                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+                    //  Crosses
+                    //
+                    // 2D Random for 2 dimentions
+                    // ================================
+                    vec2 random2 (vec2 xy) {
+                        return fract(sin(vec2(dot(xy,vec2(127.1,311.7)),dot(xy,vec2(269.5,183.3))))*43758.5453);
+                    }
+                    //
+                    // 3D Random for 2 dimentions
+                    // ================================
+                    vec3 random3 (vec2 xy) { 
+                        return fract(sin(vec3( dot(xy,vec2(127.1,311.7)), dot(xy,vec2(269.5,183.3)), dot(xy,vec2(419.2,371.9)) ))*43758.5453); 
+                    }
+                    vec3 random3(vec3 c) {
+                        float j = 4096.0*sin(dot(c,vec3(17.0, 59.4, 15.0)));
+                        vec3 r;
+                        r.z = fract(512.0*j);
+                        j *= .125;
+                        r.x = fract(512.0*j);
+                        j *= .125;
+                        r.y = fract(512.0*j);
+                        return r-0.5;
+                    }
+    geometry-normal:
+        shaders:
+            blocks:
+                global: |
+                    // Ask to the geometry normals if this surface is a Wall
+                    bool isWall() {
+                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                    }
+                    //
+                    // Ask to the geometry normals if this surface is a roof
+                    bool isRoof() {
+                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                    }
+    
+    grid:
+        mix: [tilt, space-tile]
+        shaders:
+            blocks:
+                global: |
                     //  Simple Grid
                     //=============================
                     float grid(in vec2 st, in float res, in float press){
@@ -56,7 +120,7 @@ styles:
                     // GridTile
                     //=============================
                     vec3 TileGrid(float res){
-                        vec2 st = TileCoords()*100.*res;
+                        vec2 st = getTileCoords()*100.*res;
                         vec3 color = vec3(0.0);
                         float press = 0.5+(1.0-fract(u_map_position.z))*0.1;
                         color += vec3(0.1,0.,0.)*grid(st,0.02,press);
@@ -65,37 +129,9 @@ styles:
                         return color;
                     }
                     vec3 TileGrid(){ return mix(TileGrid(1.),TileGrid(2.),fract(u_map_position.z)); }
-                    // Random
-                    //=============================
-                    float random(float x){ return fract(sin(x)*43758.5453);}
-                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
-                    //  Crosses
-                    //=============================
-                    float box(in vec2 st, in vec2 size){
-                        size = vec2(0.5) - size*0.5;
-                        vec2 uv = smoothstep(size,
-                                            size+vec2(0.001),
-                                            st);
-                        uv *= smoothstep(size,
-                                        size+vec2(0.001),
-                                        vec2(1.0)-st);
-                        return uv.x*uv.y;
-                    }
-                    float cross(in vec2 st, vec2 size){
-                        return  clamp(box(st, vec2(size.x*0.5,size.y*0.125)) +
-                                box(st, vec2(size.y*0.125,size.x*0.5)),0.,1.);
-                    }
-                    //  Color
-                    //=============================
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
-                position: |
-                    // GridTile
-                    v_pos = a_position.xyz * 32767.;
     roads:
         base: lines
-        mix: tools
+        mix: [tilt, generative-random]
         animated: true
         texcoords: true
         shaders:
@@ -121,20 +157,20 @@ styles:
                     color.rgb *= step(0.1,st.x)-step(0.9,st.x);
     simple-grid:
         base: polygons
-        mix: tools
+        mix: [grid, generative-random]
         animated: false
         shaders:
             blocks:
                 color: |
                     color.rgb *= TileGrid();
-                    vec2 st = u_tile_origin.xy+floor(TileCoords()*2.);
+                    vec2 st = u_tile_origin.xy+floor(getTileCoords()*2.);
                     float t = u_time*.8+random(st);
                     float time_i = floor(t);
                     float time_f = fract(t);
                     color.rgb += step(0.9,random(st+time_i))*(1.0-time_f);
     numeric-grid:
         base: polygons
-        mix: tools
+        mix: [grid, generative-random]
         animated: true
         shaders:
             blocks:
@@ -173,8 +209,22 @@ styles:
                         borders *= step(0.0,st)*step(0.0,1.-st);            // outer
                         return step(.5,1.0-pct) * borders.x * borders.y;
                     }
+                    float box(in vec2 st, in vec2 size){
+                        size = vec2(0.5) - size*0.5;
+                        vec2 uv = smoothstep(size,
+                                            size+vec2(0.001),
+                                            st);
+                        uv *= smoothstep(size,
+                                        size+vec2(0.001),
+                                        vec2(1.0)-st);
+                        return uv.x*uv.y;
+                    }
+                    float cross(in vec2 st, vec2 size){
+                        return  clamp(box(st, vec2(size.x*0.5,size.y*0.125)) +
+                                box(st, vec2(size.y*0.125,size.x*0.5)),0.,1.);
+                    }
                 color: |
-                    vec2 st = TileCoords();
+                    vec2 st = getTileCoords();
                     color.rgb = TileGrid();
                     float zoom = 0.0001+fract(u_map_position.z);
                     // Crosses
@@ -202,10 +252,10 @@ styles:
                         color.rgb += vec3(char(digits_st_f,pct));
                     }
                     
-    
+                    
     buildings:
         base: polygons
-        mix: tools
+        mix: [tilt, generative-random, color-tools, geometry-normal]
         texcoords: true
         shaders:
             blocks:
@@ -214,11 +264,13 @@ styles:
                         vec2 p = floor(st+v);
                         return step(t, random(100.+p*.000001)+random(p.x)*0.5 );
                     }
+                    float getBrightness(in vec3 _rgb){
+                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
+                    }
                 color: |
-                    if (dot(v_normal,vec3(0.,0.,1.)) == 0.){
-                        float r = random(getBrightness(color.rgb));
+                    if (isWall()) {
+                        float r = random( getBrightness(color.rgb) );
                         float amount = 0.5+random(color.rg)*0.5;
-                        vec2 offset = vec2(0.,0.);
                         
                         if ( r > .3) {
                             // DeFrag
@@ -240,7 +292,7 @@ styles:
                             float t = mod(u_time*20.*(1.+r*.5)+(4324.*amount),500.);
                             vec2 head = vec2(mod(t,50.), floor(t/50.));
 
-                            
+                            vec2 offset = vec2(0.1,0.);
                             float pct = 1.0;
                             pct *= step(10.-head.y,ipos.y);// Y
                             pct += (1.0-step(head.x,ipos.x))*step(10.-head.y,ipos.y+1.);   // X
@@ -268,6 +320,9 @@ styles:
                             vec2 vel = vec2(u_time*max(grid.x,grid.y)); // time
                             vel *= vec2(-1.,0.0) * random(1.0+ipos.y); // direction
 
+                            // Assign a random value base on the integer coord
+                            vec2 offset = vec2(0.1,0.);
+
                             color.r = pattern(st+offset,vel,amount);
                             color.g = pattern(st,vel,amount);
                             color.b = pattern(st-offset,vel,amount);
@@ -276,11 +331,6 @@ styles:
                     } else {
                         color.rgb = vec3(0.);
                     }
-
-sources:
-    osm:
-        type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 layers:
     earth:
         data: { source: osm }
@@ -326,16 +376,12 @@ layers:
     buildings:
         data: { source: osm }
         draw:
-            buildings:
+            buildings: 
                 order: 8
                 color: Style.color.pseudoRandomColor()
-        3d-buildings:
-            filter: { $zoom: { min: 13 } }
-            draw:
-                buildings:
-                    extrude: true
-                lin:
-                    order: 7
-                    color: [0.687,0.660,0.660]
-                    width: [[13,.5px],[15,1px],[17,2px],[20,3px]]
-                    extrude: true
+                extrude: true
+            lin:
+                order: 7
+                color: white
+                width: [[15,0px],[17,1.px],[20,3px]]
+                extrude: true
