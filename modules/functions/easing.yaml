@@ -5,8 +5,8 @@ styles:
     functions-easing:
         shaders:
             defines:
-                PI: 3.141592653589793
-                HALF_PI: 1.5707963267948966
+                PI: 3.1415926535897932384626433832795
+                HALF_PI: 1.5707963267948966192313216916398
             blocks:
                 global: |
                     float linear(float t) {
