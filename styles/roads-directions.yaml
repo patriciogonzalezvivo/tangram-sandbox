@@ -65,6 +65,8 @@ styles:
             defines:
                 PI: 3.14159265358979323846
             blocks:
+                width: |
+                    width *= 2.0;
                 color: |
                     vec2 diff = vec2(dFdx(v_texcoord.y), dFdy(v_texcoord.y));
                     float angle = 0.0;
