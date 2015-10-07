@@ -35,12 +35,8 @@ styles:
                 global: |
                     // 1D Random for 1 and 2 dimentions
                     // ================================
-                    float random (float x) {
-                        return fract(sin(x)*1e4);
-                    }
-                    float random (vec2 xy) {
-                        return fract(sin(dot(xy.xy, vec2(12.9898,78.233)))* 43758.5453123);
-                    }
+                    float random(float x){ return fract(sin(x)*43758.5453);}
+                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
                     //
                     // 2D Random for 2 dimentions
                     // ================================
@@ -377,7 +373,7 @@ layers:
                 width: 8.5
         oneway:
             filter: { oneway: yes }
-            draw: { roads: { color: red } }
+            # draw: { roads: { color: red } }
     buildings:
         data: { source: osm }
         draw:
