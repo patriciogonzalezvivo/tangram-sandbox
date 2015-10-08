@@ -373,7 +373,7 @@ layers:
                 width: 8.5
         oneway:
             filter: { oneway: yes }
-            # draw: { roads: { color: red } }
+            draw: { roads: { color: red } }
     buildings:
         data: { source: osm }
         draw:
