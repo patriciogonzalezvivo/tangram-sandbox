@@ -247,9 +247,9 @@ styles:
                     pos /= vec2(90.,180.); // Normalize
                     pos = (pos+1.)*.5; // re-map between 0.0 and 1.0
                     
-                    float df = texture2D(u_height_map,fract(pos.yx)).r*100.;
-                    // df += snoise(vec3(2.+st*0.00000009,-u_time*0.0001))*.5;
-                    // df += snoise(vec3(st*0.00000005,-u_time*0.0001))*0.5;
+                    float df = 0.0;//texture2D(u_height_map,fract(pos.yx)).r*100.;
+                    df += snoise(vec3(2.+st*0.00000009,-u_time*0.0001))*.5;
+                    df += snoise(vec3(st*0.00000005,-u_time*0.0001))*0.5;
                     df = fract(df*pow(2.,u_map_position.z));
                     color.rgb = mix(color.rgb,background,aastep(.1/u_map_position.z,df));
                     
