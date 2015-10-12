@@ -1,5 +1,12 @@
 ﻿# Author @patriciogv - 2015
 
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+scene:
+    background:
+        color: white
 cameras:
     perspective:
         type: perspective
@@ -9,17 +16,66 @@ lights:
         direction: [.1, .5, -1]
         diffuse: .7
         ambient: .5
-scene:
-    background:
-        color: white
-sources:
-    osm:
-        type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-styles:                
-    tools:
+
+styles:
+    functions-aastep:
         shaders:
             extensions: OES_standard_derivatives
+            blocks:
+                global: |
+                    // AntiAliased Step function
+                    //=============================
+                    float aastep(float threshold, float value) {
+                        #ifdef TANGRAM_FRAGMENT_SHADER
+                            #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
+                                float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+                                return smoothstep(threshold-afwidth, threshold+afwidth, value);
+                            #else
+                                return step(threshold, value);
+                            #endif  
+                        #else
+                            return step(threshold, value);
+                        #endif
+                    }
+    functions-pulse:
+        shaders:
+            blocks:
+                global: |
+                    float pulse (float x, float p, float w) {
+                        x = abs(x - p);
+                        if (x>w) return 0.0;
+                        x /= w;
+                        return 1.0 - x*x*(3.0-2.0*x);
+                    }
+    patterns-stripes:
+        mix: functions-aastep
+        shaders:
+            defines:
+                PI: 3.14159265358979323846
+            blocks:
+                global: |
+                    // Return a distance function of stripes
+                    float stripesDF (vec2 st) {
+                        return abs(sin(st.y*PI));
+                    }
+                    
+                    // Adjustable width stripes
+                    float stripes (vec2 st, float width) {
+                        return aastep(width,stripesDF(st));
+                    }
+                    
+                    // Faster optimisation of diagonal stripes
+                    float diagonalStripes (vec2 st) {
+                        vec2 i_st = floor(st);
+                        vec2 f_st = fract(st);
+                        if (mod(i_st.y,2.) - mod(i_st.x,2.) == 0.) {
+                            return 1.0 - aastep(f_st.x,f_st.y);
+                        } else {
+                            return aastep(f_st.x,f_st.y);
+                        }
+                    }
+    pallete:
+        shaders:
             blocks: 
                 global: |
                     // Common Values 
@@ -29,49 +85,9 @@ styles:
                     vec3 background = vec3(0.996,0.996,0.918);
                     vec3 midle = vec3(0.824, 0.812, 0.804);
                     vec3 foreground = vec3(0.275,0.298,0.251);
-                
-                    // Coord System
-                    //================================
-                    varying vec3 v_pos;
-                    
-                    #ifdef TANGRAM_FRAGMENT_SHADER
-                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
-                    
-                    float aastep(float threshold, float value) {
-                      #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
-                        float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
-                        return smoothstep(threshold-afwidth, threshold+afwidth, value);
-                      #else
-                        return step(threshold, value);
-                      #endif  
-                    }
-                    
-                    float pulse(float x,float p, float w){
-                        x = abs(x - p);
-                        if( x>w ) return 0.0;
-                        x /= w;
-                        return 1.0 - x*x*(3.0-2.0*x);
-                    }
-                    
-                    float stripes(vec2 st, float width){
-                        return aastep(width,abs(sin(st.y*3.14159265358)));
-                    }
-                    mat2 rotate2d(float angle){
-                        return mat2(cos(angle),-sin(angle),
-                                    sin(angle),cos(angle));
-                    }
-                    float stripes(vec2 st){
-                        st = rotate2d(.72)*st;
-                        st *= 92.;
-                        return aastep(.3,abs(sin(st.y*3.14159265358)));
-                    }
-                    
-                    #endif
-                position: |
-                    v_pos = a_position.xyz * 32767.;        
     border:
         base: lines
-        mix: tools
+        mix: [functions-pulse, functions-aastep, pallete]
         texcoords: true
         shaders:
             blocks: 
@@ -81,7 +97,7 @@ styles:
                     color.rgb = mix(background,color.rgb,pattern);
     b_border:
         base: lines
-        mix: tools
+        mix: [functions-pulse, functions-aastep, pallete]
         texcoords: true
         shaders:
             blocks: 
@@ -92,7 +108,7 @@ styles:
                     
     waves:
         base: polygons
-        mix: tools
+        mix: [pallete, patterns-stripes]
         shaders: 
             blocks: 
                 color: |
@@ -104,44 +120,26 @@ styles:
                     pos.x = pos.x*aspect;
                     pos.y += sin(pos.x*30.)*.01;
                     color.rgb = mix(color.rgb,background,stripes(pos*200.,.4));
-    zigzag:
-        base: polygons
-        mix: tools
-        shaders: 
-            blocks: 
-                color: |
-                    vec2 st = (gl_FragCoord.xy / u_resolution.xy);
-                    float aspect = u_resolution.x/u_resolution.y;
-                    // size.x *= aspect;
-
-                    vec2 pos = fract(st*100.);
-                    pos.y += mix(fract(pos.x),fract(1.0-pos.x),step(.5,pos.x))*3.;
-                    color.rgb = mix(color.rgb,background,stripes(pos,.3));
     hatch:
         base: polygons
-        mix: tools
+        mix: [functions-aastep, pallete]
         shaders: 
             blocks: 
+                global: |
+                    mat2 rotate2d(float angle){
+                        return mat2(cos(angle),-sin(angle),
+                                    sin(angle),cos(angle));
+                    }
+                    float stripes(vec2 st){
+                        st = rotate2d(.72)*st;
+                        st *= 92.;
+                        return aastep(.3,abs(sin(st.y*3.14159265358)));
+                    }
                 color: |
                     vec2 st = (gl_FragCoord.xy / u_resolution.xy);
                     float aspect = u_resolution.x/u_resolution.y;
                     // size.x *= aspect;
                     color.rgb = mix(color.rgb,background,stripes(st*3.));
-
-    frame:
-        base: polygons
-        mix: tools
-        shaders: 
-            blocks: 
-                color: |
-                    vec2 st = (gl_FragCoord.xy / u_resolution.xy);
-                    float aspect = u_resolution.x/u_resolution.y;
-                    // size.x *= aspect;
-
-                    vec2 pos = st;
-                    pos.x = pos.x*aspect;
-                    pos.y += sin(pos.x*30.)*.01;
-                    color.rgb = mix(color.rgb,background,stripes(pos*200.,.4));
                     
 layers:
     water:
