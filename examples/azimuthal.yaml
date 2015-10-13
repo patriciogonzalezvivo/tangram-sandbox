@@ -7,17 +7,7 @@ sources:
 cameras:
     perspective:
         type: flat
-lights:
-    # directional1:
-    #     type: directional
-    #     direction: [0.2, 0.7, -0.5]
-    #     diffuse: [1., 1., 1.]
-    point_light:
-        type: point
-        origin: world
-        position: [0,58,14900000]
-        specular: [0.980, 0.980, 0.980]
-        diffuse: [1., 1., 1.]
+
 styles:
     geometry-matrices:
         defines:
@@ -141,7 +131,7 @@ styles:
         animated: true
         shaders:
             uniforms:
-                u_day_map: imgs/earth-texture-day.jpg
+                u_day_map: ../styles/imgs/earth-texture-day.jpg
             blocks:
                 position: |
                     
@@ -156,13 +146,6 @@ styles:
     
                     vec4 day = texture2D(u_day_map,fract(vec2(s,t)));
                     color = day;
-    earth_texture:
-        mix: textures
-        material: 
-            specular: black
-    water_texture:
-        material: 
-            specular: white
 layers:
     earth:
         data: { source: osm }
@@ -183,11 +166,3 @@ layers:
                 order: 3
                 color: white
                 width: [[2,0px],[5,1px]]
-    roads:
-        data: { source: osm }
-        properties: { width: 3 }
-        draw:
-            lines:
-                order: 4
-                color: '#ddd'
-                width: [[5, .25px],[15, .5px],[85, 10]]
