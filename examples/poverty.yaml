@@ -1,0 +1,190 @@
+﻿sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?
+    data:
+        type: TopoJSON
+        url:  ../styles/data/us-states-10m.json
+scene:
+    background:
+        color: [1.000,1.000,1.000]
+cameras:
+    perspective:
+        type: isometric
+lights:
+    directional1:
+        type: directional
+        direction: [.1, .5, -1]
+        diffuse: .7
+        ambient: .5
+styles:
+    geometry-projection:
+        shaders:
+            defines:
+                EARTH_RADIUS: 6378137.0
+                PI: 3.14159265358979323846
+                HALF_PI: 1.570796327
+                QUATER_PI: .785398163
+                deg2rad(d): (((d)*3.14159265358979323846)/180.0)
+                rad2deg(d): (((d)*180.0)/3.14159265358979323846)
+            blocks:
+                global: |
+                    // MERCATOR
+                    //    The following functions take or return there results in degrees
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_d (float y) { return rad2deg(2.0*atan(exp(deg2rad(y)))-HALF_PI); }
+                    float x2lon_d (float x) { return x; }
+                    float lat2y_d (float lat) { return rad2deg(log(tan(QUATER_PI+ deg2rad(lat)/2.0))); }
+                    float lon2x_d (float lon) { return lon; }
+                    //
+                    //    The following functions take or return there results in something close to meters, along the equator 
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_m (float y) { return rad2deg(2.0*atan(exp((y/EARTH_RADIUS)))-HALF_PI); }
+                    float x2lon_m (float x) { return rad2deg(x/EARTH_RADIUS); }
+                    float lat2y_m (float lat) { return EARTH_RADIUS*log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
+                    float lon2x_m (float lon) { return deg2rad(lon)*EARTH_RADIUS; }
+                    
+                    // ALBERS
+                    // https://gist.github.com/RandomEtc/476238
+                    vec2 latlon2albers(float lat, float lon, float lat0, float lng0, float phi1, float phi2 ) {
+                        lat0 = deg2rad(lat0);    // Latitude_Of_Origin
+                        lng0 = deg2rad(lng0);    // Central_Meridian
+                        phi1 = deg2rad(phi1);    // Standard_Parallel_1
+                        phi2 = deg2rad(phi2);    // Standard_Parallel_2
+                        
+                        float n = 0.5 * (sin(phi1) + sin(phi2));
+                        float c = cos(phi1);
+                        float C = c*c + 2.*n*sin(phi1);
+                        float p0 = sqrt(C - 2.*n*sin(lat0)) / n;
+                        float theta = n * (deg2rad(lon)-lng0);
+                        float p = sqrt(C - 2.*n*sin(deg2rad(lat)))/n;
+                        return vec2(p * sin(theta), p0 - p * cos(theta)) * EARTH_RADIUS;
+                    }
+                    
+                    vec2 latlon2albers (float lat, float lon, float delta_phi1, float delta_phi2) {
+                        return latlon2albers(lat, 
+                                            lon, 
+                                            y2lat_m(u_map_position.y), 
+                                            x2lon_m(u_map_position.x), 
+                                            y2lat_m(u_map_position.y)+delta_phi1, 
+                                            y2lat_m(u_map_position.y+delta_phi2) );
+                    }
+                    
+                    vec2 latlon2albers (float lat, float lon, float width) {
+                        return latlon2albers(lat, lon, width, -width);
+                    }
+                    
+                    vec2 latlon2albers(float lat, float lon){
+                        return latlon2albers(lat,lon,20.);
+                    }
+                    
+                    vec2 latlon2USalbers(float lat, float lon){
+                        return latlon2albers(lat,lon,23.,-96.,29.,45.);
+                    }
+    functions-map:
+        shaders:
+            defines:
+                EPSILON: 0.0000001
+            blocks:
+                global: |
+                    float map (in float value, in float inputMin, in float inputMax, in float outputMin, in float outputMax, bool clamp) {
+                        if (abs(inputMin - inputMax) < EPSILON){
+                            return outputMin;
+                        } else {
+                            float outVal = ((value - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin);
+                        
+                            if( clamp ){
+                                if(outputMax < outputMin){
+                                    if( outVal < outputMax ) outVal = outputMax;
+                                    else if( outVal > outputMin ) outVal = outputMin;
+                                }else{
+                                    if( outVal > outputMax ) outVal = outputMax;
+                                    else if( outVal < outputMin ) outVal = outputMin;
+                                }
+                            }
+                            return outVal;
+                        }
+                    }
+                    float map (in float value, in float inputMin, in float inputMax, in float outputMin, in float outputMax) {
+                        return map(value, inputMin, inputMax, outputMin, outputMax, true); 
+                    }
+    toAlbers:
+        mix: [geometry-projection, functions-map]
+        animated: true
+        shaders:
+            blocks:
+                position: |
+                    // mercator position of the current vertex, u_map_position = center of screen, position.xy = vertex screen position in meters from the center of the screen
+                    float alpha = map(u_map_position.z,7.,12.,0.,1.);
+                    vec2 mercator = u_map_position.xy + position.xy;
+                    float lat = y2lat_m(mercator.y);
+                    float lon = x2lon_m(mercator.x);
+                    position.xy = mix(latlon2albers(lat,lon),position.xy,alpha);
+            
+    poly:
+        base: polygons
+        mix: toAlbers
+    line:
+        base: lines 
+        mix: toAlbers
+    grain:
+        shaders:
+            blocks:
+                global: |
+                    // Grain
+                    //=============================
+                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+                    float noise(vec2 x) {
+                        vec2 i = floor(x);
+                        vec2 f = fract(x);
+                        float a = random(i);
+                        float b = random(i + vec2(1.0, 0.0));
+                        float c = random(i + vec2(0.0, 1.0));
+                        float d = random(i + vec2(1.0, 1.0));
+                        vec2 u = f * f * (3.0 - 2.0 * f);
+                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                    }
+                    float fbm( in vec2 p ){
+                        float s = 0.0;
+                        float m = 0.0;
+                        float a = 0.5;
+                        for(int i=0; i<2; i++ ){
+                            s += a * noise(p);
+                            m += a;
+                            a *= 0.5;
+                            p *= 2.0;
+                        }
+                        return s/m;
+                    }
+                    float grain(vec2 pos){
+                        vec2 st = pos/u_resolution.xy-vec2(.5);
+                        return dot(st,st)+(fbm(pos*0.6)*0.1);
+                    }
+                filter: |
+                    color.rgb -= grain(gl_FragCoord.xy)*0.3;
+    coloring:
+        base: polygons
+        mix: [poly,grain] 
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            line:
+                order: 0
+                color: gray
+                width: 1px
+    boundaries:
+        data: { source: osm }
+        properties: { width: 3 }
+        draw:
+            line:
+                order: 1
+                color: gray
+                width: .5px
+    counties:
+        data: { source: data }
+        draw:
+            coloring: 
+                order: 2
+                extrude: function() { return Math.pow(feature.rate*1.2, 3); }
+                color: function() { if (feature.rate > 18) { return [0.929,0.596,0.082]; } else if (feature.rate >= 12) {  return [0.949,0.757,0.141]; } else { return [0.847,0.851,0.851]; } }
