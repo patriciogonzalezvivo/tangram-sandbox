@@ -165,12 +165,17 @@ styles:
     coloring:
         base: polygons
         mix: [poly,grain] 
+        shaders: 
+            blocks: 
+                position: |
+                    position.z = pow(position.z*7.,(1.-u_map_position.z/20.)*3.);
+        
 layers:
     earth:
         data: { source: osm }
         draw:
             line:
-                order: 0
+                order: 2
                 color: gray
                 width: 1px
     boundaries:
@@ -185,6 +190,6 @@ layers:
         data: { source: data }
         draw:
             coloring: 
-                order: 2
-                extrude: function() { return Math.pow(feature.rate*1.2, 3); }
+                order: 0
+                extrude: function() { return Math.abs(feature.rate); }
                 color: function() { if (feature.rate > 18) { return [0.929,0.596,0.082]; } else if (feature.rate >= 12) {  return [0.949,0.757,0.141]; } else { return [0.847,0.851,0.851]; } }
