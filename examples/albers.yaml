@@ -125,7 +125,7 @@ styles:
         base: polygons
         mix: toAlbers
     line:
-        base: lines  
+        base: lines 
         mix: toAlbers
 layers:
     earth:
@@ -145,7 +145,7 @@ layers:
         draw:
             line:
                 order: 2
-                color: [0.000, 0.000, 0.000]
+                color: white
                 width: 1px
     roads:
         data: { source: osm }
