@@ -168,28 +168,37 @@ styles:
         shaders: 
             blocks: 
                 position: |
-                    position.z = pow(position.z*7.,(1.-u_map_position.z/20.)*3.);
+                    position.z = pow(position.z*7.,(1.-u_map_position.z*0.05)*3.);
+                color: |
+                    color.rgb *= vec3(min((v_world_position.z*.02+.7),1.));
+    coloring-line:
+        base: lines
+        mix: [line,grain] 
+        shaders: 
+            blocks: 
+                position: |
+                    position.z = pow(position.z*7.,(1.-u_map_position.z*0.05)*3.);
+                color: |
+                    color.rgb *= .8;
         
 layers:
-    earth:
-        data: { source: osm }
-        draw:
-            line:
-                order: 2
-                color: gray
-                width: 1px
-    boundaries:
+    water:
         data: { source: osm }
         properties: { width: 3 }
         draw:
             line:
                 order: 1
                 color: gray
-                width: .5px
+                width: 1px
     counties:
         data: { source: data }
         draw:
             coloring: 
-                order: 0
+                order: 2
                 extrude: function() { return Math.abs(feature.rate); }
+                color: function() { if (feature.rate > 18) { return [0.929,0.596,0.082]; } else if (feature.rate >= 12) {  return [0.949,0.757,0.141]; } else { return [0.847,0.851,0.851]; } }
+            coloring-line:
+                order: 1
+                extrude: function() { return Math.abs(feature.rate); }
+                width: 1px
                 color: function() { if (feature.rate > 18) { return [0.929,0.596,0.082]; } else if (feature.rate >= 12) {  return [0.949,0.757,0.141]; } else { return [0.847,0.851,0.851]; } }
