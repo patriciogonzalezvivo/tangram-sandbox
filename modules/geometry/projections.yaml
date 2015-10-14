@@ -67,20 +67,31 @@ styles:
                     
                     // AZIMUTHAL
                     // http://rogerallen.github.io/webgl/2014/01/27/azimuthal-equidistant-projection/
-                    vec2 latlon2azimur (float lat, float lon, float phi1, float lambda0) {
+                    vec2 latlon2azimuthal (float lat, float lon, float phi1, float lambda0) {
                         phi1 = deg2rad(phi1);
                         lambda0 = deg2rad(lambda0);
                         vec2 st = vec2(deg2rad(lon),deg2rad(lat));
                         float c = length(st);
-                        float phi = asin( cos(c)*sin(phi1) + st.y*sin(c)*cos(phi1)/c );
+                        float phi = asin(cos(c)*sin(phi1) + st.y*sin(c)*cos(phi1)/c );
                         float lambda = lambda0 +
                             atan( st.x*sin(c), (c*cos(phi1)*cos(c) - st.y*sin(phi1)*sin(c)));
                         return vec2(phi,lambda);
                     }
                     
-                    vec2 azimur(float lat, float lon) {
-                        return latlon2azimur(lat, 
-                                            lon, 
-                                            y2lat_m(u_map_position.y),
-                                            x2lon_m(u_map_position.x));
+                    vec2 azimuthal(float lat, float lon) {
+                        return latlon2azimuthal(lat, lon, 
+                                                y2lat_m(u_map_position.y),
+                                                x2lon_m(u_map_position.x));
+                    }
+                    
+                    vec2 azimuthalNorth(float lat, float lon) {
+                        return latlon2azimuthal(lat, lon, 
+                                                90.,
+                                                x2lon_m(u_map_position.x));
+                    }
+                    
+                    vec2 azimuthalSouth(float lat, float lon) {
+                        return latlon2azimuthal(lat, lon, 
+                                                -90.,
+                                                x2lon_m(u_map_position.x));
                     }
