@@ -1,10 +1,8 @@
 # Patricio Gonzalez Vivo - 2015
 # From Chapter about Shapes at http://thebookofshaders.com/07/
 
-include: ../functions/aastep.yaml
 styles:
     shapes-rect:
-        mix: functions-aastep
         shaders:
             blocks:
                 global: |
