@@ -41,6 +41,7 @@ layers:
     roads:
         data: { source: osm }
         properties: { width: 3 }
+        filter: { not: { kind: ferry } }
         draw:
             lines:
                 order: 2

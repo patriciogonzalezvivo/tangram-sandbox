@@ -186,7 +186,7 @@ layers:
                 color: '#343434'
     roads:
         data: { source: osm }
-        filter: { not: { highway: service, kind: rail } }
+        filter: { not: { highway: service, kind: [rail, ferry] } }
         properties: { width: 3 }
         draw:
             ink-lines:

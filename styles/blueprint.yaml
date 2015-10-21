@@ -299,6 +299,7 @@ layers:
                 color: [0.116,0.116,0.116]
     roads:
         data: { source: osm }
+        filter: { not: { kind: ferry } }
         properties: { width: 3 }
         draw:
             roads:

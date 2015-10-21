@@ -184,6 +184,7 @@ layers:
                 width: [[10, 1], [12, 1px],[14, 1px], [16, 2px], [17, 3px], [18, 5px]]
     roads:
         data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
         properties: { width: 3 }
         draw:
             lines:

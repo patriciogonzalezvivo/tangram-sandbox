@@ -360,7 +360,7 @@ layers:
                 tile_edges: false
     roads:
         data: { source: osm }
-        filter: { not: { highway: service, kind: rail } }
+        filter: { not: { highway: service, kind: [rail, ferry] } }
         draw:
             roads:
                 order: 5
