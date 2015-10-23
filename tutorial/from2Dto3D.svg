@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="3085px" height="872px" viewBox="0 0 3085 872" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
+    <title>from2Dto3D</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="3.79464286%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#7F7F7F" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="73.3027069%" y1="159.156632%" x2="58.8849714%" y2="0%" id="linearGradient-2">
+            <stop stop-color="#F7F7F7" offset="0%"></stop>
+            <stop stop-color="#A4A4A4" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="94.3219866%" id="linearGradient-3">
+            <stop stop-color="#C4C2C2" offset="0%"></stop>
+            <stop stop-color="#777777" offset="100%"></stop>
+        </linearGradient>
+        <path id="path-4" d="M100.78156,1.87071842 L80.0859436,1.87071842"></path>
+        <path id="path-5" d="M78.7815605,1.87071842 L58.0859436,1.87071842"></path>
+        <path id="path-6" d="M83.7815605,13.8707184 L63.0859436,13.8707184"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="GPU" sketch:type="MSLayerGroup" transform="translate(1262.000000, 0.000000)">
+            <g id="Fragment-Shader" transform="translate(677.000000, 212.000000)">
+                <g id="filter" transform="translate(920.000000, 73.000000)" sketch:type="MSShapeGroup">
+                    <g id="spline-copy-3" transform="translate(0.000000, 182.000000)" fill-opacity="0.644666478" fill="#D2CFD3">
+                        <path d="M58.6132912,0.601364479 L0.299821647,58.914834 L181.793672,58.9148334 L69.3701043,169.72698 L100.796125,169.72698 L225.930625,44.5924804 L36.4154458,44.5924804 L80.2398677,0.768058527" id="Path-14"></path>
+                    </g>
+                    <g id="building-copy-3" transform="translate(90.000000, 0.000000)">
+                        <rect id="front" fill="url(#linearGradient-1)" x="1" y="40" width="79" height="167"></rect>
+                        <path d="M0.4453125,41.7539062 L77.8814971,41.7539062 L118.966504,0.668899546 L42.509576,0.668899546 L0.4453125,41.7539062 Z" id="ceil" fill="url(#linearGradient-2)"></path>
+                        <path d="M118.820312,0.23828125 L78.3564708,41.4095406 L78.3564708,208 L118.193172,167.466845 L118.820312,0.23828125 Z" id="side" fill="url(#linearGradient-3)"></path>
+                    </g>
+                </g>
+                <g id="lightining" transform="translate(610.000000, 14.000000)">
+                    <g id="spline" transform="translate(0.000000, 240.000000)" fill="#C4C2C5" sketch:type="MSShapeGroup">
+                        <path d="M58.6132912,0.601364479 L0.299821647,58.914834 L181.793672,58.9148334 L69.3701043,169.72698 L100.796125,169.72698 L225.930625,44.5924804 L36.4154458,44.5924804 L80.2398677,0.768058527" id="Path-14"></path>
+                    </g>
+                    <g id="building" transform="translate(92.000000, 58.000000)" sketch:type="MSShapeGroup">
+                        <rect id="front" fill="#4A4A4A" x="1" y="40" width="79" height="167"></rect>
+                        <path d="M0.4453125,41.7539062 L77.8814971,41.7539062 L118.966504,0.668899546 L42.509576,0.668899546 L0.4453125,41.7539062 Z" id="ceil" fill="#C5C5C5"></path>
+                        <path d="M118.820312,0.23828125 L78.3564708,41.4095406 L78.3564708,208 L118.193172,167.466845 L118.820312,0.23828125 Z" id="side" fill="#9B9B9B"></path>
+                    </g>
+                    <text id="Lightining" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="420" fill="#000000">
+                        <tspan x="134.5" y="18"></tspan>
+                        <tspan x="134.5" y="41">Lightining</tspan>
+                    </text>
+                </g>
+                <g id="color" transform="translate(305.000000, 38.000000)">
+                    <g id="spline" transform="translate(0.000000, 216.000000)" fill="#4A4A4A" sketch:type="MSShapeGroup">
+                        <path d="M58.6132912,0.601364479 L0.299821647,58.914834 L181.793672,58.9148334 L69.3701043,169.72698 L100.796125,169.72698 L225.930625,44.5924804 L36.4154458,44.5924804 L80.2398677,0.768058527" id="Path-14"></path>
+                    </g>
+                    <g id="building" transform="translate(90.000000, 34.000000)" fill="#4A4A4A" sketch:type="MSShapeGroup">
+                        <rect id="front" x="1" y="40" width="79" height="167"></rect>
+                        <path d="M0.4453125,41.7539062 L77.8814971,41.7539062 L118.966504,0.668899546 L42.509576,0.668899546 L0.4453125,41.7539062 Z" id="ceil"></path>
+                        <path d="M118.820312,0.23828125 L78.3564708,41.4095406 L78.3564708,208 L118.193172,167.466845 L118.820312,0.23828125 Z" id="side"></path>
+                    </g>
+                    <text id="Coloring" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="420" fill="#000000">
+                        <tspan x="132.5" y="18">Color (+ material)</tspan>
+                    </text>
+                </g>
+                <g id="normal" transform="translate(0.000000, 37.000000)">
+                    <g id="spline-copy" transform="translate(0.000000, 198.000000)">
+                        <path d="M58.6132912,19.6013645 L0.299821647,77.914834 L181.793672,77.9148334 L69.3701043,188.72698 L100.796125,188.72698 L225.930625,63.5924804 L36.4154458,63.5924804 L80.2398677,19.7680585" id="Path-14" fill="#9B9B9B" sketch:type="MSShapeGroup"></path>
+                        <path d="M195.5,70.5507728 L195.5,49.593794" id="Line-Copy-15" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-15-decoration-1" d="M195.5,49.593794 L192.5,60.393794 L198.5,60.393794 L195.5,49.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M185.5,90.5507728 L185.5,69.593794" id="Line-Copy-27" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-27-decoration-1" d="M185.5,69.593794 L182.5,80.393794 L188.5,80.393794 L185.5,69.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M165.5,110.550773 L165.5,89.593794" id="Line-Copy-28" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-28-decoration-1" d="M165.5,89.593794 L162.5,100.393794 L168.5,100.393794 L165.5,89.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M145.5,130.550773 L145.5,109.593794" id="Line-Copy-29" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-29-decoration-1" d="M145.5,109.593794 L142.5,120.393794 L148.5,120.393794 L145.5,109.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M125.5,150.550773 L125.5,129.593794" id="Line-Copy-30" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-30-decoration-1" d="M125.5,129.593794 L122.5,140.393794 L128.5,140.393794 L125.5,129.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M105.5,170.550773 L105.5,149.593794" id="Line-Copy-31" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-31-decoration-1" d="M105.5,149.593794 L102.5,160.393794 L108.5,160.393794 L105.5,149.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M86.5,188.550773 L86.5,167.593794" id="Line-Copy-32" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-32-decoration-1" d="M86.5,167.593794 L83.5,178.393794 L89.5,178.393794 L86.5,167.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M165.5,70.5507728 L165.5,49.593794" id="Line-Copy-16" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-16-decoration-1" d="M165.5,49.593794 L162.5,60.393794 L168.5,60.393794 L165.5,49.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M135.5,70.5507728 L135.5,49.593794" id="Line-Copy-17" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-17-decoration-1" d="M135.5,49.593794 L132.5,60.393794 L138.5,60.393794 L135.5,49.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M105.5,70.5507728 L105.5,49.593794" id="Line-Copy-18" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-18-decoration-1" d="M105.5,49.593794 L102.5,60.393794 L108.5,60.393794 L105.5,49.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M75.5,70.5507728 L75.5,49.593794" id="Line-Copy-19" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-19-decoration-1" d="M75.5,49.593794 L72.5,60.393794 L78.5,60.393794 L75.5,49.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M45.5,70.5507728 L45.5,49.593794" id="Line-Copy-20" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-20-decoration-1" d="M45.5,49.593794 L42.5,60.393794 L48.5,60.393794 L45.5,49.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M25.5,70.5507728 L25.5,49.593794" id="Line-Copy-21" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-21-decoration-1" d="M25.5,49.593794 L22.5,60.393794 L28.5,60.393794 L25.5,49.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M35.5,50.5507728 L35.5,29.593794" id="Line-Copy-22" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-22-decoration-1" d="M35.5,29.593794 L32.5,40.393794 L38.5,40.393794 L35.5,29.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M35.5,50.5507728 L35.5,29.593794" id="Line-Copy-23" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-23-decoration-1" d="M35.5,29.593794 L32.5,40.393794 L38.5,40.393794 L35.5,29.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M45.5,40.5507728 L45.5,19.593794" id="Line-Copy-24" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-24-decoration-1" d="M45.5,19.593794 L42.5,30.393794 L48.5,30.393794 L45.5,19.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M55.5,30.5507728 L55.5,9.59379404" id="Line-Copy-25" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-25-decoration-1" d="M55.5,9.59379404 L52.5,20.393794 L58.5,20.393794 L55.5,9.59379404 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M65.5,21.5507728 L65.5,0.593794036" id="Line-Copy-26" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-26-decoration-1" d="M65.5,0.593794036 L62.5,11.393794 L68.5,11.393794 L65.5,0.593794036 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                    </g>
+                    <g id="building" transform="translate(75.000000, 20.000000)">
+                        <rect id="front" fill="#9B9B9B" sketch:type="MSShapeGroup" x="17" y="55" width="79" height="167"></rect>
+                        <path d="M16.4453125,56.7539062 L93.8814971,56.7539062 L134.966504,15.6688995 L58.509576,15.6688995 L16.4453125,56.7539062 Z" id="ceil" fill="#9B9B9B" sketch:type="MSShapeGroup"></path>
+                        <path d="M134.820312,15.2382812 L94.3564708,56.4095406 L94.3564708,223 L134.193172,182.466845 L134.820312,15.2382812 Z" id="side" fill="#9B9B9B" sketch:type="MSShapeGroup"></path>
+                        <path d="M100.247743,70.5 L126.647588,70.5" id="Line-Copy-14" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-14-decoration-1" d="M126.647588,70.5 L115.847588,67.5 L115.847588,73.5 L126.647588,70.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M110.247743,60.5 L136.647588,60.5" id="Line-Copy-81" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-81-decoration-1" d="M136.647588,60.5 L125.847588,57.5 L125.847588,63.5 L136.647588,60.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M120.247743,50.5 L146.647588,50.5" id="Line-Copy-82" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-82-decoration-1" d="M146.647588,50.5 L135.847588,47.5 L135.847588,53.5 L146.647588,50.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M130.247743,40.5 L156.647588,40.5" id="Line-Copy-83" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-83-decoration-1" d="M156.647588,40.5 L145.847588,37.5 L145.847588,43.5 L156.647588,40.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M130.247743,60.5 L156.647588,60.5" id="Line-Copy-84" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-84-decoration-1" d="M156.647588,60.5 L145.847588,57.5 L145.847588,63.5 L156.647588,60.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M120.247743,70.5 L146.647588,70.5" id="Line-Copy-85" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-85-decoration-1" d="M146.647588,70.5 L135.847588,67.5 L135.847588,73.5 L146.647588,70.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M110.247743,80.5 L136.647588,80.5" id="Line-Copy-86" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-86-decoration-1" d="M136.647588,80.5 L125.847588,77.5 L125.847588,83.5 L136.647588,80.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M100.247743,90.5 L126.647588,90.5" id="Line-Copy-87" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-87-decoration-1" d="M126.647588,90.5 L115.847588,87.5 L115.847588,93.5 L126.647588,90.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M100.247743,110.5 L126.647588,110.5" id="Line-Copy-88" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-88-decoration-1" d="M126.647588,110.5 L115.847588,107.5 L115.847588,113.5 L126.647588,110.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M110.247743,100.5 L136.647588,100.5" id="Line-Copy-89" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-89-decoration-1" d="M136.647588,100.5 L125.847588,97.5 L125.847588,103.5 L136.647588,100.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M120.247743,90.5 L146.647588,90.5" id="Line-Copy-90" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-90-decoration-1" d="M146.647588,90.5 L135.847588,87.5 L135.847588,93.5 L146.647588,90.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M130.247743,80.5 L156.647588,80.5" id="Line-Copy-91" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-91-decoration-1" d="M156.647588,80.5 L145.847588,77.5 L145.847588,83.5 L156.647588,80.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M130.247743,100.5 L156.647588,100.5" id="Line-Copy-92" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-92-decoration-1" d="M156.647588,100.5 L145.847588,97.5 L145.847588,103.5 L156.647588,100.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M120.247743,110.5 L146.647588,110.5" id="Line-Copy-93" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-93-decoration-1" d="M146.647588,110.5 L135.847588,107.5 L135.847588,113.5 L146.647588,110.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M110.247743,120.5 L136.647588,120.5" id="Line-Copy-94" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-94-decoration-1" d="M136.647588,120.5 L125.847588,117.5 L125.847588,123.5 L136.647588,120.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M100.247743,130.5 L126.647588,130.5" id="Line-Copy-95" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-95-decoration-1" d="M126.647588,130.5 L115.847588,127.5 L115.847588,133.5 L126.647588,130.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M100.247743,150.5 L126.647588,150.5" id="Line-Copy-96" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-96-decoration-1" d="M126.647588,150.5 L115.847588,147.5 L115.847588,153.5 L126.647588,150.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M110.247743,140.5 L136.647588,140.5" id="Line-Copy-97" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-97-decoration-1" d="M136.647588,140.5 L125.847588,137.5 L125.847588,143.5 L136.647588,140.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M120.247743,130.5 L146.647588,130.5" id="Line-Copy-98" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-98-decoration-1" d="M146.647588,130.5 L135.847588,127.5 L135.847588,133.5 L146.647588,130.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M130.247743,120.5 L156.647588,120.5" id="Line-Copy-99" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-99-decoration-1" d="M156.647588,120.5 L145.847588,117.5 L145.847588,123.5 L156.647588,120.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M130.247743,140.5 L156.647588,140.5" id="Line-Copy-100" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-100-decoration-1" d="M156.647588,140.5 L145.847588,137.5 L145.847588,143.5 L156.647588,140.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M120.247743,150.5 L146.647588,150.5" id="Line-Copy-101" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-101-decoration-1" d="M146.647588,150.5 L135.847588,147.5 L135.847588,153.5 L146.647588,150.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M110.247743,160.5 L136.647588,160.5" id="Line-Copy-102" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-102-decoration-1" d="M136.647588,160.5 L125.847588,157.5 L125.847588,163.5 L136.647588,160.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M100.247743,170.5 L126.647588,170.5" id="Line-Copy-103" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-103-decoration-1" d="M126.647588,170.5 L115.847588,167.5 L115.847588,173.5 L126.647588,170.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M100.247743,190.5 L126.647588,190.5" id="Line-Copy-104" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-104-decoration-1" d="M126.647588,190.5 L115.847588,187.5 L115.847588,193.5 L126.647588,190.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M110.247743,180.5 L136.647588,180.5" id="Line-Copy-105" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-105-decoration-1" d="M136.647588,180.5 L125.847588,177.5 L125.847588,183.5 L136.647588,180.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M120.247743,170.5 L146.647588,170.5" id="Line-Copy-106" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-106-decoration-1" d="M146.647588,170.5 L135.847588,167.5 L135.847588,173.5 L146.647588,170.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M130.247743,160.5 L156.647588,160.5" id="Line-Copy-107" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-107-decoration-1" d="M156.647588,160.5 L145.847588,157.5 L145.847588,163.5 L156.647588,160.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M130.247743,180.5 L156.647588,180.5" id="Line-Copy-108" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-108-decoration-1" d="M156.647588,180.5 L145.847588,177.5 L145.847588,183.5 L156.647588,180.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M120.247743,190.5 L146.647588,190.5" id="Line-Copy-109" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-109-decoration-1" d="M146.647588,190.5 L135.847588,187.5 L135.847588,193.5 L146.647588,190.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M110.247743,200.5 L136.647588,200.5" id="Line-Copy-110" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-110-decoration-1" d="M136.647588,200.5 L125.847588,197.5 L125.847588,203.5 L136.647588,200.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M100.247743,210.5 L126.647588,210.5" id="Line-Copy-111" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-111-decoration-1" d="M126.647588,210.5 L115.847588,207.5 L115.847588,213.5 L126.647588,210.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M100.247743,210.5 L126.647588,210.5" id="Line-Copy-112" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-112-decoration-1" d="M126.647588,210.5 L115.847588,207.5 L115.847588,213.5 L126.647588,210.5 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M23.928545,70.9155634 L1.7323108,87.9094262" id="Line-Copy-12" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-12-decoration-1" d="M1.7323108,87.9094262 L12.1313176,83.7260476 L8.48387205,78.9620009 L1.7323108,87.9094262 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M43.928545,70.9155634 L21.7323108,87.9094262" id="Line-Copy-49" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-49-decoration-1" d="M21.7323108,87.9094262 L32.1313176,83.7260476 L28.4838721,78.9620009 L21.7323108,87.9094262 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.928545,70.9155634 L41.7323108,87.9094262" id="Line-Copy-50" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-50-decoration-1" d="M41.7323108,87.9094262 L52.1313176,83.7260476 L48.4838721,78.9620009 L41.7323108,87.9094262 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.928545,70.9155634 L61.7323108,87.9094262" id="Line-Copy-51" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-51-decoration-1" d="M61.7323108,87.9094262 L72.1313176,83.7260476 L68.4838721,78.9620009 L61.7323108,87.9094262 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.928545,90.9155634 L61.7323108,107.909426" id="Line-Copy-52" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-52-decoration-1" d="M61.7323108,107.909426 L72.1313176,103.726048 L68.4838721,98.9620009 L61.7323108,107.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.928545,90.9155634 L41.7323108,107.909426" id="Line-Copy-53" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-53-decoration-1" d="M41.7323108,107.909426 L52.1313176,103.726048 L48.4838721,98.9620009 L41.7323108,107.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M43.928545,90.9155634 L21.7323108,107.909426" id="Line-Copy-54" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-54-decoration-1" d="M21.7323108,107.909426 L32.1313176,103.726048 L28.4838721,98.9620009 L21.7323108,107.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M23.928545,90.9155634 L1.7323108,107.909426" id="Line-Copy-55" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-55-decoration-1" d="M1.7323108,107.909426 L12.1313176,103.726048 L8.48387205,98.9620009 L1.7323108,107.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M23.928545,110.915563 L1.7323108,127.909426" id="Line-Copy-56" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-56-decoration-1" d="M1.7323108,127.909426 L12.1313176,123.726048 L8.48387205,118.962001 L1.7323108,127.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M43.928545,110.915563 L21.7323108,127.909426" id="Line-Copy-57" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-57-decoration-1" d="M21.7323108,127.909426 L32.1313176,123.726048 L28.4838721,118.962001 L21.7323108,127.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.928545,110.915563 L41.7323108,127.909426" id="Line-Copy-58" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-58-decoration-1" d="M41.7323108,127.909426 L52.1313176,123.726048 L48.4838721,118.962001 L41.7323108,127.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.928545,110.915563 L61.7323108,127.909426" id="Line-Copy-59" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-59-decoration-1" d="M61.7323108,127.909426 L72.1313176,123.726048 L68.4838721,118.962001 L61.7323108,127.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.928545,130.915563 L61.7323108,147.909426" id="Line-Copy-60" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-60-decoration-1" d="M61.7323108,147.909426 L72.1313176,143.726048 L68.4838721,138.962001 L61.7323108,147.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.928545,130.915563 L41.7323108,147.909426" id="Line-Copy-61" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-61-decoration-1" d="M41.7323108,147.909426 L52.1313176,143.726048 L48.4838721,138.962001 L41.7323108,147.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M43.928545,130.915563 L21.7323108,147.909426" id="Line-Copy-62" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-62-decoration-1" d="M21.7323108,147.909426 L32.1313176,143.726048 L28.4838721,138.962001 L21.7323108,147.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M23.928545,130.915563 L1.7323108,147.909426" id="Line-Copy-63" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-63-decoration-1" d="M1.7323108,147.909426 L12.1313176,143.726048 L8.48387205,138.962001 L1.7323108,147.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M23.928545,150.915563 L1.7323108,167.909426" id="Line-Copy-64" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-64-decoration-1" d="M1.7323108,167.909426 L12.1313176,163.726048 L8.48387205,158.962001 L1.7323108,167.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M43.928545,150.915563 L21.7323108,167.909426" id="Line-Copy-65" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-65-decoration-1" d="M21.7323108,167.909426 L32.1313176,163.726048 L28.4838721,158.962001 L21.7323108,167.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.928545,150.915563 L41.7323108,167.909426" id="Line-Copy-66" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-66-decoration-1" d="M41.7323108,167.909426 L52.1313176,163.726048 L48.4838721,158.962001 L41.7323108,167.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.928545,150.915563 L61.7323108,167.909426" id="Line-Copy-67" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-67-decoration-1" d="M61.7323108,167.909426 L72.1313176,163.726048 L68.4838721,158.962001 L61.7323108,167.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.928545,170.915563 L61.7323108,187.909426" id="Line-Copy-68" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-68-decoration-1" d="M61.7323108,187.909426 L72.1313176,183.726048 L68.4838721,178.962001 L61.7323108,187.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.928545,170.915563 L41.7323108,187.909426" id="Line-Copy-69" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-69-decoration-1" d="M41.7323108,187.909426 L52.1313176,183.726048 L48.4838721,178.962001 L41.7323108,187.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M43.928545,170.915563 L21.7323108,187.909426" id="Line-Copy-70" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-70-decoration-1" d="M21.7323108,187.909426 L32.1313176,183.726048 L28.4838721,178.962001 L21.7323108,187.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M23.928545,170.915563 L1.7323108,187.909426" id="Line-Copy-71" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-71-decoration-1" d="M1.7323108,187.909426 L12.1313176,183.726048 L8.48387205,178.962001 L1.7323108,187.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M23.928545,190.915563 L1.7323108,207.909426" id="Line-Copy-72" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-72-decoration-1" d="M1.7323108,207.909426 L12.1313176,203.726048 L8.48387205,198.962001 L1.7323108,207.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M43.928545,190.915563 L21.7323108,207.909426" id="Line-Copy-73" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-73-decoration-1" d="M21.7323108,207.909426 L32.1313176,203.726048 L28.4838721,198.962001 L21.7323108,207.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.928545,190.915563 L41.7323108,207.909426" id="Line-Copy-74" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-74-decoration-1" d="M41.7323108,207.909426 L52.1313176,203.726048 L48.4838721,198.962001 L41.7323108,207.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.928545,190.915563 L61.7323108,207.909426" id="Line-Copy-75" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-75-decoration-1" d="M61.7323108,207.909426 L72.1313176,203.726048 L68.4838721,198.962001 L61.7323108,207.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.928545,210.915563 L61.7323108,227.909426" id="Line-Copy-76" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-76-decoration-1" d="M61.7323108,227.909426 L72.1313176,223.726048 L68.4838721,218.962001 L61.7323108,227.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.928545,210.915563 L41.7323108,227.909426" id="Line-Copy-77" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-77-decoration-1" d="M41.7323108,227.909426 L52.1313176,223.726048 L48.4838721,218.962001 L41.7323108,227.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M43.928545,210.915563 L21.7323108,227.909426" id="Line-Copy-78" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-78-decoration-1" d="M21.7323108,227.909426 L32.1313176,223.726048 L28.4838721,218.962001 L21.7323108,227.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M23.928545,210.915563 L1.7323108,227.909426" id="Line-Copy-79" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-79-decoration-1" d="M1.7323108,227.909426 L12.1313176,223.726048 L8.48387205,218.962001 L1.7323108,227.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M23.928545,210.915563 L1.7323108,227.909426" id="Line-Copy-80" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-80-decoration-1" d="M1.7323108,227.909426 L12.1313176,223.726048 L8.48387205,218.962001 L1.7323108,227.909426 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.5,21.5507728 L63.5,0.593794036" id="Line-Copy-13" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-13-decoration-1" d="M63.5,0.593794036 L60.5,11.393794 L66.5,11.393794 L63.5,0.593794036 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.5,21.5507728 L83.5,0.593794036" id="Line-Copy-33" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-33-decoration-1" d="M83.5,0.593794036 L80.5,11.393794 L86.5,11.393794 L83.5,0.593794036 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M103.5,21.5507728 L103.5,0.593794036" id="Line-Copy-34" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-34-decoration-1" d="M103.5,0.593794036 L100.5,11.393794 L106.5,11.393794 L103.5,0.593794036 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M123.5,21.5507728 L123.5,0.593794036" id="Line-Copy-35" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-35-decoration-1" d="M123.5,0.593794036 L120.5,11.393794 L126.5,11.393794 L123.5,0.593794036 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M113.5,31.5507728 L113.5,10.593794" id="Line-Copy-36" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-36-decoration-1" d="M113.5,10.593794 L110.5,21.393794 L116.5,21.393794 L113.5,10.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M103.5,41.5507728 L103.5,20.593794" id="Line-Copy-37" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-37-decoration-1" d="M103.5,20.593794 L100.5,31.393794 L106.5,31.393794 L103.5,20.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M93.5,51.5507728 L93.5,30.593794" id="Line-Copy-38" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-38-decoration-1" d="M93.5,30.593794 L90.5,41.393794 L96.5,41.393794 L93.5,30.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M93.5,31.5507728 L93.5,10.593794" id="Line-Copy-39" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-39-decoration-1" d="M93.5,10.593794 L90.5,21.393794 L96.5,21.393794 L93.5,10.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M73.5,31.5507728 L73.5,10.593794" id="Line-Copy-40" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-40-decoration-1" d="M73.5,10.593794 L70.5,21.393794 L76.5,21.393794 L73.5,10.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M53.5,31.5507728 L53.5,10.593794" id="Line-Copy-41" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-41-decoration-1" d="M53.5,10.593794 L50.5,21.393794 L56.5,21.393794 L53.5,10.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M83.5,41.5507728 L83.5,20.593794" id="Line-Copy-42" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-42-decoration-1" d="M83.5,20.593794 L80.5,31.393794 L86.5,31.393794 L83.5,20.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M63.5,41.5507728 L63.5,20.593794" id="Line-Copy-43" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-43-decoration-1" d="M63.5,20.593794 L60.5,31.393794 L66.5,31.393794 L63.5,20.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M43.5,41.5507728 L43.5,20.593794" id="Line-Copy-44" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-44-decoration-1" d="M43.5,20.593794 L40.5,31.393794 L46.5,31.393794 L43.5,20.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M33.5,51.5507728 L33.5,30.593794" id="Line-Copy-45" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-45-decoration-1" d="M33.5,30.593794 L30.5,41.393794 L36.5,41.393794 L33.5,30.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M53.5,51.5507728 L53.5,30.593794" id="Line-Copy-46" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-46-decoration-1" d="M53.5,30.593794 L50.5,41.393794 L56.5,41.393794 L53.5,30.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M73.5,51.5507728 L73.5,30.593794" id="Line-Copy-47" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-47-decoration-1" d="M73.5,30.593794 L70.5,41.393794 L76.5,41.393794 L73.5,30.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                        <path d="M73.5,51.5507728 L73.5,30.593794" id="Line-Copy-48" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-48-decoration-1" d="M73.5,30.593794 L70.5,41.393794 L76.5,41.393794 L73.5,30.593794 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                    </g>
+                    <text id="Normal" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="420" fill="#000000">
+                        <tspan x="135.5" y="18">Normal (+ material)</tspan>
+                    </text>
+                </g>
+                <text id="prop:-filter" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="420" fill="#000000">
+                    <tspan x="1009.5" y="545"></tspan>
+                    <tspan x="1009.5" y="568">- filter</tspan>
+                </text>
+                <text id="prop:-normal" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="420" fill="#000000">
+                    <tspan x="366.5" y="544"></tspan>
+                    <tspan x="366.5" y="567">	- color</tspan>
+                </text>
+                <text id="prop:-color" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="260" fill="#000000">
+                    <tspan x="64.5" y="498">. defines</tspan>
+                    <tspan x="64.5" y="521">. uniforms</tspan>
+                    <tspan x="64.5" y="544">. blocks</tspan>
+                    <tspan x="139.092" y="544" font-weight="420">:</tspan>
+                    <tspan x="64.5" y="567" font-weight="420">	- global</tspan>
+                    <tspan x="166.786" y="567"></tspan>
+                    <tspan x="64.5" y="590">	- </tspan>
+                    <tspan x="106.702" y="590" font-weight="420">normal</tspan>
+                </text>
+                <text id="Text" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="420" sketch:alignment="middle" fill="#000000">
+                    <tspan x="71.564" y="23">Fragment Shader</tspan>
+                </text>
+            </g>
+            <g id="Raster" transform="translate(377.000000, 210.000000)">
+                <g id="spline" transform="translate(0.000000, 256.000000)" sketch:type="MSShapeGroup">
+                    <path d="M58.6132912,0.601364479 L0.299821647,58.914834 L181.793672,58.9148334 L69.3701043,169.72698 L100.796125,169.72698 L225.930625,44.5924804 L36.4154458,44.5924804 L80.2398677,0.768058527" id="Path-14"></path>
+                </g>
+                <g id="building" transform="translate(90.000000, 74.000000)" sketch:type="MSShapeGroup">
+                    <rect id="front" x="0" y="41" width="79" height="167"></rect>
+                    <path d="M0.4453125,41.7539062 L77.8814971,41.7539062 L118.966504,0.668899546 L42.509576,0.668899546 L0.4453125,41.7539062 Z" id="ceil"></path>
+                    <path d="M118.820312,0.23828125 L78.3564708,41.4095406 L78.3564708,208 L118.193172,167.466845 L118.820312,0.23828125 Z" id="side"></path>
+                </g>
+                <text id="Text" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="bold" sketch:alignment="middle" fill="#000000">
+                    <tspan x="122.232" y="23">Raster</tspan>
+                </text>
+            </g>
+            <g id="Vertex-Shader" transform="translate(77.000000, 210.000000)">
+                <g id="spline" transform="translate(0.000000, 254.000000)">
+                    <path d="M101.243297,2.37908297 C101.243297,2.37908297 95.6751059,7.94727447 92.8910102,10.7313702 C81.1739002,22.4484802 57.7396802,45.8827002 57.7396802,45.8827002 L246.750295,45.8827002 L121.983535,170.64946" id="Path-13" stroke="#000000" sketch:type="MSShapeGroup"></path>
+                    <path d="M80.6132912,1.60136448 L22.2998216,59.914834 L203.793672,59.9148334 L91.3701043,170.72698 L122.796125,170.72698" id="Path-14" stroke="#000000" sketch:type="MSShapeGroup"></path>
+                    <g id="Path-17" stroke="#000000">
+                        <use sketch:type="MSShapeGroup" xlink:href="#path-4"></use>
+                        <use xlink:href="#path-4"></use>
+                    </g>
+                    <path d="M127.75,171 L144.772763,171" id="Line" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                    <path id="Line-decoration-1" d="M144.772763,171 L133.972763,168 L133.972763,174 L144.772763,171 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                    <g id="Line-Copy-11-+-Line-Copy-10" transform="translate(40.609269, 52.579495) rotate(-23.000000) translate(-40.609269, -52.579495) translate(-2.390731, 50.079495)" stroke="#D0011B" stroke-linecap="square" fill="#D0011B">
+                        <path d="M68.2134817,2.86477195 L85.2362445,2.86477195" id="Line-Copy-11" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-11-decoration-1" d="M85.2362445,2.86477195 L74.4362445,-0.13522805 L74.4362445,5.86477195 L85.2362445,2.86477195 Z"></path>
+                        <path d="M19.1474757,1.1892015 L0.860313041,1.18920155" id="Line-Copy-10" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-10-decoration-1" d="M0.860313041,1.18920155 L11.660313,4.18920152 L11.660313,-1.81079848 L0.860313041,1.18920155 Z"></path>
+                    </g>
+                    <g id="Line-Copy-11-+-Line-Copy-10-Copy" transform="translate(222.146186, 54.978152) rotate(-17.000000) translate(-222.146186, -54.978152) translate(173.146186, 51.978152)" stroke="#D0011B" stroke-linecap="square" fill="#D0011B">
+                        <path d="M80.4825344,1.24135517 L97.5052972,1.24135517" id="Line-Copy-11" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-11-decoration-1" d="M97.5052972,1.24135517 L86.7052972,-1.75864483 L86.7052972,4.24135517 L97.5052972,1.24135517 Z"></path>
+                        <path d="M18.7250939,4.00066388 L0.437931225,4.00066393" id="Line-Copy-10" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-10-decoration-1" d="M0.437931225,4.00066393 L11.2379312,7.0006639 L11.2379312,1.0006639 L0.437931225,4.00066393 Z"></path>
+                    </g>
+                    <path d="M87.6526102,171.285714 L69.3654475,171.285714" id="Line-Copy-7" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                    <path id="Line-Copy-7-decoration-1" d="M69.3654475,171.285714 L80.1654475,174.285714 L80.1654475,168.285714 L69.3654475,171.285714 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                    <path d="M107.75,3 L124.772763,3" id="Line-Copy-9" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                    <path id="Line-Copy-9-decoration-1" d="M124.772763,3 L113.972763,3.24185123e-14 L113.972763,6 L124.772763,3 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                    <path d="M67.6526102,3.28571429 L49.3654475,3.28571434" id="Line-Copy-8" stroke="#D0011B" stroke-linecap="square" fill="#D0011B" sketch:type="MSShapeGroup"></path>
+                    <path id="Line-Copy-8-decoration-1" d="M49.3654475,3.28571434 L60.1654475,6.28571431 L60.1654475,0.285714307 L49.3654475,3.28571434 Z" stroke="#D0011B" stroke-linecap="square" fill="#D0011B"></path>
+                </g>
+                <g id="building" transform="translate(89.000000, 51.000000)">
+                    <rect id="front" stroke="#000000" stroke-dasharray="5" sketch:type="MSShapeGroup" x="23" y="64" width="79" height="167"></rect>
+                    <path d="M23.4453125,64.7539062 L100.881497,64.7539062 L141.966504,23.6688995 L65.509576,23.6688995 L23.4453125,64.7539062 Z" id="ceil" stroke="#000000" stroke-dasharray="5" sketch:type="MSShapeGroup"></path>
+                    <path d="M141.820312,23.2382812 L101.356471,64.4095406 L101.356471,231 L141.193172,190.466845 L141.820312,23.2382812 Z" id="side" stroke="#000000" stroke-dasharray="5" sketch:type="MSShapeGroup"></path>
+                    <g id="vertex-copy-3" transform="translate(0.000000, 40.000000)" fill="#D0011B">
+                        <path d="M28.75,24 L45.7727629,24" id="Line-Copy-6" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-6-decoration-1" d="M45.7727629,24 L34.9727629,21 L34.9727629,27 L45.7727629,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M19.55,27.8095238 L5.23774805,42.0328791" id="Line-Copy-4" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-4-decoration-1" d="M5.23774805,42.0328791 L15.0129564,36.547872 L10.7835533,32.2920349 L5.23774805,42.0328791 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M26.45,20.1904762 L39.1521646,7.56720647" id="Line-Copy-5" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-5-decoration-1" d="M39.1521646,7.56720647 L29.3769566,13.052214 L33.6063599,17.3080509 L39.1521646,7.56720647 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M17.25,24 L0.383333333,24" id="Line-Copy-3" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-3-decoration-1" d="M0.383333333,24 L11.1833333,27 L11.1833333,21 L0.383333333,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,29.3333333 L23.3833333,47.8712769" id="Line-Copy" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-decoration-1" d="M23.3833333,47.8712769 L26.3833333,37.0712769 L20.3833333,37.0712769 L23.3833333,47.8712769 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,17.9047619 L23.3833333,0.364397049" id="Line-Copy-2" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-2-decoration-1" d="M23.3833333,0.364397049 L20.3833333,11.164397 L26.3833333,11.164397 L23.3833333,0.364397049 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <text id="+-copy-24" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18.2857143" font-weight="420">
+                            <tspan x="19.1666667" y="29.4285714">+</tspan>
+                        </text>
+                    </g>
+                    <g id="vertex-copy-4" transform="translate(0.000000, 207.000000)" fill="#D0011B">
+                        <path d="M28.75,24 L45.7727629,24" id="Line" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-decoration-1" d="M45.7727629,24 L34.9727629,21 L34.9727629,27 L45.7727629,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M19.55,27.8095238 L5.23774805,42.0328791" id="Line-Copy-4" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-4-decoration-1" d="M5.23774805,42.0328791 L15.0129564,36.547872 L10.7835533,32.2920349 L5.23774805,42.0328791 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M26.45,20.1904762 L39.1521646,7.56720647" id="Line-Copy-5" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-5-decoration-1" d="M39.1521646,7.56720647 L29.3769566,13.052214 L33.6063599,17.3080509 L39.1521646,7.56720647 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M17.25,24 L0.383333333,24" id="Line-Copy-3" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-3-decoration-1" d="M0.383333333,24 L11.1833333,27 L11.1833333,21 L0.383333333,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,29.3333333 L23.3833333,47.8712769" id="Line-Copy" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-decoration-1" d="M23.3833333,47.8712769 L26.3833333,37.0712769 L20.3833333,37.0712769 L23.3833333,47.8712769 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,17.9047619 L23.3833333,0.364397049" id="Line-Copy-2" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-2-decoration-1" d="M23.3833333,0.364397049 L20.3833333,11.164397 L26.3833333,11.164397 L23.3833333,0.364397049 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <text id="+-copy-24" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18.2857143" font-weight="420">
+                            <tspan x="19.1666667" y="29.4285714">+</tspan>
+                        </text>
+                    </g>
+                    <g id="vertex-copy-5" transform="translate(78.000000, 207.000000)" fill="#D0011B">
+                        <path d="M28.75,24 L45.7727629,24" id="Line" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-decoration-1" d="M45.7727629,24 L34.9727629,21 L34.9727629,27 L45.7727629,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M19.55,27.8095238 L5.23774805,42.0328791" id="Line-Copy-4" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-4-decoration-1" d="M5.23774805,42.0328791 L15.0129564,36.547872 L10.7835533,32.2920349 L5.23774805,42.0328791 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M26.45,20.1904762 L39.1521646,7.56720647" id="Line-Copy-5" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-5-decoration-1" d="M39.1521646,7.56720647 L29.3769566,13.052214 L33.6063599,17.3080509 L39.1521646,7.56720647 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M17.25,24 L0.383333333,24" id="Line-Copy-3" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-3-decoration-1" d="M0.383333333,24 L11.1833333,27 L11.1833333,21 L0.383333333,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,29.3333333 L23.3833333,47.8712769" id="Line-Copy" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-decoration-1" d="M23.3833333,47.8712769 L26.3833333,37.0712769 L20.3833333,37.0712769 L23.3833333,47.8712769 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,17.9047619 L23.3833333,0.364397049" id="Line-Copy-2" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-2-decoration-1" d="M23.3833333,0.364397049 L20.3833333,11.164397 L26.3833333,11.164397 L23.3833333,0.364397049 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <text id="+-copy-24" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18.2857143" font-weight="420">
+                            <tspan x="19.1666667" y="29.4285714">+</tspan>
+                        </text>
+                    </g>
+                    <g id="vertex-copy-6" transform="translate(118.000000, 167.000000)" fill="#D0011B">
+                        <path d="M28.75,24 L45.7727629,24" id="Line" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-decoration-1" d="M45.7727629,24 L34.9727629,21 L34.9727629,27 L45.7727629,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M19.55,27.8095238 L5.23774805,42.0328791" id="Line-Copy-4" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-4-decoration-1" d="M5.23774805,42.0328791 L15.0129564,36.547872 L10.7835533,32.2920349 L5.23774805,42.0328791 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M26.45,20.1904762 L39.1521646,7.56720647" id="Line-Copy-5" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-5-decoration-1" d="M39.1521646,7.56720647 L29.3769566,13.052214 L33.6063599,17.3080509 L39.1521646,7.56720647 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M17.25,24 L0.383333333,24" id="Line-Copy-3" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-3-decoration-1" d="M0.383333333,24 L11.1833333,27 L11.1833333,21 L0.383333333,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,29.3333333 L23.3833333,47.8712769" id="Line-Copy" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-decoration-1" d="M23.3833333,47.8712769 L26.3833333,37.0712769 L20.3833333,37.0712769 L23.3833333,47.8712769 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,17.9047619 L23.3833333,0.364397049" id="Line-Copy-2" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-2-decoration-1" d="M23.3833333,0.364397049 L20.3833333,11.164397 L26.3833333,11.164397 L23.3833333,0.364397049 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <text id="+-copy-24" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18.2857143" font-weight="420">
+                            <tspan x="19.1666667" y="29.4285714">+</tspan>
+                        </text>
+                    </g>
+                    <g id="vertex" transform="translate(78.000000, 41.000000)" fill="#D0011B">
+                        <path d="M28.75,24 L45.7727629,24" id="Line" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-decoration-1" d="M45.7727629,24 L34.9727629,21 L34.9727629,27 L45.7727629,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M19.55,27.8095238 L5.23774805,42.0328791" id="Line-Copy-4" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-4-decoration-1" d="M5.23774805,42.0328791 L15.0129564,36.547872 L10.7835533,32.2920349 L5.23774805,42.0328791 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M26.45,20.1904762 L39.1521646,7.56720647" id="Line-Copy-5" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-5-decoration-1" d="M39.1521646,7.56720647 L29.3769566,13.052214 L33.6063599,17.3080509 L39.1521646,7.56720647 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M17.25,24 L0.383333333,24" id="Line-Copy-3" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-3-decoration-1" d="M0.383333333,24 L11.1833333,27 L11.1833333,21 L0.383333333,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,29.3333333 L23.3833333,47.8712769" id="Line-Copy" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-decoration-1" d="M23.3833333,47.8712769 L26.3833333,37.0712769 L20.3833333,37.0712769 L23.3833333,47.8712769 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,17.9047619 L23.3833333,0.364397049" id="Line-Copy-2" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-2-decoration-1" d="M23.3833333,0.364397049 L20.3833333,11.164397 L26.3833333,11.164397 L23.3833333,0.364397049 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <text id="+-copy-24" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18.2857143" font-weight="420">
+                            <tspan x="19.1666667" y="29.4285714">+</tspan>
+                        </text>
+                    </g>
+                    <g id="vertex-copy" transform="translate(119.000000, 0.000000)" fill="#D0011B">
+                        <path d="M28.75,24 L45.7727629,24" id="Line" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-decoration-1" d="M45.7727629,24 L34.9727629,21 L34.9727629,27 L45.7727629,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M19.55,27.8095238 L5.23774805,42.0328791" id="Line-Copy-4" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-4-decoration-1" d="M5.23774805,42.0328791 L15.0129564,36.547872 L10.7835533,32.2920349 L5.23774805,42.0328791 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M26.45,20.1904762 L39.1521646,7.56720647" id="Line-Copy-5" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-5-decoration-1" d="M39.1521646,7.56720647 L29.3769566,13.052214 L33.6063599,17.3080509 L39.1521646,7.56720647 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M17.25,24 L0.383333333,24" id="Line-Copy-3" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-3-decoration-1" d="M0.383333333,24 L11.1833333,27 L11.1833333,21 L0.383333333,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,29.3333333 L23.3833333,47.8712769" id="Line-Copy" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-decoration-1" d="M23.3833333,47.8712769 L26.3833333,37.0712769 L20.3833333,37.0712769 L23.3833333,47.8712769 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,17.9047619 L23.3833333,0.364397049" id="Line-Copy-2" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-2-decoration-1" d="M23.3833333,0.364397049 L20.3833333,11.164397 L26.3833333,11.164397 L23.3833333,0.364397049 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <text id="+-copy-24" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18.2857143" font-weight="420">
+                            <tspan x="19.1666667" y="29.4285714">+</tspan>
+                        </text>
+                    </g>
+                    <g id="vertex-copy-2" transform="translate(42.000000, 0.000000)" fill="#D0011B">
+                        <path d="M28.75,24 L45.7727629,24" id="Line" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-decoration-1" d="M45.7727629,24 L34.9727629,21 L34.9727629,27 L45.7727629,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M19.55,27.8095238 L5.23774805,42.0328791" id="Line-Copy-4" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-4-decoration-1" d="M5.23774805,42.0328791 L15.0129564,36.547872 L10.7835533,32.2920349 L5.23774805,42.0328791 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M26.45,20.1904762 L39.1521646,7.56720647" id="Line-Copy-5" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-5-decoration-1" d="M39.1521646,7.56720647 L29.3769566,13.052214 L33.6063599,17.3080509 L39.1521646,7.56720647 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M17.25,24 L0.383333333,24" id="Line-Copy-3" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-3-decoration-1" d="M0.383333333,24 L11.1833333,27 L11.1833333,21 L0.383333333,24 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,29.3333333 L23.3833333,47.8712769" id="Line-Copy" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-decoration-1" d="M23.3833333,47.8712769 L26.3833333,37.0712769 L20.3833333,37.0712769 L23.3833333,47.8712769 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <path d="M23.3833333,17.9047619 L23.3833333,0.364397049" id="Line-Copy-2" stroke="#D0011B" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <path id="Line-Copy-2-decoration-1" d="M23.3833333,0.364397049 L20.3833333,11.164397 L26.3833333,11.164397 L23.3833333,0.364397049 Z" stroke="#D0011B" stroke-linecap="square"></path>
+                        <text id="+-copy-24" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18.2857143" font-weight="420">
+                            <tspan x="19.1666667" y="29.4285714">+</tspan>
+                        </text>
+                    </g>
+                </g>
+                <text id="Properties" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="260" fill="#000000">
+                    <tspan x="82.5" y="499">. defines</tspan>
+                    <tspan x="82.5" y="522">. uniforms</tspan>
+                    <tspan x="82.5" y="545">. blocks</tspan>
+                    <tspan x="157.092" y="545" font-weight="420">:</tspan>
+                    <tspan x="82.5" y="568" font-weight="420">	- global</tspan>
+                    <tspan x="184.786" y="568"></tspan>
+                    <tspan x="82.5" y="591">	- </tspan>
+                    <tspan x="124.702" y="591" font-weight="420">position</tspan>
+                    <tspan x="200.59" y="591"></tspan>
+                    <tspan x="82.5" y="614">	- </tspan>
+                    <tspan x="124.702" y="614" font-weight="420">width</tspan>
+                    <tspan x="179.026" y="614"> (only for lines)</tspan>
+                </text>
+                <text id="Text" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="420" sketch:alignment="middle" fill="#000000">
+                    <tspan x="79.188" y="23">Vertex Shader</tspan>
+                </text>
+            </g>
+            <text id="&gt;&gt;" sketch:type="MSTextLayer" font-family="Orbitron" font-size="72" font-weight="260" sketch:alignment="middle" fill="#000000">
+                <tspan x="0.3" y="419">&gt;&gt;</tspan>
+            </text>
+            <text id="&gt;&gt;" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="260" sketch:alignment="middle" fill="#000000">
+                <tspan x="405.6" y="233">&gt;&gt;</tspan>
+            </text>
+            <text id="&gt;&gt;" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="260" sketch:alignment="middle" fill="#000000">
+                <tspan x="674.6" y="233">&gt;&gt;</tspan>
+            </text>
+            <text id="Text" sketch:type="MSTextLayer" font-family="Orbitron" font-size="72" font-weight="260" sketch:alignment="middle" fill="#000000">
+                <tspan x="664.336" y="68">GPU</tspan>
+            </text>
+        </g>
+        <g id="CPU" sketch:type="MSLayerGroup" transform="translate(127.000000, 0.000000)">
+            <g id="3D-Geometry" transform="translate(824.000000, 211.000000)">
+                <g id="spline" transform="translate(0.000000, 253.000000)" stroke="#000000">
+                    <path d="M79.2432974,2.37908297 C79.2432974,2.37908297 73.6751059,7.94727447 70.8910102,10.7313702 C59.1739002,22.4484802 35.7396802,45.8827002 35.7396802,45.8827002 L224.750295,45.8827002 L99.983535,170.64946" id="Path-13" sketch:type="MSShapeGroup"></path>
+                    <path d="M58.6132912,1.60136448 L0.299821647,59.914834 L181.793672,59.9148334 L69.3701043,170.72698 L100.796125,170.72698" id="Path-14" sketch:type="MSShapeGroup"></path>
+                    <g id="Path-17">
+                        <use sketch:type="MSShapeGroup" xlink:href="#path-5"></use>
+                        <use xlink:href="#path-5"></use>
+                    </g>
+                </g>
+                <g id="building" transform="translate(90.000000, 73.000000)" stroke="#000000" sketch:type="MSShapeGroup">
+                    <rect id="front" x="0" y="41" width="79" height="167"></rect>
+                    <path d="M0.4453125,41.7539062 L77.8814971,41.7539062 L118.966504,0.668899546 L42.509576,0.668899546 L0.4453125,41.7539062 Z" id="ceil"></path>
+                    <path d="M118.820312,0.23828125 L78.3564708,41.4095406 L78.3564708,208 L118.193172,167.466845 L118.820312,0.23828125 Z" id="side"></path>
+                </g>
+                <text id="Text" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="420" sketch:alignment="middle" fill="#000000">
+                    <tspan x="43.708" y="23">3D Geometry</tspan>
+                </text>
+            </g>
+            <g id="Tessellate" transform="translate(533.000000, 211.000000)">
+                <g id="line" transform="translate(0.000000, 253.000000)" sketch:type="MSShapeGroup">
+                    <path d="M79.2432974,1.37908297 C79.2432974,1.37908297 73.6751059,6.94727447 70.8910102,9.73137022 C59.1739002,21.4484802 35.7396802,44.8827002 35.7396802,44.8827002 L224.750295,44.8827002 L99.983535,169.64946" id="Path-13" stroke="#000000"></path>
+                    <path d="M58.6132912,0.601364479 L0.299821647,58.914834 L181.793672,58.9148334 L69.3701043,169.72698 L100.796125,169.72698" id="Path-14" stroke="#000000"></path>
+                    <path d="M57.7981333,1.31554747 L79.3752302,1.12505004 L0.843313558,58.5743803 L36.3358569,44.4319026 L182.267333,58.5743803 L224.697375,44.9655564 L70.4936133,169.205115" id="Path-19" stroke="#979797" stroke-dasharray="4"></path>
+                </g>
+                <g id="polyline" transform="translate(87.000000, 73.000000)" sketch:type="MSShapeGroup">
+                    <rect id="front" stroke="#000000" x="0" y="41" width="79" height="167"></rect>
+                    <rect id="back" stroke="#000000" x="41" y="0" width="79" height="167"></rect>
+                    <path d="M0.4453125,207.753906 L77.8814971,207.753906 L118.966504,166.6689 L42.509576,166.6689 L0.4453125,207.753906 Z" id="floor" stroke="#000000"></path>
+                    <path d="M0.4453125,41.7539062 L77.8814971,41.7539062 L118.966504,0.668899546 L42.509576,0.668899546 L0.4453125,41.7539062 Z" id="ceil" stroke="#000000"></path>
+                    <path d="M0.53125,42.8359375 L78.5976562,205.585938 L120.710938,1.29296875 L43.4453125,165.070312 L0.53125,42.8359375 Z" id="Path-6" stroke="#979797" stroke-dasharray="4"></path>
+                    <path d="M3.61328125,40.2109375 L120.023438,1.29296875" id="Path-7" stroke="#979797" stroke-dasharray="4"></path>
+                    <path d="M3.2421875,206.128906 L120,165.613281" id="Path-8" stroke="#979797" stroke-dasharray="4"></path>
+                </g>
+                <text id="Text" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="420" sketch:alignment="middle" fill="#000000">
+                    <tspan x="73.64" y="23">Tessellate</tspan>
+                </text>
+            </g>
+            <g id="Add-Vertices" transform="translate(239.000000, 211.000000)">
+                <g id="line" transform="translate(11.000000, 240.000000)">
+                    <path d="M72.4186859,14.3496294 L21.4453125,65.7824582 L205.760371,65.7824582 L87.8644265,183.678403" stroke="#000000" sketch:type="MSShapeGroup"></path>
+                    <path d="M83.2432974,15.379083 C83.2432974,15.379083 77.6751059,20.9472745 74.8910102,23.7313702 C63.1739002,35.4484802 39.7396802,58.8827002 39.7396802,58.8827002 L228.750295,58.8827002 L103.983535,183.64946" id="Path-13" stroke="#979797" stroke-dasharray="4" sketch:type="MSShapeGroup"></path>
+                    <path d="M62.6132912,14.6013645 L4.29982165,72.914834 L185.793672,72.9148334 L73.3701043,183.72698 L104.796125,183.72698" id="Path-14" stroke="#979797" stroke-dasharray="4" sketch:type="MSShapeGroup"></path>
+                    <g id="Path-17" stroke="#979797" stroke-dasharray="4">
+                        <use sketch:type="MSShapeGroup" xlink:href="#path-6"></use>
+                        <use xlink:href="#path-6"></use>
+                    </g>
+                    <text id="+" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="59" y="19">+</tspan>
+                    </text>
+                    <text id="+-copy" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="79" y="19">+</tspan>
+                    </text>
+                    <text id="+-copy-2" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="37" y="64">+</tspan>
+                    </text>
+                    <text id="+-copy-3" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="0" y="78">+</tspan>
+                    </text>
+                    <text id="+-copy-4" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="224" y="64">+</tspan>
+                    </text>
+                    <text id="+-copy-5" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="181" y="78">+</tspan>
+                    </text>
+                    <text id="+-copy-6" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="69" y="189">+</tspan>
+                    </text>
+                    <text id="+-copy-7" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="101" y="189">+</tspan>
+                    </text>
+                </g>
+                <g id="polyline" transform="translate(102.000000, 61.000000)">
+                    <rect id="front" stroke="#979797" stroke-dasharray="4" sketch:type="MSShapeGroup" x="5" y="54" width="79" height="167"></rect>
+                    <rect id="back" stroke="#979797" stroke-dasharray="4" sketch:type="MSShapeGroup" x="46" y="13" width="79" height="167"></rect>
+                    <path d="M5.4453125,220.753906 L82.8814971,220.753906 L123.966504,179.6689 L47.509576,179.6689 L5.4453125,220.753906 Z" id="floor" stroke="#000000" sketch:type="MSShapeGroup"></path>
+                    <path d="M5.4453125,54.7539062 L82.8814971,54.7539062 L123.966504,13.6688995 L47.509576,13.6688995 L5.4453125,54.7539062 Z" id="ceil" stroke="#979797" stroke-dasharray="4" sketch:type="MSShapeGroup"></path>
+                    <text id="+-copy-19" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="79" y="61">+</tspan>
+                    </text>
+                    <text id="+-copy-16" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="1" y="61">+</tspan>
+                    </text>
+                    <text id="+-copy-17" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="45" y="19">+</tspan>
+                    </text>
+                    <text id="+-copy-18" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="121" y="19">+</tspan>
+                    </text>
+                    <text id="+-copy-23" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="78" y="227">+</tspan>
+                    </text>
+                    <text id="+-copy-20" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="0" y="227">+</tspan>
+                    </text>
+                    <text id="+-copy-21" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="44" y="185">+</tspan>
+                    </text>
+                    <text id="+-copy-22" sketch:type="MSTextLayer" font-family="Orbitron" font-size="20" font-weight="420" fill="#000000">
+                        <tspan x="120" y="185">+</tspan>
+                    </text>
+                </g>
+                <text id="Properties" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="260" fill="#000000">
+                    <tspan x="0.5" y="495">properties:</tspan>
+                    <tspan x="0.5" y="518"></tspan>
+                    <tspan x="0.5" y="541">	- </tspan>
+                    <tspan x="42.702" y="541" font-weight="420">order</tspan>
+                    <tspan x="97.602" y="541"></tspan>
+                    <tspan x="0.5" y="564">	- </tspan>
+                    <tspan x="42.702" y="564" font-weight="420">color</tspan>
+                    <tspan x="94.056" y="564"></tspan>
+                    <tspan x="0.5" y="587">	- </tspan>
+                    <tspan x="42.702" y="587" font-weight="420">extrude</tspan>
+                    <tspan x="120.642" y="587"> (only polygons)</tspan>
+                    <tspan x="0.5" y="610">	- </tspan>
+                    <tspan x="42.702" y="610" font-weight="420">width</tspan>
+                    <tspan x="97.026" y="610"> (only lines)</tspan>
+                    <tspan x="0.5" y="633">	- style:</tspan>
+                    <tspan x="0.5" y="656">		+ </tspan>
+                    <tspan x="69.19" y="656" font-weight="420">texcoords</tspan>
+                </text>
+                <text id="Text" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="420" sketch:alignment="middle" fill="#000000">
+                    <tspan x="65.124" y="23">Add Vertices</tspan>
+                </text>
+            </g>
+            <g id="2D-Shapes" transform="translate(0.000000, 211.000000)">
+                <g id="line" transform="translate(0.000000, 245.000000)" sketch:type="MSShapeGroup" stroke="#000000">
+                    <path d="M52.6965207,12.53125 L4.4453125,60.7824582 L188.760371,60.7824582 L70.8644265,178.678403"></path>
+                </g>
+                <g id="polygon" transform="translate(60.000000, 225.000000)" sketch:type="MSShapeGroup" stroke="#000000">
+                    <path d="M6.4453125,54.7539062 L83.8814971,54.7539062 L124.966504,13.6688995 L48.509576,13.6688995 L6.4453125,54.7539062 Z"></path>
+                </g>
+                <text id="Text" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="420" sketch:alignment="middle" fill="#000000">
+                    <tspan x="63.84" y="23">2D Shapes</tspan>
+                </text>
+            </g>
+            <text id="&gt;&gt;" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="260" sketch:alignment="middle" fill="#000000">
+                <tspan x="236.6" y="234">&gt;&gt;</tspan>
+            </text>
+            <text id="&gt;&gt;" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="260" sketch:alignment="middle" fill="#000000">
+                <tspan x="526.6" y="234">&gt;&gt;</tspan>
+            </text>
+            <text id="&gt;&gt;" sketch:type="MSTextLayer" font-family="Orbitron" font-size="24" font-weight="260" sketch:alignment="middle" fill="#000000">
+                <tspan x="796.6" y="234">&gt;&gt;</tspan>
+            </text>
+            <text id="Text" sketch:type="MSTextLayer" font-family="Orbitron" font-size="72" font-weight="260" sketch:alignment="middle" fill="#000000">
+                <tspan x="489.624" y="68">CPU</tspan>
+            </text>
+        </g>
+        <text id="User--&gt;" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="260" sketch:alignment="middle" fill="#000000">
+            <tspan x="6.342" y="690">User -&gt;</tspan>
+        </text>
+        <text id="Lines-—&gt;" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="260" sketch:alignment="middle" fill="#000000">
+            <tspan x="0.465" y="518">Lines —&gt;</tspan>
+        </text>
+        <text id="Polygons-—&gt;" sketch:type="MSTextLayer" font-family="Orbitron" font-size="18" font-weight="260" sketch:alignment="middle" fill="#000000">
+            <tspan x="0.831" y="456">Polygons —&gt;</tspan>
+        </text>
+    </g>
+</svg>
