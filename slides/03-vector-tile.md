@@ -2654,7 +2654,3 @@
   }
 }
 </code></pre>
-
-
-
-![](imgs/tile.png)

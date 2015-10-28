@@ -1,3 +1,7 @@
+![](imgs/tile.png)
+
+
+
 # CPU
 
 ![](imgs/CPU.png)

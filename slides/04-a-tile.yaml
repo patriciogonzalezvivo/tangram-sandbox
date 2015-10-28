@@ -4,7 +4,7 @@
         url: //vector.mapzen.com/osm/all/16/19293/24640.json
 scene:
     background: 
-        color: white
+        color: rgba(255,255,255,0)
 layers:
     water:
         data: { source: osmTile }
