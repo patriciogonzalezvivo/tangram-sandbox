@@ -1,14 +1,28 @@
 @font-face {
-    font-family: larabie;
-    src: url(styles/fonts/larabie.ttf);
+    font-family: 'Montserrat';
+    src: url('../fonts/montserrat-ultralight-webfont.woff2') format('woff2'),
+         url('../fonts/montserrat-ultralight-webfont.woff') format('woff'),
+         url('../fonts/montserrat-ultralight-webfont.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/montserrat-regular-webfont.woff2') format('woff2'),
+         url('../fonts/montserrat-regular-webfont.woff') format('woff'),
+         url('../fonts/montserrat-regular-webfont.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
 }
 
 body {
     margin: 0px;
     border: 0px;
     padding: 0px;
-
-    font-family: 'Open Sans', sans-serif;
+    
+    font-family: 'Montserrat', Helvetica, sans-serif;
+    font-weight: 200;
     font-size: 12px;
 }
 
@@ -152,4 +166,23 @@ code {
     margin-left: auto;
     margin-right: auto;
     max-width: 300px;
+}
+
+.leaflet-control-attribution {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    color: black;
+    background-color: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.5);
+}
+
+.leaflet-control-attribution a {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    color: black;
+}
+
+.leaflet-control-attribution a:hover {
+    font-weight: 400;
+    text-decoration: none;
 }

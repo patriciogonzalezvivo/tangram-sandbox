@@ -11,25 +11,20 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tangram Sandbox</title>
-    <link rel="stylesheet" href="src/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
 
     <!-- Highlight -->
     <link type='text/css' rel='stylesheet' href="css/github.css">
-    <script type="text/javascript" src="src/highlight.min.js"></script>
+    <script type="text/javascript" src="lib/highlight.min.js"></script>
 
     <!-- Marked -->
-    <script type="text/javascript" src="src/marked.js"></script>
+    <script type="text/javascript" src="lib/marked.js"></script>
 
     <!-- My stuff -->
-    <link type='text/css' rel='stylesheet' href="css/style.css">
+    <link type='text/css' rel='stylesheet' href="css/tangram-style.css">
     <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/build/GlslCanvas.min.js"></script>
-
-    <style> 
-/*    @font-face {
-       font-family: larabie;
-       src: url(styles/fonts/larabie.ttf);
-    }*/
-    </style>
+    <script type="text/javascript" src="lib/common.js"></script>
+    <script type="text/javascript" src="lib/parser.js"></script>
 
   </head>
 
@@ -38,9 +33,9 @@
     <div id="content" class="tag" ></div>
 
     <!-- 3rd party libraries -->
-    <script src="src/leaflet/leaflet-1.0-dev.js"></script>
+    <script src="lib/leaflet/leaflet.js"></script>
     <!-- bog-standard leaflet URL hash -->
-    <script src="src/leaflet-hash.js"></script>
+    <script src="lib/leaflet/leaflet-hash.js"></script>
     <!-- End of 3rd party libraries -->
 
     <!-- Main tangram library -->
@@ -50,19 +45,6 @@
 
     <!-- Demo module -->
     <script type="text/javascript">
-    function fetchHTTP(url, methood){
-        var request = new XMLHttpRequest(), response;
-
-        request.onreadystatechange = function () {
-            if (request.readyState === 4 && request.status === 200) {
-                response = request.responseText;
-            }
-        }
-        request.open(methood ? methood : 'GET', url, false);
-        request.send();
-        return response;
-    }
-
     window.requestAnimFrame = (function() {
         return  window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
@@ -73,93 +55,12 @@
                     return window.setTimeout(callback, 1000/60);
              };
     })();
-    // Keep track of the mouse
-    var mouse = {x: 0, y: 0};
-    document.addEventListener('mousemove', function(e){ 
-        mouse.x = e.clientX || e.pageX; 
-        mouse.y = e.clientY || e.pageY 
-    }, false);
+
     function removeElementsByClass(className){
         var elements = document.getElementsByClassName(className);
         while(elements.length > 0){
             elements[0].parentNode.removeChild(elements[0]);
         }
-    }
-
-    function captionizeImages() {
-        if (!document.getElementsByTagName)
-          return false;
-
-        if (!document.createElement)
-          return false;
-
-        var images = document.getElementsByTagName("img");
-        if (images.length < 1)
-          return false;
-
-        for (var i=0; i<images.length; i++) {
-            var title = images[i].getAttribute("alt");
-
-            if (title != ""){
-                var divCaption = document.createElement("div");
-                divCaption.className = "caption";
-                var divCaption_text = document.createTextNode(title);
-                divCaption.appendChild(divCaption_text);
-                var divContainer = document.createElement("div");
-                divContainer.className="imgcontainer";
-                images[i].parentNode.insertBefore(divContainer,images[i]);
-                divContainer.appendChild(images[i]);
-                insertAfter(divCaption,images[i]);
-            }
-        }
-    }
-
-    function insertAfter(newElement,targetElement) {
-        var parent = targetElement.parentNode;
-        if (parent.lastChild == targetElement) {
-          parent.appendChild(newElement);
-        } else {
-          parent.insertBefore(newElement,targetElement.nextSibling);
-        }
-    }
-
-    function loadMarkdown( url_file ){
-        var mdText = fetchHTTP(url_file);
-        var content = document.getElementById('content');
-        content.className = "full";
-        content.innerHTML = marked(mdText);
-        captionizeImages();
-
-        // Load codes tags that have "src" attributes
-        var list = document.getElementsByTagName("code");
-        for(var i = 0; i < list.length; i++){
-            if (list[i].className == "lang-glsl" ||
-                list[i].className == "lang-bash" ||
-                list[i].className == "lang-cpp" ||
-                list[i].className == "lang-html" ||
-                list[i].className == "lang-processing" ){
-                hljs.highlightBlock(list[i]);
-            }
-        }
-
-        loadCanvas();
-    }
-
-    var billboards = []; 
-    function loadCanvas() {
-        var canvas = document.getElementsByClassName("canvas");
-        console.log(canvas);
-        for (var i = 0; i < canvas.length; i++){
-            billboards.push(new GlslCanvas(canvas[i]));
-        }
-    }
-
-    function renderCanvas() {
-        for(var i = 0; i < billboards.length; i++){
-            billboards[i].setMouse(mouse);
-            billboards[i].render();
-        }
-        window.requestAnimFrame(renderCanvas);
     }
 
     var map = (function () {
@@ -196,27 +97,18 @@
 
         if (info_file != '' && window.self == window.top){
             document.getElementById('content').innerHTML = '<div class="info" onclick="loadMarkdown(\''+info_file+'\')"> More Info about this style </div>';
-            //loadMarkdown(info_file);
         }
 
         /*** Map ***/
-
-        // var map = L.map('map',
-        //     { zoomControl: false },
-        //     {'keyboardZoomOffset': .05}
-        // );
         var map = L.map('map', {
             maxZoom: 20,
             trackResize: true,
             keyboard: false
         });
 
-        // L.control.zoom({ position: 'topright' }).addTo(map);
-
-        // map.attributionControl.setPrefix('<a href="http://leafletjs.com" title="A JS library for interactive maps" target="_blank">Leaflet</a>')
         var layer = Tangram.leafletLayer({
             scene: style_file,
-            attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
+            attribution: '&copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a> | <a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | <a href="https://twitter.com/patriciogv" target="_blank">@PatricioGV</a>'
         });
 
         window.layer = layer;
