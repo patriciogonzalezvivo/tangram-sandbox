@@ -1,9 +1,11 @@
-﻿# Author @patriciogv - 2015
+<!-- .slide: data-background="#ffff" -->
 
-sources:
-    osmTile:
-        type: GeoJSON
-        url: //vector.mapzen.com/osm/all/16/19293/24640.json
+Layers
+
+![](imgs/tile.png)
+
+
+```yaml
 scene:
     background: 
         color: white
@@ -44,3 +46,4 @@ layers:
                 order: 50
                 color: '#999'
                 width: .75px
+```

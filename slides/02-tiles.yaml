@@ -1,7 +1,9 @@
-﻿sources:
+﻿# Author @patriciogv - 2015
+
+sources:
     osm:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
 scene:
     background:
         color: white
@@ -11,7 +13,14 @@ layers:
         draw:
             showTile:
                 order: 0
-                color: '#BBB'
+                color: '#222'
+    boundaries:
+        data: { source: osm }
+        draw:
+            lines:
+                order: 1
+                color: lightgray
+                width: 1px
     water:
         data: { source: osm }
         draw:
@@ -39,7 +48,22 @@ styles:
                     vec2 getTileCoords () {
                         return fract(v_pos.xy*TILE_SCALE);
                     }
-
+                    
+                    float box(in vec2 st, in vec2 size){
+                        size = vec2(0.5) - size*0.5;
+                        vec2 uv = smoothstep(size,
+                                            size+vec2(0.001),
+                                            st);
+                        uv *= smoothstep(size,
+                                        size+vec2(0.001),
+                                        vec2(1.0)-st);
+                        return uv.x*uv.y;
+                    }
+                    
+                    float cross(in vec2 st, vec2 size){
+                        return  clamp(box(st, vec2(size.x*0.5,size.y*0.125)) +
+                                box(st, vec2(size.y*0.125,size.x*0.5)),0.,1.);
+                    }
                 position: |
                     // Normalize the attribute position of a vertex
                     v_pos = NORMALIZED_SHORT(a_position.xyz);
@@ -50,5 +74,6 @@ styles:
             blocks:
                 color: |
                     vec2 st = getTileCoords();
-                    // Add a line at the lower left side of each tile
-                    color *= step(.003,st.x)*step(.003,st.y);
+                    // Add a line at the lower left side of each tile                  
+                    color.rgb *= .7+(step(.003,st.x)*step(.003,st.y));
+                    color.rgb *= 1.0-cross(abs(st-.5), vec2(0.08,0.09));
