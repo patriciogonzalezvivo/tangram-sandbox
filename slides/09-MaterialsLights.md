@@ -1,5 +1,5 @@
 <!-- .slide: data-background="#ffff" -->
-##[Fragment Shader](https://github.com/tangrams/tangram/blob/master/src/styles/polygons/polygons_fragment.glsl)
+[Fragment Shader](https://github.com/tangrams/tangram/blob/master/src/styles/polygons/polygons_fragment.glsl)
 
 ```
 uniform vec2 u_resolution;
@@ -58,10 +58,6 @@ void main (void) {
 Note the [the injection poins defined on with the ```pragmas```](https://github.com/tangrams/tangram/tree/master/src/gl/shaders)
 
 
- [Material.js - Light.js properties](https://github.com/tangrams/tangram/blob/master/src/gl/shaders/)
+ [**Material**.js - **Light**.js properties](https://github.com/tangrams/tangram/blob/master/src/gl/shaders/)
 
 ![](imgs/material.png)
-
-
-
-

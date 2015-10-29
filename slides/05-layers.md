@@ -10,7 +10,6 @@ sources:
     osmTile:
         type: GeoJSON
         url: //vector.mapzen.com/osm/all/16/19293/24640.json
-        
 layers:
     water:
         data: { source: osmTile }

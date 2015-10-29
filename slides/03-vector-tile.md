@@ -1,4 +1,4 @@
-How a vector-tile looks like?
+How a **vector-tile** looks like?
 
 <pre><code>
 {
