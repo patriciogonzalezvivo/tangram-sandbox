@@ -14,7 +14,7 @@ layers:
             lines:
                 order: 2
                 color: '#353535'
-                width: 3px
+                width: 2px
     earth:
         data: { source: osmTile }
         draw:

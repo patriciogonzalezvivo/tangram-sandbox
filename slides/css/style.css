@@ -317,6 +317,7 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
     font-weight: 400;
     font-size: 12px;
     color: black;
+    background-color: rgba(255,255,255,0)
 }
 
 /*

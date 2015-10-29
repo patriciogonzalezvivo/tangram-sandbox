@@ -6,44 +6,47 @@ Layers
 
 
 ```yaml
-scene:
-    background: 
-        color: white
+sources:
+    osmTile:
+        type: GeoJSON
+        url: //vector.mapzen.com/osm/all/16/19293/24640.json
+        
 layers:
     water:
         data: { source: osmTile }
         draw:
-            lines:
-                order: 2
-                color: '#353535'
-                width: 3px
+            polygons:
+                ...
     earth:
         data: { source: osmTile }
         draw:
-            lines:
-                order: 0
-                color: '#555'
-                width: 2px
+            polygons:
+                ...
     landuse:
         data: { source: osmTile }
         draw:
-            lines:
-                order: 1
-                color: '#666'
-                width: 1.5px
+            polygons:
+                ...
+    places:
+        data: { source: osm }
+        draw:
+            text:
+                font:
+                	...
+            points:
+            	...
     roads:
         data: { source: osmTile }
-        properties: { width: 3 }
         draw:
             lines:
-                order: 2
-                color: '#777'
-                width: 1px
+                ...
+            text:
+            	font:
+            		...
     buildings:
         data: { source: osmTile }
         draw:
-            lines:
-                order: 50
-                color: '#999'
-                width: .75px
+            polygons:
+            	extride: true
+                ...
 ```
