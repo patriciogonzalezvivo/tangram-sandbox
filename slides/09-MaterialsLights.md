@@ -1,5 +1,5 @@
 <!-- .slide: data-background="#ffff" -->
-[Fragment Shader](https://github.com/tangrams/tangram/blob/master/src/styles/polygons/polygons_fragment.glsl)
+[Polygon/Lines main **Fragment** Shader](https://github.com/tangrams/tangram/blob/master/src/styles/polygons/polygons_fragment.glsl)
 
 ```
 uniform vec2 u_resolution;
