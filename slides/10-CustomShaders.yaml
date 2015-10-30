@@ -17,8 +17,29 @@ lights:
         ambient: .5
         diffuse: 1.
 styles:
+    tilt:
+        animated: true
+        shaders:
+            blocks:
+                global: |
+                    mat3 rotateX3D(float phi){
+                        return mat3(
+                            vec3(1.,0.,0.),
+                            vec3(0.,cos(phi),-sin(phi)),
+                            vec3(0.,sin(phi),cos(phi)));
+                    }
+                    mat3 rotateZ3D(float psi){
+                        return mat3(
+                            vec3(cos(psi),-sin(psi),0.),
+                            vec3(sin(psi),cos(psi),0.),
+                            vec3(0.,0.,1.));
+                    }
+                position: |
+                    float t = u_time*0.05; 
+                    position.xyz = rotateX3D(abs(sin(t))*0.5) * rotateZ3D(abs(sin(t))*0.5) * position.xyz;
     buildings:
         base: polygons
+        mix: tilt
         animated: true
         shaders:
             blocks:
@@ -32,32 +53,38 @@ styles:
                                     mix(normal, preLight,step(.5,fract(t*2.))), 
                                     mix(postLight, filtered,step(.5,fract(t*2.))), 
                                     step(.5,t) );
+    tilt-poly:
+        base: polygons
+        mix: tilt
+    tilt-line:
+        base: line
+        mix: tilt
 layers:
     earth:
         data: { source: osmTile }
         draw:
-            polygons:
+            tilt-poly:
                 order: 0
                 color: gray
                 width: 2px
     water:
         data: { source: osmTile }
         draw:
-            lines:
+            tilt-line:
                 order: 1
                 color: '#353535'
                 width: 2px
     landuse:
         data: { source: osmTile }
         draw:
-            polygons:
+            tilt-poly:
                 order: 2
                 color: [0.769, 0.769, 0.769]
     roads:
         data: { source: osmTile }
         properties: { width: 3 }
         draw:
-            lines:
+            tilt-line:
                 order: 3
                 color: [0.639, 0.639, 0.639]
                 width: 10
@@ -70,7 +97,7 @@ layers:
                 order: 4
                 color: white
                 extrude: true
-            lines:
+            tilt-line:
                 order: 6
                 color: '#AAA'
                 width: .75px
