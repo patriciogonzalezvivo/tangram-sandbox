@@ -2,7 +2,7 @@
 
 *But there is more*?
 
-For the same price you can get users to inject their own blocks of code into the **vertex** and **fragment** shaders.
+For the same price you can get users to inject their own **GLSL blocks** of code into the **vertex** and **fragment** shaders.
 
 
 [Polygon/Lines main **Vertex** Shader](https://github.com/tangrams/tangram/blob/master/src/styles/polygons/polygons_vertex.glsl)
@@ -187,7 +187,7 @@ void main (void) {
 
 
 
-What kind of blocks can we inject?
+What kind of **shaders blocks** can we inject?
 
 
 
