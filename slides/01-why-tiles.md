@@ -15,3 +15,5 @@ sources:
         type: TopoJSON
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
  ```
+ 
+ **+** [more information about sources](https://mapzen.com/documentation/tangram/sources/)

@@ -4,6 +4,8 @@ Layers
 
 ![](imgs/tile.png)
 
+**+** [more information about the different styles](https://mapzen.com/documentation/tangram/Styles-Overview/)
+
 
 ```yaml
 sources:
@@ -49,3 +51,5 @@ layers:
             	extride: true
                 ...
 ```
+
+[**+** more information about filtering layers on Tangram](https://mapzen.com/documentation/tangram/Filters-Overview/)

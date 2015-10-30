@@ -1,5 +1,5 @@
 <!-- .slide: data-background="#ffff" -->
-[Polygon/Lines main **Fragment** Shader](https://github.com/tangrams/tangram/blob/master/src/styles/polygons/polygons_fragment.glsl)
+### [Polygon/Lines main **Fragment** Shader](https://github.com/tangrams/tangram/blob/master/src/styles/polygons/polygons_fragment.glsl)
 
 ```
 uniform vec2 u_resolution;
@@ -55,10 +55,72 @@ void main (void) {
     gl_FragColor = color;
 }
 ```
-Note the [the injection poins defined on with the ```pragmas```](https://github.com/tangrams/tangram/tree/master/src/gl/shaders)
+[Note the injection poins defined on with the ```pragmas```](https://github.com/tangrams/tangram/tree/master/src/gl/shaders)
 
 
 
- [**Material**.js - **Light**.js properties](https://github.com/tangrams/tangram/blob/master/src/gl/shaders/)
+[**Material**.js - **Light**.js properties](https://github.com/tangrams/tangram/blob/master/src/gl/shaders/)
 
 ![](imgs/material.png)
+
+
+How it works?
+
+
+Seting up your **lights**
+```yaml
+lights:
+    light1:
+        type: directional
+        direction: [0, 1, -.5]
+        diffuse: .6
+        ambient: .3
+    point:
+        type: point
+        position: [-500px, 200px, 500px]
+        origin: ground
+        diffuse: .35
+        ambient: .1
+        radius: 1000px
+```
+**+** [more information about lights in tangram](https://mapzen.com/documentation/tangram/Lights-Overview/)
+
+Seting up your materials
+```
+styles:
+    ocean:
+        base: polygons
+        material:
+            ambient: .7
+            diffuse:
+                texture: imgs/sem-sky-0001.jpg
+                mapping: spheremap
+    sand:
+        base: polygons
+        material:
+            normal:
+                texture: imgs/normal-0015.jpg
+                mapping: planar
+                scale: 0.01
+            ambient: 0.8
+            diffuse: 1
+            specular: 0
+```
+**+** [more information about materials in tangram](https://mapzen.com/documentation/tangram/Materials-Overview/)
+
+Assigning this styles to layers
+```yaml
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            sand:
+                order: 0
+                color: [0.933,0.890,0.839]
+    water:
+        data: { source: osm }
+        draw:
+            ocean:
+                order: 1
+                color: [0.533, 0.733, 0.933]
+```

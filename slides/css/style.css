@@ -216,7 +216,13 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   text-decoration: none;
   -webkit-transition: color 0.15s ease;
   -moz-transition: color 0.15s ease;
-  transition: color 0.15s ease; }
+  transition: color 0.15s ease; 
+}
+
+.reveal p a {
+  font-size: 14px;
+  font-weight: 100;
+}
 
 .reveal a:hover {
   color: gray;

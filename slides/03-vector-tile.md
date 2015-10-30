@@ -2654,3 +2654,5 @@ How a **vector-tile** looks like?
   }
 }
 </code></pre>
+
+**+** [try it your self](https://vector.mapzen.com/osm/all/16/19293/24640.json)

@@ -4,6 +4,8 @@ CPU
 
 ![](imgs/CPU.png)
 
+**+** [more information about tangram's styles](https://mapzen.com/documentation/tangram/Styles-Overview/)
+
 
 ```yaml
 scene:
@@ -47,3 +49,5 @@ layers:
                 color: '#999'
                 width: .75px
 ```
+
+**+** [more information about tangram's styles](https://mapzen.com/documentation/tangram/Styles-Overview/)
