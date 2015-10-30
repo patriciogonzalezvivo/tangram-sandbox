@@ -85,7 +85,8 @@ lights:
 ```
 **+** [more information about lights in tangram](https://mapzen.com/documentation/tangram/Lights-Overview/)
 
-Seting up your materials
+
+Seting up your **materials**
 ```
 styles:
     ocean:
@@ -108,7 +109,8 @@ styles:
 ```
 **+** [more information about materials in tangram](https://mapzen.com/documentation/tangram/Materials-Overview/)
 
-Assigning this styles to layers
+
+Assigning this styles to **layers**
 ```yaml
 layers:
     earth:
