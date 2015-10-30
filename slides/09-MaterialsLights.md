@@ -126,3 +126,7 @@ layers:
                 order: 1
                 color: [0.533, 0.733, 0.933]
 ```
+
+
+Let's see it all working together
+[click here](http://tangrams.github.io/tangram-play/?scene=https://raw.githubusercontent.com/tangrams/tangram-sandbox/gh-pages/styles/sandbox.yaml)
