@@ -55,7 +55,7 @@ void main (void) {
     gl_FragColor = color;
 }
 ```
-[Note the injection poins defined on with the ```pragmas```](https://github.com/tangrams/tangram/tree/master/src/gl/shaders)
+[Note the injection points defined through ```pragmas```](https://github.com/tangrams/tangram/tree/master/src/gl/shaders)
 
 
 
