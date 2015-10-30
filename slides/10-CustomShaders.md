@@ -124,7 +124,7 @@ void main() {
     gl_Position = position;
 }
 ```
-[Note the injection poins defined on with the ```pragmas```](https://github.com/tangrams/tangram/tree/master/src/gl/shaders)
+[Note the injection points defined through ```pragmas```](https://github.com/tangrams/tangram/tree/master/src/gl/shaders)
 
 
 [Polygon/Lines main **Fragment** Shader](https://github.com/tangrams/tangram/blob/master/src/styles/polygons/polygons_fragment.glsl)
@@ -183,7 +183,7 @@ void main (void) {
     gl_FragColor = color;
 }
 ```
-[Note the injection poins defined on with the ```pragmas```](https://github.com/tangrams/tangram/tree/master/src/gl/shaders)
+[Note the injection points defined through ```pragmas```](https://github.com/tangrams/tangram/tree/master/src/gl/shaders)
 
 
 
