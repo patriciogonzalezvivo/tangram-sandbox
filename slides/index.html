@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Tangram Insights</title>
+
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<!-- Reveal.js -->
+		<link rel="stylesheet" href="css/reveal.css">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="css/style.css">
+
+		<!-- Leaflet -->
+	    <script src="../lib/leaflet/leaflet.js"></script>
+	    <!-- bog-standard leaflet URL hash -->
+	    <script src="../lib/leaflet/leaflet-hash.js"></script>
+	    <!-- Main tangram library -->
+	    <script src="https://mapzen.com/tangram/0.3.3/tangram.min.js"></script>
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/reveal-pdf.css' : 'css/reveal-paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown="00-about-tangram.md"  
+			         data-separator="^\n\n\n"  
+			         data-separator-vertical="^\n\n"  
+			         data-separator-notes="^Note:"  
+			         data-charset="iso-8859-15">
+				</section>
+				
+
+				<section style="width: 100%; height: 100%;">
+					<iframe width="100%" height="100%" data-src="../tangram.html?./slides/00-tangram.yaml#15/40.7076/-74.0146"></iframe>
+				</section>
+
+				
+				<section data-markdown="01-why-tiles.md"  
+				         data-separator="^\n\n\n"  
+				         data-separator-vertical="^\n\n"  
+				         data-separator-notes="^Note:"  
+				         data-charset="iso-8859-15">
+				</section>
+
+				<section style="width: 100%; height: 100%;">
+					<iframe width="100%" height="100%" data-src="../tangram.html?slides/02-tiles.yaml#2/0/0"></iframe>
+				</section>
+
+				<section data-markdown="03-vector-tile.md"  
+				         data-separator="^\n\n\n"  
+				         data-separator-vertical="^\n\n"  
+				         data-separator-notes="^Note:"  
+				         data-charset="iso-8859-15">
+				</section>
+
+				<section>
+					<section style="width: 800px; height: 600px;">
+						<iframe width="100%" height="100%" data-src="../tangram.html?slides/04-a-tile-cross.yaml#17.40999999999997/40.71206/-74.01782"></iframe>
+					</section>
+					<section style="width: 800px; height: 600px;" data-background="#26282c">
+						<iframe width="100%" height="100%" data-src="http://tangrams.github.io/tangram-play/?scene=https://raw.githubusercontent.com/tangrams/tangram-sandbox/gh-pages/slides/04-a-tile.yaml#17.0/40.71208/-74.01769"></iframe>
+					</section>
+				</section>
+
+				<section data-markdown="05-layers.md"  
+				         data-separator="^\n\n\n"  
+				         data-separator-vertical="^\n\n"  
+				         data-separator-notes="^Note:"  
+				         data-charset="iso-8859-15">
+				</section>
+
+				<section data-markdown="06-CPU.md"  
+				         data-separator="^\n\n\n"  
+				         data-separator-vertical="^\n\n"  
+				         data-separator-notes="^Note:"  
+				         data-charset="iso-8859-15">
+				</section>
+
+				<section data-markdown="07-GPU.md"  
+				         data-separator="^\n\n\n"  
+				         data-separator-vertical="^\n\n"  
+				         data-separator-notes="^Note:"  
+				         data-charset="iso-8859-15">
+				</section>
+
+				<section>
+					<section style="width: 800px; height: 600px;">
+						<iframe width="100%" height="100%" data-src="../tangram.html?slides/08-default-pipeline.yaml#17.0/40.71206/-74.01782"></iframe>
+					</section>
+					<section style="width: 800px; height: 600px;" data-background="#26282c">
+						<iframe width="100%" height="100%" data-src="http://tangrams.github.io/tangram-play/?scene=https://raw.githubusercontent.com/tangrams/tangram-sandbox/gh-pages/slides/08-default-pipeline.yaml#17.0/40.71208/-74.01769"></iframe>
+					</section>
+				</section>
+
+				<section data-markdown="09-MaterialsLights.md"  
+				         data-separator="^\n\n\n"  
+				         data-separator-vertical="^\n\n"  
+				         data-separator-notes="^Note:"  
+				         data-charset="iso-8859-15">
+				</section>
+
+				<section data-markdown="10-CustomShaders.md"  
+				         data-separator="^\n\n\n"  
+				         data-separator-vertical="^\n\n"  
+				         data-separator-notes="^Note:"  
+				         data-charset="iso-8859-15">
+				</section>
+
+				<section>
+					<section style="width: 800px; height: 600px;">
+						<iframe width="100%" height="100%" data-src="../tangram.html?slides/10-CustomShaders.yaml#17.40999999999997/40.71206/-74.01782"></iframe>
+					</section>
+					<section style="width: 800px; height: 600px;" data-background="#26282c">
+						<iframe width="100%" height="100%" data-src="http://tangrams.github.io/tangram-play/?scene=https://raw.githubusercontent.com/tangrams/tangram-sandbox/gh-pages/slides/10-CustomShaders.yaml#17.40999999999997/40.71206/-74.01782"></iframe>
+					</section>
+				</section>
+
+				<section data-markdown="11-Thanks.md"  
+				         data-separator="^\n\n\n"  
+				         data-separator-vertical="^\n\n"  
+				         data-separator-notes="^Note:"  
+				         data-charset="iso-8859-15">
+				</section>
+
+			</div>
+		</div>
+
+		<script src="../lib/reveal/lib/head.min.js"></script>
+		<script src="../lib/reveal/reveal.js"></script>
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide',
+				parallaxBackgroundImage: '../imgs/background.png',
+				parallaxBackgroundSize: '1500px 1000px ',
+				parallaxBackgroundHorizontal: '10',
+    			parallaxBackgroundVertical: '10',
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: '../lib/reveal/lib/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: '../lib/reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../lib/reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../lib/reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: '../lib/reveal/plugin/zoom-js/zoom.js', async: true },
+					{ src: '../lib/reveal/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

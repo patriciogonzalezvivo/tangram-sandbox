@@ -1,9 +1,0 @@
-include: cubic.yaml
-styles:
-    interpolation-cubic:
-        shaders:
-            blocks:
-                global: |
-                    float cubic (float x) {
-                        return x*x*(3.0-2.0*x);
-                    }

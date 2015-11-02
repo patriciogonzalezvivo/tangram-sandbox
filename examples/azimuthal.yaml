@@ -1,0 +1,100 @@
+﻿# Author @patriciogv - 2015
+
+sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+cameras:
+    perspective:
+        type: flat
+
+styles:
+    geometry-projection:
+        shaders:
+            defines:
+                EARTH_RADIUS: 6378137.0
+                PI: 3.14159265358979323846
+                TAU: 6.2831853071795862
+                HALF_PI: 1.570796327
+                QUATER_PI: .785398163
+                deg2rad(d): (((d)*3.14159265358979323846)/180.0)
+                rad2deg(d): (((d)*180.0)/3.14159265358979323846)
+            blocks:
+                global: |
+                    //
+                    //    The following functions take or return there results in degrees
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_d (float y) { return rad2deg(2.0*atan(exp(deg2rad(y)))-HALF_PI); }
+                    float x2lon_d (float x) { return x; }
+                    float lat2y_d (float lat) { return rad2deg(log(tan(QUATER_PI+ deg2rad(lat)/2.0))); }
+                    float lon2x_d (float lon) { return lon; }
+                    //
+                    //    The following functions take or return there results in something close to meters, along the equator 
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_m (float y) { return rad2deg(2.0*atan(exp((y/EARTH_RADIUS)))-HALF_PI); }
+                    float x2lon_m (float x) { return rad2deg(x/EARTH_RADIUS); }
+                    float lat2y_m (float lat) { return EARTH_RADIUS*log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
+                    float lon2x_m (float lon) { return deg2rad(lon)*EARTH_RADIUS; }
+                    
+                    vec2 latlon2azimur (float lat, float lon, float phi1, float lambda0) {
+                        phi1 = deg2rad(phi1);
+                        lambda0 = deg2rad(lambda0);
+                        vec2 st = vec2(deg2rad(lon),deg2rad(lat));
+                        float c = length(st);
+                        float phi = asin( cos(c)*sin(phi1) + st.y*sin(c)*cos(phi1)/c );
+                        float lambda = lambda0 +
+                            atan( st.x*sin(c), (c*cos(phi1)*cos(c) - st.y*sin(phi1)*sin(c)));
+                        return vec2(phi,lambda);
+                    }
+                    
+                    vec2 azimur(float lat, float lon) {
+                        return latlon2azimur(lat, 
+                                            lon, 
+                                            y2lat_m(u_map_position.y),
+                                            x2lon_m(u_map_position.x));
+                    }
+    textures:
+        base: polygons
+        mix: [geometry-projection,geometry-matrices]
+        animated: true
+        shaders:
+            uniforms:
+                u_day_map: ../styles/imgs/earth-texture-day.jpg
+            blocks:
+                position: |
+                    
+                color: |
+                    vec2 st = v_position.xy;
+                    float lat = y2lat_m(st.y);
+                    float lon = x2lon_m(st.x);
+                    
+                    vec2 azim = azimur(lat,lon);
+                    float s = (azim.y/TAU) + 0.5; // -pi,pi -> 0,1
+                    float t = (azim.x/PI) + 0.5;  // -pi/2,pi/2 -> 0,1
+    
+                    vec4 day = texture2D(u_day_map,fract(vec2(s,t)));
+                    color = day;
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            textures:
+                order: 0
+                color: '#555'
+            lines:
+                order: 3
+                color: white
+                width: [[2,0px],[5,1px]]
+    water:
+        data: { source: osm }
+        draw:
+            textures:
+                order: 1
+                color: '#ddd'
+    boundaries:
+        data: { source: osm }
+        draw:
+            lines:
+                order: 3
+                color: white
+                width: [[2,0px],[5,1px]]

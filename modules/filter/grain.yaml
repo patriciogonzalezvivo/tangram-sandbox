@@ -3,12 +3,12 @@
 # Apply a lens grain effect to the scene
 # The amount can be set by the GRAIN_AMOUNT define [0.0~1.0]
 
-include: .../generative/fbm.yaml
+include: ../generative/fbm.yaml
 styles:
     filter-grain:
         mix: generative-fbm
         shaders:
-            defineS:
+            defines:
                 GRAIN_AMOUNT: .3
             blocks:
                 global: |
@@ -16,10 +16,11 @@ styles:
                     // ================================
                     float grain(){
                         #ifdef TANGRAM_FRAGMENT_SHADER
-                        vec2 st = gl_FragCoord.xy/u_resolution.xy-vec2(.5);
-                        return dot(st,st)+(fbm(st*0.6)*0.1);
+                            vec2 pos = gl_FragCoord.xy;
+                            vec2 st = pos/u_resolution.xy-vec2(.5);
+                            return dot(st,st)+(fbm(pos*0.6)*0.1);
                         #else
-                        return 0.0;
+                            return 0.0;
                         #endif
                     }
                 filter: |

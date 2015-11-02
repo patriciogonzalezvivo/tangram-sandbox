@@ -1,9 +1,7 @@
 # Patricio Gonzalez Vivo - 2015
 
-include: ../interpolation/aastep.yaml
 styles:
     shapes-simplex:
-        mix: interpolation-aastep
         shaders:
             blocks:
                 global: |

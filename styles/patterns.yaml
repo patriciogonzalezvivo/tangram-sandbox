@@ -183,6 +183,7 @@ layers:
                 color: '#343434'
     roads:
         data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
         draw:
             lines:
                 order: 5

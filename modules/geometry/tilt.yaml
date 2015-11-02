@@ -2,8 +2,8 @@
 
 include: matrices.yaml
 styles:
-    tilt:
-        mix: matrices.yaml
+    geometry-tilt:
+        mix: geometry-matrices
         animated: true
         shaders:
             blocks:

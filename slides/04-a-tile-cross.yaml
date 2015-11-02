@@ -1,0 +1,91 @@
+﻿# Author @patriciogv - 2015
+
+sources:
+    osmTile:
+        type: GeoJSON
+        url: //vector.mapzen.com/osm/all/16/19293/24640.json
+scene:
+    background: 
+        color: white
+layers:
+    water:
+        data: { source: osmTile }
+        draw:
+            lines:
+                order: 0
+                color: '#666'
+                width: 1.5px
+            cross:
+                order: 1
+                color: '#333'
+                size: 30px
+    earth:
+        data: { source: osmTile }
+        draw:
+            lines:
+                order: 0
+                color: '#555'
+                width: 2px
+            cross:
+                order: 2
+                color: '#333'
+                size: 30px
+    landuse:
+        data: { source: osmTile }
+        draw:
+            lines:
+                order: 0
+                color: '#666'
+                width: 1.5px
+            cross:
+                order: 3
+                color: '#333'
+                size: 20px
+    roads:
+        data: { source: osmTile }
+        properties: { width: 3 }
+        draw:
+            lines:
+                order: 0
+                color: '#777'
+                width: 1px
+            cross:
+                order: 4
+                color: '#444'
+                size: 20px
+    buildings:
+        data: { source: osmTile }
+        draw:
+            lines:
+                order: 0
+                color: '#999'
+                width: .75px
+            cross:
+                order: 5
+                color: '#555'
+                size: 13px
+styles:
+    cross:
+        base: points
+        texcoords: true
+        shaders:
+            blocks: 
+                global: |
+                    float box(in vec2 st, in vec2 size){
+                        size = vec2(0.5) - size*0.5;
+                        vec2 uv = smoothstep(size,
+                                            size+vec2(0.001),
+                                            st);
+                        uv *= smoothstep(size,
+                                        size+vec2(0.001),
+                                        vec2(1.0)-st);
+                        return uv.x*uv.y;
+                    }
+                    float cross(in vec2 st, vec2 size){
+                        return  clamp(box(st, vec2(size.x*0.5,size.y*0.125)) +
+                                box(st, vec2(size.y*0.125,size.x*0.5)),0.,1.);
+                    }
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    color.rgb += 1.-cross(st,vec2(.85,1.));
+                    color.a = cross(st,vec2(1.5,2.));

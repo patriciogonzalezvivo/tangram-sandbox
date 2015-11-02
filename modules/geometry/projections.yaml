@@ -1,0 +1,97 @@
+ # Patricio Gonzalez Vivo - 2015
+
+styles:
+    geometry-projection:
+        shaders:
+            defines:
+                EARTH_RADIUS: 6378137.0
+                PI: 3.14159265358979323846
+                HALF_PI: 1.570796327
+                QUATER_PI: .785398163
+                deg2rad(d): (((d)*3.14159265358979323846)/180.0)
+                rad2deg(d): (((d)*180.0)/3.14159265358979323846)
+            blocks:
+                global: |
+                    //
+                    //    The following functions take or return there results in degrees
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_d (float y) { return rad2deg(2.0 * atan(exp( deg2rad(y) ) ) - HALF_PI); }
+                    float x2lon_d (float x) { return x; }
+                    float lat2y_d (float lat) { return rad2deg(log(tan(QUATER_PI+ deg2rad(lat)/2.0))); }
+                    float lon2x_d (float lon) { return lon; }
+                    //
+                    //    The following functions take or return there results in something close to meters, along the equator 
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_m (float y) { return rad2deg(2.0 * atan(exp( (y / EARTH_RADIUS ) )) - HALF_PI); }
+                    float x2lon_m (float x) { return rad2deg(x / EARTH_RADIUS); }
+                    float lat2y_m (float lat) { return EARTH_RADIUS * log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
+                    float lon2x_m (float lon) { return deg2rad(lon) * EARTH_RADIUS; }
+                    
+                    // ALBERS
+                    // https://gist.github.com/RandomEtc/476238
+                    vec2 latlon2albers(float lat, float lon, float lat0, float lng0, float phi1, float phi2 ) {
+                        lat0 = deg2rad(lat0);    // Latitude_Of_Origin
+                        lng0 = deg2rad(lng0);    // Central_Meridian
+                        phi1 = deg2rad(phi1);    // Standard_Parallel_1
+                        phi2 = deg2rad(phi2);    // Standard_Parallel_2
+                        
+                        float n = 0.5 * (sin(phi1) + sin(phi2));
+                        float c = cos(phi1);
+                        float C = c*c + 2.*n*sin(phi1);
+                        float p0 = sqrt(C - 2.*n*sin(lat0)) / n;
+                        float theta = n * (deg2rad(lon)-lng0);
+                        float p = sqrt(C - 2.*n*sin(deg2rad(lat)))/n;
+                        return vec2(p * sin(theta), p0 - p * cos(theta)) * EARTH_RADIUS;
+                    }
+                    
+                    vec2 latlon2albers (float lat, float lon, float delta_phi1, float delta_phi2) {
+                        return latlon2albers(lat, 
+                                            lon, 
+                                            y2lat_m(u_map_position.y), 
+                                            x2lon_m(u_map_position.x), 
+                                            y2lat_m(u_map_position.y)+delta_phi1, 
+                                            y2lat_m(u_map_position.y+delta_phi2) );
+                    }
+                    
+                    vec2 latlon2albers (float lat, float lon, float width) {
+                        return latlon2albers(lat, lon, width, -width);
+                    }
+                    
+                    vec2 latlon2albers(float lat, float lon){
+                        return latlon2albers(lat,lon,20.);
+                    }
+                    
+                    vec2 latlon2USalbers(float lat, float lon){
+                        return latlon2albers(lat,lon,23.,-96.,29.,45.);
+                    }
+                    
+                    // AZIMUTHAL
+                    // http://rogerallen.github.io/webgl/2014/01/27/azimuthal-equidistant-projection/
+                    vec2 latlon2azimuthal (float lat, float lon, float phi1, float lambda0) {
+                        phi1 = deg2rad(phi1);
+                        lambda0 = deg2rad(lambda0);
+                        vec2 st = vec2(deg2rad(lon),deg2rad(lat));
+                        float c = length(st);
+                        float phi = asin(cos(c)*sin(phi1) + st.y*sin(c)*cos(phi1)/c );
+                        float lambda = lambda0 +
+                            atan( st.x*sin(c), (c*cos(phi1)*cos(c) - st.y*sin(phi1)*sin(c)));
+                        return vec2(phi,lambda);
+                    }
+                    
+                    vec2 azimuthal(float lat, float lon) {
+                        return latlon2azimuthal(lat, lon, 
+                                                y2lat_m(u_map_position.y),
+                                                x2lon_m(u_map_position.x));
+                    }
+                    
+                    vec2 azimuthalNorth(float lat, float lon) {
+                        return latlon2azimuthal(lat, lon, 
+                                                90.,
+                                                x2lon_m(u_map_position.x));
+                    }
+                    
+                    vec2 azimuthalSouth(float lat, float lon) {
+                        return latlon2azimuthal(lat, lon, 
+                                                -90.,
+                                                x2lon_m(u_map_position.x));
+                    }

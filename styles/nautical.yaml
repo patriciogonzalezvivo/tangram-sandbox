@@ -1,0 +1,354 @@
+﻿# Author @patriciogv - 2015
+
+sources:
+    osm:
+        type: TopoJSONTiles
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+        
+scene:
+    background:
+        color: white
+        
+cameras:
+    perspective:
+        type: perspective
+lights:
+    directional1:
+        type: directional
+        direction: [.1, .5, -1]
+        diffuse: .7
+        ambient: .5
+
+styles:
+    geometry-projection:
+        shaders:
+            defines:
+                EARTH_RADIUS: 6378137.0
+                PI: 3.14159265358979323846
+                HALF_PI: 1.570796327
+                QUATER_PI: .785398163
+                deg2rad(d): (((d)*PI)/180.0)
+                rad2deg(d): (((d)*180.0)/PI)
+            blocks:
+                global: |
+                    //
+                    //    The following functions take or return there results in degrees
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_d (float y) { return rad2deg(2.0*atan(exp(deg2rad(y)))-HALF_PI); }
+                    float x2lon_d (float x) { return x; }
+                    float lat2y_d (float lat) { return rad2deg(log(tan(QUATER_PI+ deg2rad(lat)/2.0))); }
+                    float lon2x_d (float lon) { return lon; }
+                    //
+                    //    The following functions take or return there results in something close to meters, along the equator 
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_m (float y) { return rad2deg(2.0*atan(exp((y/EARTH_RADIUS)))-HALF_PI); }
+                    float x2lon_m (float x) { return rad2deg(x/EARTH_RADIUS); }
+                    float lat2y_m (float lat) { return EARTH_RADIUS*log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
+                    float lon2x_m (float lon) { return deg2rad(lon)*EARTH_RADIUS; }
+    generative-random:
+        shaders:
+            blocks:
+                global: |
+                    // 1D Random for 1 and 2 dimentions
+                    // ================================
+                    float random(float x){ return fract(sin(x)*43758.5453);}
+                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+                    //
+                    // 2D Random for 2 dimentions
+                    // ================================
+                    vec2 random2 (vec2 xy) { return fract(sin(vec2(dot(xy,vec2(127.1,311.7)),dot(xy,vec2(269.5,183.3))))*43758.5453); }
+                    //
+                    // 3D Random for 2 dimentions
+                    // ================================
+                    vec3 random3 (vec2 xy) { return fract(sin(vec3( dot(xy,vec2(127.1,311.7)), dot(xy,vec2(269.5,183.3)), dot(xy,vec2(419.2,371.9)) ))*43758.5453); }
+                    vec3 random3 (vec3 c) {
+                        float j = 4096.0*sin(dot(c,vec3(17.0, 59.4, 15.0)));
+                        vec3 r;
+                        r.z = fract(512.0*j);
+                        j *= .125;
+                        r.x = fract(512.0*j);
+                        j *= .125;
+                        r.y = fract(512.0*j);
+                        return r-0.5;
+                    }
+    generative-noise:
+        mix: generative-random
+        shaders:
+            blocks:
+                global: |
+                    // 1D Value Noise for 1, 2 and 3 dimentions
+                    // ================================
+                    float noise (in float x) {
+                        float i = floor(x);
+                        float f = fract(x);
+                        float u = f * f * (3.0 - 2.0 * f);
+                        return mix(random(i), random(i + 1.0), u);
+                    }
+                    float noise (vec2 xy) {
+                        vec2 i = floor(xy);
+                        vec2 f = fract(xy);
+                        float a = random(i);
+                        float b = random(i + vec2(1.0, 0.0));
+                        float c = random(i + vec2(0.0, 1.0));
+                        float d = random(i + vec2(1.0, 1.0));
+                        vec2 u = f * f * (3.0 - 2.0 * f);
+                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                    }
+                    float noise (vec3 xyz) {
+                        const vec3 step = vec3(110.0, 241.0, 171.0);
+                        vec3 i = floor(xyz);
+                        vec3 f = fract(xyz);
+                        float n = dot(i, step);
+                        vec3 u = f * f * (3.0 - 2.0 * f);
+                        return mix( mix(mix(random(n + dot(step, vec3(0,0,0))),
+                                            random(n + dot(step, vec3(1,0,0))),
+                                            u.x),
+                                        mix(random(n + dot(step, vec3(0,1,0))),
+                                            random(n + dot(step, vec3(1,1,0))),
+                                            u.x),
+                                        u.y),
+                                    mix(mix(random(n + dot(step, vec3(0,0,1))),
+                                        random(n + dot(step, vec3(1,0,1))),
+                                        u.x),
+                                        mix(random(n + dot(step, vec3(0,1,1))),
+                                            random(n + dot(step, vec3(1,1,1))),
+                                            u.x),
+                                    u.y),
+                                u.z);
+                    }
+                    //
+                    // Simplex Noise
+                    //
+                    const float F3 =  0.3333333;
+                    const float G3 =  0.1666667;
+                    float snoise (vec3 p) {
+                        vec3 s = floor(p + dot(p, vec3(F3)));
+                        vec3 x = p - s + dot(s, vec3(G3));
+                        vec3 e = step(vec3(0.0), x - x.yzx);
+                        vec3 i1 = e*(1.0 - e.zxy);
+                        vec3 i2 = 1.0 - e.zxy*(1.0 - e);
+                        vec3 x1 = x - i1 + G3;
+                        vec3 x2 = x - i2 + 2.0*G3;
+                        vec3 x3 = x - 1.0 + 3.0*G3;
+                        vec4 w, d;
+                        w.x = dot(x, x);
+                        w.y = dot(x1, x1);
+                        w.z = dot(x2, x2);
+                        w.w = dot(x3, x3);
+                        w = max(0.6 - w, 0.0);
+                        d.x = dot(random3(s), x);
+                        d.y = dot(random3(s + i1), x1);
+                        d.z = dot(random3(s + i2), x2);
+                        d.w = dot(random3(s + 1.0), x3);
+                        w *= w;
+                        w *= w;
+                        d *= w;
+                        return dot(d, vec4(52.0));
+                    }
+    functions-aastep:
+        shaders:
+            extensions: OES_standard_derivatives
+            blocks:
+                global: |
+                    // AntiAliased Step function
+                    //=============================
+                    float aastep(float threshold, float value) {
+                        #ifdef TANGRAM_FRAGMENT_SHADER
+                            #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
+                                float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+                                return smoothstep(threshold-afwidth, threshold+afwidth, value);
+                            #else
+                                return step(threshold, value);
+                            #endif  
+                        #else
+                            return step(threshold, value);
+                        #endif
+                    }
+    functions-pulse:
+        shaders:
+            blocks:
+                global: |
+                    float pulse (float x, float p, float w) {
+                        x = abs(x - p);
+                        if (x>w) return 0.0;
+                        x /= w;
+                        return 1.0 - x*x*(3.0-2.0*x);
+                    }
+    patterns-stripes:
+        mix: functions-aastep
+        shaders:
+            defines:
+                PI: 3.14159265358979323846
+            blocks:
+                global: |
+                    // Return a distance function of stripes
+                    float stripesDF (vec2 st) {
+                        return abs(sin(st.y*PI));
+                    }
+                    
+                    // Adjustable width stripes
+                    float stripes (vec2 st, float width) {
+                        return aastep(width,stripesDF(st));
+                    }
+                    
+                    // Faster optimisation of diagonal stripes
+                    float diagonalStripes (vec2 st) {
+                        vec2 i_st = floor(st);
+                        vec2 f_st = fract(st);
+                        if (mod(i_st.y,2.) - mod(i_st.x,2.) == 0.) {
+                            return 1.0 - aastep(f_st.x,f_st.y);
+                        } else {
+                            return aastep(f_st.x,f_st.y);
+                        }
+                    }
+    pallete:
+        shaders:
+            blocks: 
+                global: |
+                    // Common Values 
+                    //================================
+                    float radio = 0.05;
+                    vec2 size = vec2(1.,.6);
+                    vec3 background = vec3(0.996,0.996,0.918);
+                    vec3 midle = vec3(0.824, 0.812, 0.804);
+                    vec3 foreground = vec3(0.275,0.298,0.251);
+    border:
+        base: lines
+        mix: [functions-pulse, functions-aastep, pallete]
+        texcoords: true
+        shaders:
+            blocks: 
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    float pattern = aastep(.5,pulse(st.x,.7,.1)+pulse(st.x,.35,.25));
+                    color.rgb = mix(background,color.rgb,pattern);
+    b_border:
+        base: lines
+        mix: [functions-pulse, functions-aastep, pallete]
+        texcoords: true
+        shaders:
+            blocks: 
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    float pattern = aastep(.5,pulse(st.x,.5,.2));
+                    color.rgb = mix(background,color.rgb,pattern);
+                    
+    waves:
+        base: polygons
+        mix: [pallete, patterns-stripes, generative-noise, geometry-projection]
+        animated: true
+        shaders: 
+            uniforms:
+                u_height_map: imgs/earth-elevation.jpg
+            blocks: 
+                color: |
+                    vec2 st = u_map_position.xy+v_position.xy;
+                    vec2 pos = vec2(y2lat_m(st.y),x2lon_m(st.x));
+                    pos /= vec2(90.,180.); // Normalize
+                    pos = (pos+1.)*.5; // re-map between 0.0 and 1.0
+                    
+                    float df = 0.0;//texture2D(u_height_map,fract(pos.yx)).r*100.;
+                    df += snoise(vec3(2.+st*0.00000009,-u_time*0.0001))*.5;
+                    df += snoise(vec3(st*0.00000005,-u_time*0.0001))*0.5;
+                    df = fract(df*pow(2.,u_map_position.z));
+                    color.rgb = mix(color.rgb,background,aastep(.1/u_map_position.z,df));
+                    
+    hatch:
+        base: polygons
+        mix: [functions-aastep, pallete]
+        shaders: 
+            blocks: 
+                global: |
+                    mat2 rotate2d(float angle){
+                        return mat2(cos(angle),-sin(angle),
+                                    sin(angle),cos(angle));
+                    }
+                    float stripes(vec2 st){
+                        st = rotate2d(.72)*st;
+                        st *= 92.;
+                        return aastep(.3,abs(sin(st.y*3.14159265358)));
+                    }
+                color: |
+                    vec2 st = (gl_FragCoord.xy / u_resolution.xy);
+                    float aspect = u_resolution.x/u_resolution.y;
+                    // size.x *= aspect;
+                    color.rgb = mix(color.rgb,background,stripes(st*3.));
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            waves:
+                order: 0
+                cap: round
+                width: 8px
+                color: [0.486, 0.498, 0.510]
+                width: 5px
+        lakes:
+            filter: { kind: [lake, riverbank, dock, water, basin, reservoir, playa, canal, dam, ditch, drain, river, stream]}
+            draw: 
+                lines:
+                    order: 1
+                    color: black
+                    cap: round
+                    width: .5px
+    earth:
+        data: { source: osm }
+        draw:
+            border:
+                order: 5
+                color: black
+                cap: round
+                width: 6px
+            
+    landuse:
+        data: { source: osm }
+        draw:
+            hatch:
+                order: 2
+                color: #464C40
+    buildings:
+        data: { source: osm }
+        filter: { $zoom: { min: 10 } }
+        draw:
+            b_border:
+                order: 6
+                color: [[10,[1,1,1]],[15,[1,1,1]],[18,[0.306, 0.306, 0.306]]]
+                width: [[10, 1], [12, 1px],[14, 1px], [16, 2px], [17, 3px], [18, 5px]]
+    roads:
+        data: { source: osm }
+        properties: { width: 3 }
+        draw:
+            lines:
+                order: 4
+                color: black
+                width: [[5, .25px],[15, .5px],[85, 10]]
+            outlines:
+                style: lines
+                order: 3
+                color: white
+                width: [[5, 2.px],[15, 4px],[85, 60]]
+    
+    boundaries:
+        data: { source: osm }
+        properties: { width: 3 }
+        draw:
+            lines:
+                order: 5
+                color: black
+                width: .3px
+            outlines:
+                style: lines
+                order: 4
+                color: white
+                width: 3px
+    
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        draw:
+            text:
+                font:
+                    typeface: Italic 14px Times
+                    fill: black
+                    stroke: { color: white , width: 5 }
+                

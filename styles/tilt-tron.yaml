@@ -189,6 +189,7 @@ layers:
                 tile_edges: false
     roads:
         data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
                 order: 4

@@ -196,9 +196,8 @@ layers:
                 color: [0.016,0.341,0.651]
 
     roads:
-        data:
-            source: osm
-            layer: roads
+        data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
                 order: 4

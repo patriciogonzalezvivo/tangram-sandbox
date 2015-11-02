@@ -1,0 +1,16 @@
+ # Patricio Gonzalez Vivo - 2015
+
+styles:
+    geometry-normal:
+        shaders:
+            blocks:
+                global: |
+                    // Ask to the geometry normals if this surface is a Wall
+                    bool isWall() {
+                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                    }
+                    //
+                    // Ask to the geometry normals if this surface is a roof
+                    bool isRoof() {
+                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                    }

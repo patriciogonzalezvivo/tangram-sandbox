@@ -1,0 +1,188 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/montserrat-ultralight-webfont.woff2') format('woff2'),
+         url('../fonts/montserrat-ultralight-webfont.woff') format('woff'),
+         url('../fonts/montserrat-ultralight-webfont.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/montserrat-regular-webfont.woff2') format('woff2'),
+         url('../fonts/montserrat-regular-webfont.woff') format('woff'),
+         url('../fonts/montserrat-regular-webfont.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+    
+    font-family: 'Montserrat', Helvetica, sans-serif;
+    font-weight: 200;
+    font-size: 12px;
+}
+
+.tag {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+}
+
+.info {
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    position: relative;
+    left: -70px;
+    top: 150px;
+    z-index: 1;
+    background: #EEE;
+    opacity: 0.9;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+}
+
+.full {
+    position: fixed;
+    left: 0px;
+    top: 80px;
+    z-index: 1;
+    background: #EEE;
+    opacity: 0.9;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+    min-width: 200px;
+}
+
+/*#floating-content {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+    background: white;
+    opacity: 0.9;
+    border-bottom-right-radius: 8px;
+    width: 280px;
+}*/
+
+#map {
+    background: rgba(0, 0, 0, 0);
+    z-index:0;
+}
+
+h1 {
+    font-size: 40px;
+    margin-top: 30px;
+    margin-bottom: 0px;
+    font-style: italic;
+    color: #575857;
+}
+
+h2 {
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-style: italic;
+    color: #575857;
+}
+
+h3 {
+    font-size: 20px;
+    margin-top: 24px;
+    margin-bottom: 0px;
+    color: #575857;
+}
+
+h4 {
+    font-style: italic;
+    font-size: 14px;
+    text-align: center;
+    color: #575857;
+}
+
+h1, h2, h3, h4 {
+    font-weight: normal;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 150px;
+    opacity: 1.0;
+    border-radius: 5px;
+}
+
+.canvas {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 150px;
+    opacity: 1.0;
+    border-radius: 5px;
+}
+
+.imgcontainer {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 1.0;
+}
+
+.caption {
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.3;
+    text-align: center;
+    opacity: 1.0;
+}
+
+.info {
+    font-size: 14px;
+    padding: 7px;
+    text-align: center;
+    opacity: 1.0;
+    cursor: pointer; 
+    cursor: hand;
+}
+
+code {
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5em;
+    background-color: #ECECEC;
+}
+
+.lang-yaml, .lang-glsl, .lang-bash { 
+    background-color: #ECECEC;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 300px;
+}
+
+.leaflet-control-attribution {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    color: black;
+    background-color: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.5);
+}
+
+.leaflet-control-attribution a {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    color: black;
+}
+
+.leaflet-control-attribution a:hover {
+    font-weight: 400;
+    text-decoration: none;
+}

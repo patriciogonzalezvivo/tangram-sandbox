@@ -1,0 +1,147 @@
+﻿# Author @patriciogv - 2015
+
+sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+cameras:
+    perspective:
+        type: perspective
+lights:
+    directional1:
+        type: directional
+        direction: [0.2, 0.9, -0.5]
+        diffuse: .7
+        ambient: .5
+styles:
+    geometry-projection:
+        shaders:
+            defines:
+                EARTH_RADIUS: 6378137.0
+                PI: 3.14159265358979323846
+                HALF_PI: 1.570796327
+                QUATER_PI: .785398163
+                deg2rad(d): (((d)*3.14159265358979323846)/180.0)
+                rad2deg(d): (((d)*180.0)/3.14159265358979323846)
+            blocks:
+                global: |
+                    //
+                    //    The following functions take or return there results in something close to meters, along the equator 
+                    //    http://wiki.openstreetmap.org/wiki/Mercator
+                    float y2lat_m (float y) { return rad2deg(2.0*atan(exp((y/EARTH_RADIUS)))-HALF_PI); }
+                    float x2lon_m (float x) { return rad2deg(x/EARTH_RADIUS); }
+                    float lat2y_m (float lat) { return EARTH_RADIUS*log(tan(QUATER_PI+ deg2rad(lat)/2.0)); }
+                    float lon2x_m (float lon) { return deg2rad(lon)*EARTH_RADIUS; }
+    functions-map:
+        shaders:
+            defines:
+                EPSILON: 0.0000001
+            blocks:
+                global: |
+                    float map (in float value, in float inputMin, in float inputMax, in float outputMin, in float outputMax, bool clamp) {
+                        if (abs(inputMin - inputMax) < EPSILON){
+                            return outputMin;
+                        } else {
+                            float outVal = ((value - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin);
+                        
+                            if( clamp ){
+                                if(outputMax < outputMin){
+                                    if( outVal < outputMax ) outVal = outputMax;
+                                    else if( outVal > outputMin ) outVal = outputMin;
+                                }else{
+                                    if( outVal > outputMax ) outVal = outputMax;
+                                    else if( outVal < outputMin ) outVal = outputMin;
+                                }
+                            }
+                            return outVal;
+                        }
+                    }
+                    float map (in float value, in float inputMin, in float inputMax, in float outputMin, in float outputMax) {
+                        return map(value, inputMin, inputMax, outputMin, outputMax, true); 
+                    }
+    textures:
+        base: polygons
+        mix: [geometry-projection,functions-map]
+        animated: true
+        shaders:
+            uniforms:
+                u_height_map: imgs/earth-elevation-hd.jpg
+                u_normal_map: imgs/earth-normals-hd.jpg
+            blocks:
+                normal: |
+                    float alpha = pow(1.-map(u_map_position.z,3.,10.,0.,1.),5.0);
+                    vec2 st = u_map_position.xy+v_position.xy;
+                    vec2 pos = vec2(y2lat_m(st.y),x2lon_m(st.x));                    
+                    pos /= vec2(90.,180.); // Normalize
+                    pos = (pos+1.)*.5; // re-map between 0.0 and 1.0
+                    normal += (texture2D(u_normal_map,fract(pos.yx)).rgb*2.-1.)*alpha;
+                filter: |
+                    float height = texture2D(u_height_map,fract(pos.yx)).r;
+                    float t = abs(smoothstep(.0,1.,sin(u_time*.5)));
+                    float level = 0.044+t*.035;
+                    color.rgb = mix(vec3(0.098, 0.467, 0.867),color.rgb,step(level,height));
+    buildings:
+        base: polygons
+        shaders:
+            blocks:
+                color: |
+                    color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            textures:
+                order: 0
+                color: [0.569, 0.569, 0.569]
+            lines:
+                order: 5
+                color: [0.996, 0.745, 0.086]
+                width: 1.px
+    water:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 1
+                color: [0.098, 0.467, 0.867]
+    roads:
+        data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
+        properties: { width: 3 }
+        draw:
+            lines:
+                order: 4
+                color: gray
+                width: [[5, .25px],[15, .5px],[85, 10]]
+    
+    boundaries:
+        data: { source: osm }
+        properties: { width: 3 }
+        draw:
+            lines:
+                order: 5
+                color: [0.996, 0.745, 0.086]
+                width: .5px
+    buildings:
+        data: { source: osm }
+        filter: { $zoom: { min: 14 } }
+        draw:
+            polygons:
+                order: 50
+                color: '#999'
+        extruded:
+            filter: { $zoom: { min: 15 } }
+            draw:
+                polygons:
+                    style: buildings
+                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        draw:
+            text:
+                font:
+                    style: italic 
+                    size: 16px
+                    family: helvetica
+                    fill: black
+                    stroke: { color: white , width: 2 }
