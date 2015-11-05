@@ -304,7 +304,8 @@ layers:
         draw:
             text:
                 font:
-                    typeface: 14px Courier
+                    family: Courier
+                    size: 14px
                     fill: white
                     stroke: { color: black , width: 6 }
     places:
@@ -313,7 +314,9 @@ layers:
         draw:
             places_label:
                 font:
-                    typeface: Bold 20px Courier
+                    family: Courier
+                    size: 20px
+                    style: bold
                     fill: white
                     stroke: { color: black , width: 6 }
             places_icons:
