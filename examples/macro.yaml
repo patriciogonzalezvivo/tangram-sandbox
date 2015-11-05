@@ -236,21 +236,3 @@ layers:
                     width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
                     extrude: true
                     color: [0.217,0.217,0.217]
-    places:
-        data: { source: osm }
-        filter: { name: true }
-        draw:
-            text:
-                font:
-                    typeface: Italic 20px Baskerville
-                    fill: black
-                    stroke: { color: white , width: 7 }
-    landuse_labels:
-        data: { source: osm }
-        filter: { name: true, kind: park, $zoom: { min: 16 } }
-        draw:
-            text:
-                font:
-                    typeface: Italic 18px Baskerville
-                    fill: black
-                    stroke: { color: white , width: 7 }

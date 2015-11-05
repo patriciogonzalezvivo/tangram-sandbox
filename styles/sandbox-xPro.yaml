@@ -291,7 +291,8 @@ layers:
             text:
                 order: 5
                 font:
-                    typeface: 14px Helvetica
+                    family: helvetica
+                    size: 14px
                     fill: [1.000,0.968,0.968]
                     stroke: { color: [0.204,0.204,0.204] , width: 3 }
     places:
@@ -301,6 +302,7 @@ layers:
             text:
                 order: 6
                 font:
-                    typeface: 18px Helvetica
+                    family: helvetica
+                    size: 18px
                     fill: [0.204,0.204,0.204]
                     stroke: { color: white , width: 4 }

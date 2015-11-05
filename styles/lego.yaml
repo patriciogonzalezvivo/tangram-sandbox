@@ -249,7 +249,9 @@ layers:
         draw:
             text:
                 font:
-                    typeface: Bold 14px Helvetica
+                    family: helvetica
+                    size: 14px
+                    style: bold
                     fill: white
                     stroke: { color: black , width: 3 }
     places:
@@ -258,6 +260,8 @@ layers:
         draw:
             text:
                 font:
-                    typeface: Bold 18px Helvetica
+                    family: helvetica
+                    size: 18px
+                    style: bold
                     fill: black
                     stroke: { color: white , width: 3 }

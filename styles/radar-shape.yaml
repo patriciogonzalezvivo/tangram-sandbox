@@ -229,7 +229,9 @@ layers:
         draw:
             text:
                 font:
-                    typeface: Italic 14px Times
+                    family: Times
+                    size: 14px
+                    style: italic
                     fill: black
                     stroke: { color: white , width: 5 }
                 

@@ -237,7 +237,8 @@ layers:
             text:
                 order: 5
                 font:
-                    typeface: 12px Helvetica
+                    family: helvetica
+                    size: 12px
                     fill: white
                     stroke: black
     places:
@@ -247,6 +248,7 @@ layers:
             text:
                 order: 6
                 font:
-                    typeface: 12px Helvetica
+                    family: helvetica
+                    size: 12px
                     fill: black
                     stroke: { color: white, width: 3 }

@@ -239,7 +239,9 @@ layers:
         draw:
             text:
                 font:
-                    typeface: Italic 20px Baskerville
+                    family: Baskerville
+                    size: 20px
+                    style: italic
                     fill: black
                     stroke: { color: white , width: 7 }
     landuse_labels:
@@ -248,6 +250,8 @@ layers:
         draw:
             text:
                 font:
-                    typeface: Italic 18px Baskerville
+                    family: Baskerville
+                    size: 18px
+                    style: italic
                     fill: black
                     stroke: { color: white , width: 7 }
