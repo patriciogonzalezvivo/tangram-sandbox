@@ -251,7 +251,7 @@ layers:
                 font:
                     family: helvetica
                     size: 14px
-                    style: bold
+                    weight: bold
                     fill: white
                     stroke: { color: black , width: 3 }
     places:
@@ -262,6 +262,6 @@ layers:
                 font:
                     family: helvetica
                     size: 18px
-                    style: bold
+                    weight: bold
                     fill: black
                     stroke: { color: white , width: 3 }

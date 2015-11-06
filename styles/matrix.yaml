@@ -316,7 +316,7 @@ layers:
                 font:
                     family: Courier
                     size: 20px
-                    style: bold
+                    weight: bold
                     fill: white
                     stroke: { color: black , width: 6 }
             places_icons:

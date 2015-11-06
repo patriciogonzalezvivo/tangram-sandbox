@@ -287,6 +287,6 @@ layers:
                 font:
                     family: helvetica
                     size: 18px
-                    style: bold
+                    weight: bold
                     fill: [0.232,0.170,0.229]
                     stroke: { color: white , width: 3 }
