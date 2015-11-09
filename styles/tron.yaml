@@ -68,7 +68,7 @@ styles:
                     }
                 position: |
                     // GridTile
-                    v_pos = a_position.xyz * 32767.;
+                    v_pos = modelPosition().xyz * 32767.;
     grid:
         base: polygons
         mix : tools

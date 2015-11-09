@@ -71,7 +71,7 @@ styles:
                     }
                 position: |
                     // GridTile
-                    v_pos = a_position.xyz * 32767.;
+                    v_pos = modelPosition().xyz * 32767.;
     roads:
         base: lines
         mix: matrix
@@ -130,7 +130,7 @@ styles:
                 position: |
                     position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 color: |
-                    vec3 pos = v_world_position.xyz*0.01;
+                    vec3 pos = worldPosition().xyz*0.01;
                     vec2 uv = v_texcoord.xy;
                     float pct = grid(v_texcoord,10.,0.1)*0.5;
                     {

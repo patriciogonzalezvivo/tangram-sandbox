@@ -10,9 +10,9 @@ uniform float u_meters_per_pixel;
 uniform float u_device_pixel_ratio;
 
 varying vec4 v_position;
-varying vec3 v_normal;
+varying vec3 worldNormal();
 varying vec4 v_color;
-varying vec4 v_world_position;
+varying vec4 worldPosition();
 
 #ifdef TANGRAM_TEXTURE_COORDS
     varying vec2 v_texcoord;
@@ -29,7 +29,7 @@ varying vec4 v_world_position;
 
 void main (void) {
     vec4 color = v_color;
-    vec3 normal = v_normal;
+    vec3 normal = worldNormal();
 
     #ifdef TANGRAM_MATERIAL_NORMAL_TEXTURE
         calculateNormal(normal);

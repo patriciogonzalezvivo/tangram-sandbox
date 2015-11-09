@@ -51,7 +51,7 @@ styles:
 
                 position: |
                     // Normalize the attribute position of a vertex
-                    v_pos = NORMALIZED_SHORT(a_position.xyz);
+                    v_pos = NORMALIZED_SHORT(modelPosition().xyz);
     generative-random:
         shaders:
             blocks:
@@ -95,12 +95,12 @@ styles:
                 global: |
                     // Ask to the geometry normals if this surface is a Wall
                     bool isWall() {
-                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                        return dot(worldNormal(),vec3(0.,0.,1.)) == 0.0;
                     }
                     //
                     // Ask to the geometry normals if this surface is a roof
                     bool isRoof() {
-                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                        return dot(worldNormal(),vec3(0.,0.,1.)) == 0.0;
                     }
     
     grid:
@@ -310,7 +310,7 @@ styles:
                             color.rgb *= step(.1,fract(st.x+vel.x))*step(.1,fract(st.y+vel.y));
                         } else {
                             // Running lines
-                            vec2 st = vec2(v_texcoord.x,v_world_position.z*0.005); 
+                            vec2 st = vec2(v_texcoord.x,worldPosition().z*0.005); 
                             vec2 grid = vec2(100.0,20.);
                             st *= grid;
 

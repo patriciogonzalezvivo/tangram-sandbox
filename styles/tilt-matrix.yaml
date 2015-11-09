@@ -96,7 +96,7 @@ styles:
                     }
                 position: |
                     // GridTile
-                    v_pos = a_position.xyz * 32767.;
+                    v_pos = modelPosition().xyz * 32767.;
     roads:
         base: lines
         mix: matrix
@@ -153,10 +153,10 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec3 pos = v_world_position.xyz*0.01;
+                    vec3 pos = worldPosition().xyz*0.01;
                     vec2 uv = v_texcoord.xy;
                     float pct = grid(v_texcoord,10.,0.1)*0.5;
-                    if (dot(v_normal,vec3(.0,.0,1.)) == 0.){
+                    if (dot(worldNormal(),vec3(.0,.0,1.)) == 0.){
                         // Wall
                         vec2 st = v_texcoord.xy;
                         float rows = 30.0;

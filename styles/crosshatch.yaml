@@ -103,7 +103,7 @@ styles:
                                    1.0-fract(brightness*9.0));
                     }
                 position: |
-                    v_pos = a_position.xyz * 32767.;
+                    v_pos = modelPosition().xyz * 32767.;
     ink-lines:
         base: lines
         mix: tools
@@ -131,7 +131,7 @@ styles:
                     vec2 uv = v_texcoord;
                     float b = getBrightness(light_accumulator_diffuse.rgb);
                     float pattern = 1.0;
-                    if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
+                    if ( dot(worldNormal(),vec3(0.,0.,1.)) == 0.0 ){
                         // Walls
                         b *=  clamp(uv.y*1.5,0.0,1.0)+0.2;
                         pattern = 1.-hatch(u_hatchmap,uv,b);
@@ -141,7 +141,7 @@ styles:
                     } else {
                         // Roof
                         b *= 1.8;
-                        //uv = v_world_position.xy*0.01;
+                        //uv = worldPosition().xy*0.01;
                         const float pixel_scale = 695.;
                         float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
                         uv = gl_FragCoord.xy/pixel_scale;

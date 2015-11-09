@@ -13,7 +13,7 @@ styles:
                     varying vec3 v_pos;
                     vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
                 position: |
-                    v_pos = a_position.xyz * 32767.;
+                    v_pos = modelPosition().xyz * 32767.;
     splatter:
         base: polygons
         mix: tools

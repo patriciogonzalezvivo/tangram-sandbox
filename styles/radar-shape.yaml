@@ -82,7 +82,7 @@ styles:
                     
                     #endif
                 position: |
-                    v_pos = a_position.xyz * 32767.;
+                    v_pos = modelPosition().xyz * 32767.;
                 filter: |
                     vec2 xy = gl_FragCoord.xy/u_resolution.xy;
                     xy.x *= u_resolution.x/u_resolution.y;

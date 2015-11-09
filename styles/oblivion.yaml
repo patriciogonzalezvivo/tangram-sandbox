@@ -246,7 +246,7 @@ styles:
                             return dot(d, vec4(52.0));
                         }
                 normal: |
-                    normal += snoise(vec3(v_world_position.xy*0.08,u_time*.5))*0.02;
+                    normal += snoise(vec3(worldPosition().xy*0.08,u_time*.5))*0.02;
                     
     buildings:
         base: polygons
@@ -254,7 +254,7 @@ styles:
         shaders:
             blocks:
                 color: |
-                    color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
+                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
                     
 
     area:

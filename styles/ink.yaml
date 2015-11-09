@@ -51,11 +51,11 @@ styles:
                         // Water traces
                         float f = fbm(st+q);
                         // Add paper grain
-                        f *= noise(v_world_position.xy*0.001)*10.*(1.0-clamp(t,0.0,1.))-(noise(tile_st*250.))*noise(tile_st*100.);
+                        f *= noise(worldPosition().xy*0.001)*10.*(1.0-clamp(t,0.0,1.))-(noise(tile_st*250.))*noise(tile_st*100.);
                         return f;
                     }
                 position: |
-                    v_pos = a_position.xyz * 32767.;
+                    v_pos = modelPosition().xyz * 32767.;
     ink-polygons:
         base: polygons
         mix: ink
@@ -63,7 +63,7 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec2 st = v_world_position.xy*0.001;
+                    vec2 st = worldPosition().xy*0.001;
                     float t = u_time*0.1;
                     float f = ink(st,TileCoords(),t);
                     float pct = smoothstep(t,t+0.5,f);
@@ -79,9 +79,9 @@ styles:
             blocks:
                 color: |
                     vec2 uv = v_texcoord;
-                    vec2 st = v_world_position.xy*0.01;
+                    vec2 st = worldPosition().xy*0.01;
                     float t = u_time*0.18;
-                    float f = ink(st,v_world_position.xy*0.0001,t);
+                    float f = ink(st,worldPosition().xy*0.0001,t);
                     float pct = 1.0-smoothstep(t,t+0.5,f);
                     pct *= (smoothstep(0.0,0.1,uv.x)*smoothstep(0.0,0.1,1.0-uv.x)-noise(uv*vec2(2.,70.))*.1 );
                     color.rgb = mix(vec3(0.871, 0.863, 0.816),v_color.rgb, clamp(pow(pct,3.),0.,1.)  );

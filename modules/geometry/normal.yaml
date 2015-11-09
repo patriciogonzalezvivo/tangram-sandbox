@@ -7,10 +7,10 @@ styles:
                 global: |
                     // Ask to the geometry normals if this surface is a Wall
                     bool isWall() {
-                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                        return dot(worldNormal(),vec3(0.,0.,1.)) == 0.0;
                     }
                     //
                     // Ask to the geometry normals if this surface is a roof
                     bool isRoof() {
-                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                        return dot(worldNormal(),vec3(0.,0.,1.)) == 0.0;
                     }

@@ -106,10 +106,10 @@ styles:
                 color: |
                     float t = u_time*0.001;
                     // color.rgb += vec3(cos(t)*.1, sin(t)*.1, 0.1); 
-                    vec3 pos = v_world_position.xyz*0.005;
+                    vec3 pos = worldPosition().xyz*0.005;
                     pos *= rotateX3D(color.r) * rotateY3D(color.g) * rotateZ3D(color.b);
                     
-                    float w = 0.005;//.001+random(v_color.b)*0.03;//+min((v_world_position.z*.000000001),.2);
+                    float w = 0.005;//.001+random(v_color.b)*0.03;//+min((worldPosition().z*.000000001),.2);
                     float s = 1.;//0.7+random(v_color.g)*2.;
                     vec3 c = voronoi( 8.0*pos.xy*s );
                     
@@ -119,14 +119,14 @@ styles:
                     float dd = length( c.yz );
                     color.rgb = mix(color.rgb,vec3(1.,.0,.0),(1.0-smoothstep( .0, .05, dd)));
                     
-                    color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
+                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
     ground:
         base: polygons
         mix: tools
         shaders: 
             blocks: 
                 color: |
-                    vec3 pos = v_world_position.xyz*0.005;
+                    vec3 pos = worldPosition().xyz*0.005;
                     float s = 1.;
                     float w = 0.005;
                     vec3 c = voronoi( 8.0*pos.xy );

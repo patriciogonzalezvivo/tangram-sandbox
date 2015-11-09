@@ -19,7 +19,7 @@ uniform mat4 u_model;
 uniform mat4 u_modelView;
 uniform mat3 u_normalMatrix;
 
-attribute vec4 a_position;
+attribute vec4 modelPosition();
 attribute vec4 a_color;
 
 // Optional normal attribute, otherwise default to up
@@ -39,9 +39,9 @@ attribute vec4 a_color;
 #endif
 
 varying vec4 v_position;
-varying vec3 v_normal;
+varying vec3 worldNormal();
 varying vec4 v_color;
-varying vec4 v_world_position;
+varying vec4 worldPosition();
 
 // Optional texture UVs
 #ifdef TANGRAM_TEXTURE_COORDS
@@ -68,7 +68,7 @@ void main() {
     #endif
 
     // Position
-    vec4 position = vec4(SHORT(a_position.xyz), 1.);
+    vec4 position = vec4(SHORT(modelPosition().xyz), 1.);
 
     #ifdef TANGRAM_EXTRUDE_LINES
         vec2 extrude = SCALE_8(a_extrude.xy);
@@ -89,7 +89,7 @@ void main() {
     #endif
 
     // World coordinates for 3d procedural textures
-    v_world_position = wrapWorldPosition(u_model * position);
+    worldPosition() = wrapWorldPosition(u_model * position);
 
     // Adjust for tile and view position
     position = u_modelView * position;
@@ -99,7 +99,7 @@ void main() {
 
     // Setup varyings
     v_position = position;
-    v_normal = normalize(u_normalMatrix * TANGRAM_NORMAL);
+    worldNormal() = normalize(u_normalMatrix * TANGRAM_NORMAL);
     v_color = a_color;
 
     // Vertex lighting
@@ -119,7 +119,7 @@ void main() {
 
     // Camera
     cameraProjection(position);
-    applyLayerOrder(SHORT(a_position.w), position);
+    applyLayerOrder(SHORT(modelPosition().w), position);
 
     gl_Position = position;
 }
@@ -138,9 +138,9 @@ uniform float u_meters_per_pixel;
 uniform float u_device_pixel_ratio;
 
 varying vec4 v_position;
-varying vec3 v_normal;
+varying vec3 worldNormal();
 varying vec4 v_color;
-varying vec4 v_world_position;
+varying vec4 worldPosition();
 
 #ifdef TANGRAM_TEXTURE_COORDS
     varying vec2 v_texcoord;
@@ -157,7 +157,7 @@ varying vec4 v_world_position;
 
 void main (void) {
     vec4 color = v_color;
-    vec3 normal = v_normal;
+    vec3 normal = worldNormal();
 
     #ifdef TANGRAM_MATERIAL_NORMAL_TEXTURE
         calculateNormal(normal);
@@ -236,7 +236,7 @@ Normals
         shaders:
             blocks:
                 normal: |
-                    normal += snoise(vec3(v_world_position.xy*0.08,u_time*.5))*0.02;
+                    normal += snoise(vec3(worldPosition().xy*0.08,u_time*.5))*0.02;
 ```
 **+** [see example](http://tangrams.github.io/tangram-play/?scene=https://rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/sandbox.yaml&lines=75-86#16.29625000000001/40.70147/-74.01192)
 
@@ -248,7 +248,7 @@ Normals
         shaders:
             blocks:
                 normal: |
-                    vec2 st = fract(v_world_position.xy*0.0175);
+                    vec2 st = fract(worldPosition().xy*0.0175);
                     normal = legoPattern(st);
                     st = tile(st,2.);
                     vec2 pos = st-0.5;
@@ -274,26 +274,26 @@ Color
         shaders:
             blocks:
                 color: |
-                    vec2 st = vec2(v_texcoord.x,v_world_position.z*0.01);
+                    vec2 st = vec2(v_texcoord.x,worldPosition().z*0.01);
                     float b = 0.1+random(getBrightness(color.rgb))*.9;
                     float pattern = 0.0;
                     if (b > 0.9){
-                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
-                            st = fract(v_world_position.xy*0.1);
+                        if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
+                            st = fract(worldPosition().xy*0.1);
                         } else {
                             st = tile(st,3.);
                         }
                         pattern = circle(st,0.2);
                     } else if (b > 0.8){
-                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
-                            st = fract(v_world_position.xy*0.05);
+                        if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
+                            st = fract(worldPosition().xy*0.05);
                             st = brickTile(st,2.);
                         } else {
                             st = brickTile(st,5.);
                         }
                         pattern = 1.0-circle(st,0.1);
                     } else {
-                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
+                        if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
                             st = v_texcoord.xy;
                         } else {
                             st *= 0.5;

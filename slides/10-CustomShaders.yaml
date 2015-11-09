@@ -46,7 +46,7 @@ styles:
                 filter: |
                     vec3 preLight = v_color.rgb;
                     vec3 postLight = color.rgb;
-                    vec3 filtered = color.rgb * vec3(min((v_world_position.z*.001 + .5),1.));
+                    vec3 filtered = color.rgb * vec3(min((worldPosition().z*.001 + .5),1.));
                     
                     float t = fract(u_time*0.1);
                     color.rgb = mix( 

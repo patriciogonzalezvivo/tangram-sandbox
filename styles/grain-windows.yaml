@@ -63,7 +63,7 @@ styles:
         shaders:
             blocks:
                 filter: |
-                    color.rgb += infinitGrid(v_world_position.xy, u_map_position.z)*0.05;
+                    color.rgb += infinitGrid(worldPosition().xy, u_map_position.z)*0.05;
                     color.rgb -= grain(gl_FragCoord.xy)*0.3;
                     
     buildings:
@@ -76,21 +76,21 @@ styles:
         shaders:
             blocks:
                 color: |
-                    color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
+                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
                     
-                    if (dot(v_normal,vec3(0.,0.,1.)) == 0.0){
-                        vec2 st = vec2(v_texcoord.x*10.,v_world_position.z*0.2);
+                    if (dot(worldNormal(),vec3(0.,0.,1.)) == 0.0){
+                        vec2 st = vec2(v_texcoord.x*10.,worldPosition().z*0.2);
                         vec2 ipos = floor(st);
                         vec2 fpos = fract(st);
                         if ( step(0.01,fpos.x)*step(0.1,fpos.y) > 0.0 ){
-                            material.specular = vec4(1.) * max( 1.-(v_world_position.z*.001 + .5), 0. );
-                            material.emission = vec4(0.957,0.988,0.976,1.0) * step(.5,random(ipos*vec2(0.0000001,0.01)+floor(v_normal.xy*10.0)));
+                            material.specular = vec4(1.) * max( 1.-(worldPosition().z*.001 + .5), 0. );
+                            material.emission = vec4(0.957,0.988,0.976,1.0) * step(.5,random(ipos*vec2(0.0000001,0.01)+floor(worldNormal().xy*10.0)));
                             material.emission *= vec4(0.988,0.983,0.880,1.0) * step(.5,random(ipos));
                             
                         }
                     }
                 filter: |
-                    color.rgb += vec3(1.)* min( 1.-(v_world_position.z*.001 + .7) , 0.5 );
+                    color.rgb += vec3(1.)* min( 1.-(worldPosition().z*.001 + .7) , 0.5 );
                     color.rgb -= grain(gl_FragCoord.xy);
 sources:
     osm:
