@@ -35,9 +35,6 @@ cameras:
 styles:
     space-tile:
         shaders:
-            defines:
-                TILE_SCALE: 0.0002445
-                NORMALIZED_SHORT(x): (x * 32767.)
             blocks:
                 global: |
                     // Variant to be add to both vertex and fragments shaders
@@ -46,7 +43,7 @@ styles:
                     // Get the coordinates in tile space
                     // ================================
                     vec2 getTileCoords () {
-                        return fract(v_pos.xy*TILE_SCALE);
+                        return fract(v_pos.xy);
                     }
                     
                     float box(in vec2 st, in vec2 size){
@@ -66,7 +63,7 @@ styles:
                     }
                 position: |
                     // Normalize the attribute position of a vertex
-                    v_pos = NORMALIZED_SHORT(a_position.xyz);
+                    v_pos = modelPosition().xyz;
     showTile:
         base: polygons
         mix: space-tile
