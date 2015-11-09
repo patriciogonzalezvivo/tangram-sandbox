@@ -39,7 +39,7 @@ attribute vec4 a_color;
 #endif
 
 varying vec4 v_position;
-varying vec3 worldNormal();
+varying vec3 v_normal;
 varying vec4 v_color;
 varying vec4 worldPosition();
 
@@ -99,7 +99,7 @@ void main() {
 
     // Setup varyings
     v_position = position;
-    worldNormal() = normalize(u_normalMatrix * TANGRAM_NORMAL);
+    v_normal = normalize(u_normalMatrix * TANGRAM_NORMAL);
     v_color = a_color;
 
     // Vertex lighting
@@ -138,7 +138,7 @@ uniform float u_meters_per_pixel;
 uniform float u_device_pixel_ratio;
 
 varying vec4 v_position;
-varying vec3 worldNormal();
+varying vec3 v_normal;
 varying vec4 v_color;
 varying vec4 worldPosition();
 
@@ -157,7 +157,7 @@ varying vec4 worldPosition();
 
 void main (void) {
     vec4 color = v_color;
-    vec3 normal = worldNormal();
+    vec3 normal = v_normal;
 
     #ifdef TANGRAM_MATERIAL_NORMAL_TEXTURE
         calculateNormal(normal);
@@ -278,14 +278,14 @@ Color
                     float b = 0.1+random(getBrightness(color.rgb))*.9;
                     float pattern = 0.0;
                     if (b > 0.9){
-                        if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
+                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                             st = fract(worldPosition().xy*0.1);
                         } else {
                             st = tile(st,3.);
                         }
                         pattern = circle(st,0.2);
                     } else if (b > 0.8){
-                        if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
+                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                             st = fract(worldPosition().xy*0.05);
                             st = brickTile(st,2.);
                         } else {
@@ -293,7 +293,7 @@ Color
                         }
                         pattern = 1.0-circle(st,0.1);
                     } else {
-                        if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
+                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                             st = v_texcoord.xy;
                         } else {
                             st *= 0.5;

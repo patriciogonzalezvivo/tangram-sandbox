@@ -135,15 +135,15 @@ styles:
                     normal += vec3(cos(a),sin(a),0.)*circle(st,0.4);
                     normal *= 1.0-circle(st,0.26);
                     normal.b = 1.0;
-                    if ( dot(worldNormal(),vec3(0.,0.,1.)) == 0.0 ){
+                    if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
                         // Roofs
                         st = fract(worldPosition().xy*0.0175);
                         float z = worldPosition().z*0.07;
                         pos = st-0.5;
                         if (fract(z * 0.5) > 0.5){
-                            normal = worldNormal() + legoPattern(st);
+                            normal = v_normal + legoPattern(st);
                         } else {
-                            normal = worldNormal();
+                            normal = v_normal;
                         }
                         float p = fract(z);
                         float size = 0.92;

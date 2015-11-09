@@ -122,7 +122,7 @@ styles:
             blocks:
                 normal: |
                     float pct = sin(v_texcoord.x*3.1415);
-                    vec3 waterNormal = worldNormal() + snoise(vec3(worldPosition().xy*0.1,u_time*.5));
+                    vec3 waterNormal = v_normal + snoise(vec3(worldPosition().xy*0.1,u_time*.5));
                     normal = mix(normal, waterNormal, pct );
                 color: |
                     color.rgb = mix(vec3(.6), vec3(0.400,0.576,0.718), pow(pct,2.));

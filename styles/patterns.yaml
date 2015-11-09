@@ -108,14 +108,14 @@ styles:
                     float b = 0.1+random(getBrightness(color.rgb))*.9;
                     float pattern = 0.0;
                     if (b > 0.9){
-                        if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
+                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                             st = fract(worldPosition().xy*0.1);
                         } else {
                             st = tile(st,3.);
                         }
                         pattern = circle(st,0.2);
                     } else if (b > 0.8){
-                        if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
+                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                             st = fract(worldPosition().xy*0.05);
                             st = brickTile(st,2.);
                         } else {
@@ -123,7 +123,7 @@ styles:
                         }
                         pattern = 1.0-circle(st,0.1);
                     } else {
-                        if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
+                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                             st = v_texcoord.xy;
                         } else {
                             st *= 0.5;

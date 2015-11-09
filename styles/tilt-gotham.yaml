@@ -109,12 +109,12 @@ styles:
                 global: |
                     // Ask to the geometry normals if this surface is a Wall
                     bool isWall() {
-                        return dot(worldNormal(),vec3(0.,0.,1.)) == 0.0;
+                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
                     }
                     //
                     // Ask to the geometry normals if this surface is a roof
                     bool isRoof() {
-                        return dot(worldNormal(),vec3(0.,0.,1.)) == 0.0;
+                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
                     }
     generative-random:
         shaders:
@@ -316,7 +316,7 @@ styles:
                         
                         if ( p > 0.0 ){
                             material.specular = vec4(1.) * max( 1.-(worldPosition().z*.001 + .5), 0. );
-                            material.emission = vec4(0.988,0.983,0.880,1.)  * step(.5,random(ipos+floor(worldNormal().xy*10.0)));
+                            material.emission = vec4(0.988,0.983,0.880,1.)  * step(.5,random(ipos+floor(v_normal.xy*10.0)));
                             fpos = vec2(.8,.7)-fpos;
                             material.emission -= clamp(dot(fpos,fpos)*100.*dof,0.,1.);
                         }
@@ -334,7 +334,7 @@ styles:
                         if ( step(0.01,fpos.x)*step(0.1,fpos.y) > 0.0 ){
                             material.specular = vec4(1.) * max( 1.-(worldPosition().z*.001 + .5), 0. );
                             material.emission = vec4(0.957,0.988,0.976,1.0);
-                            material.emission *= step(.5, random(ipos)*random(ipos*vec2(0.0000001,0.01)+floor(worldNormal().xy*10.0)));
+                            material.emission *= step(.5, random(ipos)*random(ipos*vec2(0.0000001,0.01)+floor(v_normal.xy*10.0)));
                         }
                     }
     modern-buildings:

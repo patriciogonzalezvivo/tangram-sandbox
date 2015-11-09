@@ -142,7 +142,7 @@ styles:
                     float b = random(getBrightness(color.rgb));
 
                     vec2 st = v_texcoord;
-                    if( dot(worldNormal(),vec3(0.,0.,1.)) >= 0.9 ){
+                    if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
                         st = fract(worldPosition().xy*0.05);
                     }
                     float pattern = 0.0;

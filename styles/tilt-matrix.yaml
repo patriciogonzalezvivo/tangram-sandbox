@@ -156,7 +156,7 @@ styles:
                     vec3 pos = worldPosition().xyz*0.01;
                     vec2 uv = v_texcoord.xy;
                     float pct = grid(v_texcoord,10.,0.1)*0.5;
-                    if (dot(worldNormal(),vec3(.0,.0,1.)) == 0.){
+                    if (dot(v_normal,vec3(.0,.0,1.)) == 0.){
                         // Wall
                         vec2 st = v_texcoord.xy;
                         float rows = 30.0;
