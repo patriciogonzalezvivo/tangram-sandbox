@@ -28,7 +28,7 @@ styles:
 
                 position: |
                     // Normalize the attribute position of a vertex
-                    v_pos = NORMALIZED_SHORT(modelPosition().xyz);
+                    v_pos = NORMALIZED_SHORT(a_position.xyz);
     generative-random:
         shaders:
             blocks:

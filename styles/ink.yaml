@@ -55,7 +55,7 @@ styles:
                         return f;
                     }
                 position: |
-                    v_pos = modelPosition().xyz * 32767.;
+                    v_pos = a_position.xyz * 32767.;
     ink-polygons:
         base: polygons
         mix: ink

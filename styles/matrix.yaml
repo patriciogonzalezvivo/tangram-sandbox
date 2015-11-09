@@ -71,7 +71,7 @@ styles:
                     }
                 position: |
                     // GridTile
-                    v_pos = modelPosition().xyz * 32767.;
+                    v_pos = a_position.xyz * 32767.;
     roads:
         base: lines
         mix: matrix

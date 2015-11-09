@@ -91,7 +91,7 @@ styles:
                                    1.-fract(brightness*9.0));
                     }
                 position: |
-                    v_pos = NORMALIZED_SHORT(modelPosition().xyz);
+                    v_pos = NORMALIZED_SHORT(a_position.xyz);
     earth-hatch:
         base: polygons
         mix: tools 
