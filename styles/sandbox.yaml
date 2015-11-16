@@ -83,7 +83,7 @@ styles:
         shaders:
             blocks:
                 normal: |
-                    normal += snoise(vec3(v_world_position.xy*0.08,u_time*.5))*0.02;
+                    normal += snoise(vec3(worldPosition().xy*0.08,u_time*.5))*0.02;
     roads:
         base: lines
         mix: water
@@ -100,7 +100,7 @@ styles:
             blocks:
                 normal: |
                     float pct = sin(v_texcoord.x*3.1415);
-                    vec3 waterNormal = v_normal + snoise(vec3(v_world_position.xy*0.1,u_time*.5));
+                    vec3 waterNormal = v_normal + snoise(vec3(worldPosition().xy*0.1,u_time*.5));
                     normal = mix(normal, waterNormal, pct );
                 color: |
                     color.rgb = mix(vec3(.6), vec3(0.400,0.576,0.718), pow(pct,2.));
@@ -163,7 +163,7 @@ styles:
                         return smoothstep(0.0,0.5+_brigtness*0.5,abs((sin(_pos.x*3.1415)+_brigtness*2.0))*0.5);//smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
                     }
                 color: |
-                    vec3 pos = v_world_position.xyz*0.01;
+                    vec3 pos = worldPosition().xyz*0.01;
                     float pattern = getHatch( color.br*20.0+pos.xy+noise(pos.xy)*(2.0*(1.0-color.g)),color.r, noise(color.rg*10.0+v_texcoord) );
 
                     color.rgb = vec3( mix(vec3(color.r*0.25,color.g*0.133,color.g*0.063), vec3(0.578,0.351,0.171)+color.r,pattern) );

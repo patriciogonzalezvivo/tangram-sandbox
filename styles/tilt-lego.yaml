@@ -92,7 +92,7 @@ styles:
         shaders:
             blocks:
                 normal: |
-                    vec2 st = fract(v_world_position.xy*0.0175);
+                    vec2 st = fract(worldPosition().xy*0.0175);
                     normal = legoPattern(st);
                     st = tile(st,2.);
                     vec2 pos = st-0.5;
@@ -106,7 +106,7 @@ styles:
         shaders:
             blocks:
                 normal: |
-                    vec2 st = fract(v_world_position.xy*0.0175);
+                    vec2 st = fract(worldPosition().xy*0.0175);
                     normal = legoPattern(st);
                     st = tile(st,2.);
                     vec2 pos = st-0.5;
@@ -127,7 +127,7 @@ styles:
                         return fract(sin(x)*43758.5453123);
                     }
                 normal: |
-                    vec2 st = fract(v_world_position.xy*0.0175);
+                    vec2 st = fract(worldPosition().xy*0.0175);
                     normal = legoPattern(st);
                     st = tile(st,2.);
                     vec2 pos = st-0.5;
@@ -137,8 +137,8 @@ styles:
                     normal.b = 1.0;
                     if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
                         // Roofs
-                        st = fract(v_world_position.xy*0.0175);
-                        float z = v_world_position.z*0.07;
+                        st = fract(worldPosition().xy*0.0175);
+                        float z = worldPosition().z*0.07;
                         pos = st-0.5;
                         if (fract(z * 0.5) > 0.5){
                             normal = v_normal + legoPattern(st);
@@ -163,7 +163,7 @@ styles:
                     } else {
                         color.rgb = vec3(0.400,0.176,0.180);
                     }
-                    color *= clamp(0.6+v_world_position.z*0.007,0.,1.);
+                    color *= clamp(0.6+worldPosition().z*0.007,0.,1.);
 sources:
     osm:
         type: TopoJSON

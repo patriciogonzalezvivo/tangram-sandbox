@@ -287,7 +287,7 @@ styles:
                     float focalZoom = 1.-min(u_map_position.z/16.,1.);
                     float focalRange = 2000.+20000.*focalZoom;
                     float dof = 1.0;
-                    dof = clamp((abs((v_position.z)-focalDistance)-v_world_position.z*10.)/focalRange,0.,1.);
+                    dof = clamp((abs((v_position.z)-focalDistance)-worldPosition().z*10.)/focalRange,0.,1.);
                 filter: |
                     color.rgb += vec3(.15,.1,.05)*dof*.5;
     buildings:
@@ -301,7 +301,7 @@ styles:
         shaders:
             blocks:
                 filter: |
-                    color.rgb += vec3(1.0)* min( 1.-(v_world_position.z*.001 + .7) , 0.5 );
+                    color.rgb += vec3(1.0)* min( 1.-(worldPosition().z*.001 + .7) , 0.5 );
     apartments:
         base: polygons
         mix: buildings
@@ -309,13 +309,13 @@ styles:
             blocks:
                 color: |
                     if (isWall()){
-                        vec2 st = vec2(v_texcoord.x*10.,v_world_position.z*0.2);
+                        vec2 st = vec2(v_texcoord.x*10.,worldPosition().z*0.2);
                         vec2 ipos = floor(st);
                         vec2 fpos = fract(st);
                         float p = step(0.6,fpos.x)*step(0.4,fpos.y);
                         
                         if ( p > 0.0 ){
-                            material.specular = vec4(1.) * max( 1.-(v_world_position.z*.001 + .5), 0. );
+                            material.specular = vec4(1.) * max( 1.-(worldPosition().z*.001 + .5), 0. );
                             material.emission = vec4(0.988,0.983,0.880,1.)  * step(.5,random(ipos+floor(v_normal.xy*10.0)));
                             fpos = vec2(.8,.7)-fpos;
                             material.emission -= clamp(dot(fpos,fpos)*100.*dof,0.,1.);
@@ -328,11 +328,11 @@ styles:
             blocks:
                 color: |
                     if (isWall()){
-                        vec2 st = vec2(v_texcoord.x*10.,v_world_position.z*0.2);
+                        vec2 st = vec2(v_texcoord.x*10.,worldPosition().z*0.2);
                         vec2 ipos = floor(st);
                         vec2 fpos = fract(st);
                         if ( step(0.01,fpos.x)*step(0.1,fpos.y) > 0.0 ){
-                            material.specular = vec4(1.) * max( 1.-(v_world_position.z*.001 + .5), 0. );
+                            material.specular = vec4(1.) * max( 1.-(worldPosition().z*.001 + .5), 0. );
                             material.emission = vec4(0.957,0.988,0.976,1.0);
                             material.emission *= step(.5, random(ipos)*random(ipos*vec2(0.0000001,0.01)+floor(v_normal.xy*10.0)));
                         }
@@ -361,7 +361,7 @@ styles:
                     }
                 color: |
                     if (isWall()){
-                        vec2 st = vec2(v_texcoord.x*10.,v_world_position.z*0.2);
+                        vec2 st = vec2(v_texcoord.x*10.,worldPosition().z*0.2);
                         float scale = 0.8;
                         
                         vec3 c = voronoi(st*scale);
@@ -406,7 +406,7 @@ styles:
                     ipos = floor(fpos*vec2(10.));
                     fpos = fract(fpos*vec2(1.,10.));
                     
-                    st = v_world_position.xy*0.04;
+                    st = worldPosition().xy*0.04;
                     float n = noise(st);
                     
                     material.emission = vec4(0.957,0.988,0.976,1.0) * max(0.0,car(fpos) * step(0.5,random(ipos.y)));
@@ -437,7 +437,7 @@ styles:
                 position: |
                     position.z -= 10.*u_meters_per_pixel;
                 normal: |
-                    normal += snoise(vec3(v_world_position.xy*0.08,u_time*.5))*0.3;
+                    normal += snoise(vec3(worldPosition().xy*0.08,u_time*.5))*0.3;
     
 layers:
     earth:

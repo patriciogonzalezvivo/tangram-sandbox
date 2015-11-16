@@ -143,7 +143,7 @@ styles:
 
                     vec2 st = v_texcoord;
                     if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
-                        st = fract(v_world_position.xy*0.05);
+                        st = fract(worldPosition().xy*0.05);
                     }
                     float pattern = 0.0;
 
@@ -287,6 +287,6 @@ layers:
                 font:
                     family: helvetica
                     size: 18px
-                    style: bold
+                    weight: bold
                     fill: [0.232,0.170,0.229]
                     stroke: { color: white , width: 3 }

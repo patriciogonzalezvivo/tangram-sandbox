@@ -97,8 +97,8 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec2 st = vec2(v_texcoord);//.x,v_world_position.z*0.005);
-                    color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
+                    vec2 st = vec2(v_texcoord);//.x,worldPosition().z*0.005);
+                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
                     color.rgb -= grain(gl_FragCoord.xy)*0.3;
                     if (dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
                         color.rgb = mix(color.rgb,vec3(1.,1.,0.),stripes(fract(st*10.),st.y) );

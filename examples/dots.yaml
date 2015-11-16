@@ -18,13 +18,13 @@ styles:
                     //
                     // Get the coordinates in tile space
                     // ================================
-                    vec2 getTileCoords () {
-                        return fract(v_pos.xy*TILE_SCALE);
+                    vec2 getTileCoords() {
+                        return fract(v_pos.xy);
                     }
 
                 position: |
                     // Normalize the attribute position of a vertex
-                    v_pos = NORMALIZED_SHORT(a_position.xyz);
+                    v_pos = modelPosition().xyz;
     tools-aastep:
         shaders:
             extensions: OES_standard_derivatives

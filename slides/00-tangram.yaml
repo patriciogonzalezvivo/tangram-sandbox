@@ -111,7 +111,7 @@ styles:
         shaders:
             blocks:
                 filter: |
-                    color.rgb -= vec3(.6)* min( 1.-(v_world_position.z*.001 + .7) , 0.5 );    
+                    color.rgb -= vec3(.6)* min( 1.-(worldPosition().z*.001 + .7) , 0.5 );    
     roads:
         texcoords: true
         base: lines

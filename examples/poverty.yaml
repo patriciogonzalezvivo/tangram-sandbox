@@ -170,7 +170,7 @@ styles:
                 position: |
                     position.z = pow(position.z*7.,(1.-u_map_position.z*0.05)*3.);
                 color: |
-                    color.rgb *= vec3(min((v_world_position.z*.02+.7),1.));
+                    color.rgb *= vec3(min((worldPosition().z*.02+.7),1.));
     coloring-line:
         base: lines
         mix: [line,grain] 

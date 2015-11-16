@@ -104,19 +104,19 @@ styles:
                 position: |
                     position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 color: |
-                    vec2 st = vec2(v_texcoord.x,v_world_position.z*0.01);
+                    vec2 st = vec2(v_texcoord.x,worldPosition().z*0.01);
                     float b = 0.1+random(getBrightness(color.rgb))*.9;
                     float pattern = 0.0;
                     if (b > 0.9){
                         if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
-                            st = fract(v_world_position.xy*0.1);
+                            st = fract(worldPosition().xy*0.1);
                         } else {
                             st = tile(st,3.);
                         }
                         pattern = circle(st,0.2);
                     } else if (b > 0.8){
                         if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
-                            st = fract(v_world_position.xy*0.05);
+                            st = fract(worldPosition().xy*0.05);
                             st = brickTile(st,2.);
                         } else {
                             st = brickTile(st,5.);
@@ -287,6 +287,6 @@ layers:
                 font:
                     family: Helvetica
                     size: 20px
-                    style: bold
+                    weight: bold
                     fill: [0.204,0.204,0.204]
                     stroke: { color: white , width: 4 }

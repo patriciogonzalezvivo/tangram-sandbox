@@ -10,5 +10,5 @@ styles:
                     // the Z of the World Position
                     // ================================
                     vec2 getUZCoords () {
-                        return vec2(v_texcoord.x*10.,v_world_position.z*0.2);
+                        return vec2(v_texcoord.x*10.,worldPosition().z*0.2);
                     }

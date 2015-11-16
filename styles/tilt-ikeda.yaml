@@ -35,9 +35,6 @@ styles:
          mix: tilt  
     space-tile:
         shaders:
-            defines:
-                TILE_SCALE: 0.0002445
-                NORMALIZED_SHORT(x): (x * 32767.)
             blocks:
                 global: |
                     // Variant to be add to both vertex and fragments shaders
@@ -46,12 +43,12 @@ styles:
                     // Get the coordinates in tile space
                     // ================================
                     vec2 getTileCoords () {
-                        return fract(v_pos.xy*TILE_SCALE);
+                        return fract(v_pos.xy);
                     }
 
                 position: |
                     // Normalize the attribute position of a vertex
-                    v_pos = NORMALIZED_SHORT(a_position.xyz);
+                    v_pos = modelPosition().xyz;
     generative-random:
         shaders:
             blocks:
@@ -310,7 +307,7 @@ styles:
                             color.rgb *= step(.1,fract(st.x+vel.x))*step(.1,fract(st.y+vel.y));
                         } else {
                             // Running lines
-                            vec2 st = vec2(v_texcoord.x,v_world_position.z*0.005); 
+                            vec2 st = vec2(v_texcoord.x,worldPosition().z*0.005); 
                             vec2 grid = vec2(100.0,20.);
                             st *= grid;
 

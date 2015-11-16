@@ -12,9 +12,6 @@ cameras:
 styles:
     space-tile:
         shaders:
-            defines:
-                TILE_SCALE: 0.0002445
-                NORMALIZED_SHORT(x): (x * 32767.)
             blocks:
                 global: |
                     // Variant to be add to both vertex and fragments shaders
@@ -22,13 +19,13 @@ styles:
                     //
                     // Get the coordinates in tile space
                     // ================================
-                    vec2 getTileCoords () {
-                        return fract(v_pos.xy*TILE_SCALE);
+                    vec2 getTileCoords() {
+                        return fract(v_pos.xy);
                     }
 
                 position: |
                     // Normalize the attribute position of a vertex
-                    v_pos = NORMALIZED_SHORT(a_position.xyz);
+                    v_pos = modelPosition().xyz;
     generative-random:
         shaders:
             blocks:
@@ -111,7 +108,7 @@ styles:
                     // GridTile
                     //=============================
                     vec3 TileGrid(float res){
-                        vec2 st = getTileCoords()*100.*res;
+                        vec2 st = getTileCoords().xy *100.*res;
                         vec3 color = vec3(0.0);
                         float press = 0.5+(1.0-fract(u_map_position.z))*0.1;
                         color += vec3(0.1,0.,0.)*grid(st,0.02,press);
@@ -301,7 +298,7 @@ styles:
                             color.rgb *= step(.1,fract(st.x+vel.x))*step(.1,fract(st.y+vel.y));
                         } else {
                             // Running lines
-                            vec2 st = vec2(v_texcoord.x,v_world_position.z*0.005); 
+                            vec2 st = vec2(v_texcoord.x,worldPosition().z*0.005); 
                             vec2 grid = vec2(100.0,20.);
                             st *= grid;
 

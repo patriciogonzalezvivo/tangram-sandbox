@@ -17,9 +17,6 @@ lights:
 styles:
     space-tile:
         shaders:
-            defines:
-                TILE_SCALE: 0.0002445
-                NORMALIZED_SHORT(x): (x * 32767.)
             blocks:
                 global: |
                     // Variant to be add to both vertex and fragments shaders
@@ -28,11 +25,11 @@ styles:
                     // Get the coordinates in tile space
                     // ================================
                     vec2 getTileCoords () {
-                        return fract(v_pos.xy*TILE_SCALE);
+                        return fract(v_pos.xy);
                     }
                 position: |
                     // Normalize the attribute position of a vertex
-                    v_pos = NORMALIZED_SHORT(a_position.xyz);
+                    v_pos = modelPosition().xyz;
     grids-grid:
         shaders:
             blocks:
@@ -247,7 +244,7 @@ styles:
         shaders:
             blocks:
                 color: |
-                    color.rgb *= vec3(min((v_world_position.z*.001 + .5),1.));
+                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
         patterns-stripes:
         mix: functions-aastep
         shaders:

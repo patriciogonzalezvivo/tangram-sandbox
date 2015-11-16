@@ -160,7 +160,7 @@ styles:
                     } else {
                         // Roof
                         b *= 1.8;
-                        //uv = v_world_position.xy*0.01;
+                        //uv = worldPosition().xy*0.01;
                         const float pixel_scale = 695.;
                         float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
                         uv = gl_FragCoord.xy/pixel_scale;

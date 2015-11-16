@@ -40,7 +40,7 @@ http://www.mitchchn.me/2014/os-x-terminal/?x
                     float pattern = 0.0;
                     float f = smoothstep( 0.4, 0.6, sin(u_time) );
                     
-                    pattern = 1.0 - textureNoTile(u_hatch, v_world_position.xy*.005, f).a;
+                    pattern = 1.0 - textureNoTile(u_hatch, worldPosition().xy*.005, f).a;
                     // pattern = 1.0-TileTexture(u_hatch,3.).a;
                     color.rgb = mix(vec3(0.271,0.267,0.243), vec3(0.949,0.957,0.949), pattern);
 ‘’’

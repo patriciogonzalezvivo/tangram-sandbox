@@ -46,10 +46,10 @@ styles:
                         return uv.x*uv.y;
                     }
                 color: |
-                    vec2 st = vec2(v_texcoord.x*.1,v_world_position.z*0.001);
+                    vec2 st = vec2(v_texcoord.x*.1,worldPosition().z*0.001);
                     
                     if (dot(v_normal,vec3(.0,.0,.1)) != 0.) {
-                        st = v_world_position.xy*0.001;
+                        st = worldPosition().xy*0.001;
                     }
                     st = tileFractal(st,4);
                     

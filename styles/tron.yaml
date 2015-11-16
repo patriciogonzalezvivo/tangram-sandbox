@@ -254,6 +254,6 @@ layers:
                 font:
                     family: Helvetica
                     size: 18px
-                    style: bold
+                    weight: bold
                     fill: black
                     stroke: { color: white , width: 5 }
