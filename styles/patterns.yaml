@@ -18,7 +18,24 @@ lights:
         ambient: .3
         diffuse: .3
 styles:
+    space-tile:
+        shaders:
+            blocks:
+                global: |
+                    // Variant to be add to both vertex and fragments shaders
+                    varying vec3 v_pos;
+                    //
+                    // Get the coordinates in tile space
+                    // ================================
+                    vec2 getTileCoords() {
+                        return fract(v_pos.xy);
+                    }
+
+                position: |
+                    // Normalize the attribute position of a vertex
+                    v_pos = modelPosition().xyz;
     patterns:
+        mix: space-tile
         material:
             ambient: 1
             diffuse: 1
@@ -38,8 +55,6 @@ styles:
                     }
                     // Space
                     //=============================
-                    varying vec3 v_pos;
-                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
                     vec2 rotate2D(vec2 _st, float _angle){
                       _st -= 0.5;
                       _st =  mat2(cos(_angle),-sin(_angle),
@@ -78,10 +93,6 @@ styles:
                         return aastep(width,abs(sin(st.x*3.1415)));
                     }
                     #endif
-                    
-                position: |
-                    // GridTile
-                    v_pos = a_position.xyz * 32767.;
     plain:
         base: polygons
         mix: patterns
@@ -91,7 +102,7 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec2 st = TileCoords()*5.;
+                    vec2 st = getTileCoords()*5.;
                     float b = 1.0-getBrightness(color.rgb);
                     float pattern = stripes(st,3.1415*b,b*5.);
                     color.rgb = mix(vec3(0.704), vec3(1.000,0.968,0.908), pattern);

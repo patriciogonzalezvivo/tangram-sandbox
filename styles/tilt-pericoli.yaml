@@ -62,6 +62,34 @@ styles:
                 position: |
                     float t = u_time*0.05; 
                     position.xyz = rotateX3D(abs(cos(t))) * rotateZ3D(abs(sin(t))*.5) * position.xyz;
+    space-tile:
+        shaders:
+            blocks:
+                global: |
+                    // Variant to be add to both vertex and fragments shaders
+                    varying vec3 v_pos;
+                    //
+                    // Get the coordinates in tile space
+                    // ================================
+                    vec2 getTileCoords() {
+                        return fract(v_pos.xy);
+                    }
+
+                position: |
+                    // Normalize the attribute position of a vertex
+                    v_pos = modelPosition().xyz;
+    tiling-texture-zoom-fade:
+        mix: space-tile
+        shaders:
+            blocks:
+                global: |
+                    // Tile a texture across zoom by fading between them
+                    // ================================
+                    vec4 TileTexture (sampler2D tex, float scale) {
+                        vec2 IN = getTileCoords()*scale;
+                        vec2 OUT = getTileCoords()*scale*2.;
+                        return mix(texture2D(tex,fract(IN)), texture2D(tex,fract(OUT)), fract(u_map_position.z));
+                    }
     lin:
         base: lines
         mix: tilt
@@ -70,10 +98,6 @@ styles:
         shaders:
             blocks: 
                 global: |
-                    // Coord System
-                    //================================
-                    varying vec3 v_pos;
-                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
                     // Color
                     //================================
                     float getBrightness(in vec3 _rgb){
@@ -112,22 +136,14 @@ styles:
                                    texture2D( hatchmap,fract(pos2) ).a,
                                    1.0-fract(brightness*9.0));
                     }
-                position: |
-                    v_pos = a_position.xyz * 32767.;
     earth-hatch:
         base: polygons
-        mix: tools 
+        mix: [tilt, tiling-texture-zoom-fade]
         lighting: false
         shaders:
             uniforms:
                     u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_1.png
             blocks:
-                global: |
-                    vec4 TileTexture(sampler2D tex, float scale) {
-                        vec2 IN = TileCoords()*scale;
-                        vec2 OUT = TileCoords()*scale*2.;
-                        return mix(texture2D(tex,fract(IN)), texture2D(tex,fract(OUT)), fract(u_map_position.z));
-                    }
                 color: |
                     float pattern = 1.0-TileTexture(u_hatch,3.).a;
                     color.rgb = mix(vec3(0.271,0.267,0.243), vec3(0.949,0.957,0.949), pattern);

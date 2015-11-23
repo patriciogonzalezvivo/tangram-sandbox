@@ -25,24 +25,28 @@ styles:
                 position: |
                     float t = u_time*0.05; 
                     position.xyz = rotateX3D(abs(cos(t))) * rotateZ3D(abs(sin(t))*.5) * position.xyz;
+    space-tile:
+        shaders:
+            blocks:
+                global: |
+                    // Variant to be add to both vertex and fragments shaders
+                    varying vec3 v_pos;
+                    //
+                    // Get the coordinates in tile space
+                    // ================================
+                    vec2 getTileCoords() {
+                        return fract(v_pos.xy);
+                    }
+
+                position: |
+                    // Normalize the attribute position of a vertex
+                    v_pos = modelPosition().xyz;
     tools:
-        mix: tilt
+        mix: [tilt, space-tile]
         lighting: false
         shaders:
             blocks:
                 global: |
-                    // Coord Systems
-                    //=============================
-                    varying vec3 v_pos;
-                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
-                    vec2 getConstantPos(vec2 fragCoord){
-                        const float pixel_scale = 695.;
-                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                        vec2 st = fragCoord.xy/pixel_scale;
-                        const float dot_wrap = 1000.;
-                        st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                        return st;
-                    }
                     // Grids
                     //=============================
                     bool gridLine(vec2 st, float res, float press){
@@ -50,7 +54,7 @@ styles:
                         return grid.x < res*press || grid.y < res*press;
                     }
                     float TileGrid(float res){
-                        vec2 st = TileCoords()*100.*res;
+                        vec2 st = getTileCoords()*100.*res;
                         float pct = 0.0;
                         float press = 0.4+(1.0-fract(u_map_position.z))*0.1;
                         if (gridLine(st,0.01,press)) pct += 0.5;
@@ -88,16 +92,13 @@ styles:
                         return  box(_st, vec2(_size.x*0.5,_size.y*0.125)) +
                                 box(_st, vec2(_size.y*0.125,_size.x*0.5));
                     }
-                position: |
-                    // GridTile
-                    v_pos = a_position.xyz * 32767.;
     grid:
         base: polygons
         mix : tools
         shaders:
             blocks:
                 color: |
-                    vec2 pos = TileCoords()*4.;
+                    vec2 pos = getTileCoords()*4.;
                     color.rgb = v_color.rgb*grid(pos,10.,0.05);
     tiledCross:
         base: polygons
@@ -105,7 +106,7 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec2 pos = TileCoords()*3.;
+                    vec2 pos = getTileCoords()*3.;
                     float pct = clamp(cross(fract(pos),0.2),0.0,1.0);
                     color.rgb = mix(vec3(0.051,0.071,0.278),vec3(0.654,0.897,1.000),pct);
     lin:
