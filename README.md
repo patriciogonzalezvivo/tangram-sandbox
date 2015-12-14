@@ -1,6 +1,6 @@
 # Tangram Sandbox
 
-Personal experiments using [tangram.js](https://github.com/tangrams/tangram) (WebGL 2D/3D map engine) by [Patricio Gonzalez Vivo](https://twitter.com/patriciogv) for [Mapzen](https://mapzen.com/).
+Experiments on [Tangram.js](https://github.com/tangrams/tangram) styles by [Patricio Gonzalez Vivo](https://twitter.com/patriciogv) at [Mapzen](https://mapzen.com/).
 
 #### Materials & Procedural Textures
 

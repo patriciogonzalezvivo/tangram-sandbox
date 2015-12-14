@@ -22,6 +22,9 @@ lights:
         ambient: .2
         diffuse: .2
         specular: .4
+scene:
+    background:
+        color: [0.114, 0.114, 0.114]
 styles:
     geometry-matrices:
         defines:
