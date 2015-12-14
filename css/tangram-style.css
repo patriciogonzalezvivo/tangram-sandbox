@@ -28,18 +28,18 @@ body {
 
 .tag {
     position: fixed;
-    left: 0px;
+    right: 0px;
     top: 0px;
     z-index: 1;
 }
 
 .info {
-    -ms-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-    transform: rotate(-90deg);
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
     position: relative;
-    left: -70px;
-    top: 150px;
+    right: -80px;
+    top: 100px;
     z-index: 1;
     background: #EEE;
     opacity: 0.9;
@@ -50,14 +50,14 @@ body {
 
 .full {
     position: fixed;
-    left: 0px;
-    top: 80px;
+    right: 0px;
+    top: 20px;
     z-index: 1;
     background: #EEE;
     opacity: 0.9;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding: 7px;
     min-width: 200px;
 }
 
@@ -151,6 +151,7 @@ img {
     opacity: 1.0;
     cursor: pointer; 
     cursor: hand;
+    margin-left: -10px;
 }
 
 code {
