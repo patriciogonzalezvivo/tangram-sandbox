@@ -220,7 +220,7 @@ layers:
         draw:
             buildings:
                 order: 4
-                color: Style.color.pseudoRandomColor()
+                color: Style.color.pseudoRandomColor
         extruded:
             filter: { $zoom: { min: 13 } }
             draw:

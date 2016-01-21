@@ -291,6 +291,6 @@ layers:
         filter: { name: true }
         draw:
             icons:
-                color: Style.color.pseudoRandomColor()
+                color: Style.color.pseudoRandomColor
                 size: [[13, 20px], [15, 40px]]
                 interactive: true

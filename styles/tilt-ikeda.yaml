@@ -378,7 +378,7 @@ layers:
         draw:
             buildings: 
                 order: 8
-                color: Style.color.pseudoRandomColor()
+                color: Style.color.pseudoRandomColor
                 extrude: true
             lin:
                 order: 7

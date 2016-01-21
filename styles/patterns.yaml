@@ -263,7 +263,7 @@ layers:
         draw:
             buildings:
                 order: 7
-                color: Style.color.pseudoRandomColor()
+                color: Style.color.pseudoRandomColor
             outline:
                 style: lines
                 order: 6

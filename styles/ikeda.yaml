@@ -376,7 +376,7 @@ layers:
         draw:
             buildings:
                 order: 7
-                color: Style.color.pseudoRandomColor()
+                color: Style.color.pseudoRandomColor
         3d-buildings:
             filter: { $zoom: { min: 13 } }
             draw:
