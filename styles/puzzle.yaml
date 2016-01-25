@@ -204,13 +204,13 @@ layers:
         draw:
             grid:
                 order: 0
-                color: [0.129, 0.129, 0.129]
+                color: [0.106, 0.106, 0.106]
     earth:
         data: { source: osm }
         draw:
             billboardPly:
                 order: 1
-                color: [0.494, 0.482, 0.482]
+                color: [0.333, 0.333, 0.333]
     boundaries:
         data: { source: osm }
         draw:

@@ -240,7 +240,7 @@ layers:
                     family: helvetica
                     size: 12px
                     fill: white
-                    stroke: black
+                    stroke: [0,0,0]
     places:
         data: { source: osm }
         filter: { name: true }
@@ -250,5 +250,5 @@ layers:
                 font:
                     family: helvetica
                     size: 12px
-                    fill: black
+                    fill: [0,0,0]
                     stroke: { color: white, width: 3 }
