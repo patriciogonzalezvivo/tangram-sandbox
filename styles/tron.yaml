@@ -235,7 +235,7 @@ layers:
                     color: [0.654,0.897,1.000]
     road_labels:
         data: { source: osm, layer: roads }
-        filter: { name: true, $zoom: { min: 14 } }
+        filter: { name: true, $zoom: { min: 14 }, not: { kind: [ferry] } }
         draw:
             text:
                 font:
@@ -243,7 +243,7 @@ layers:
                     size: 12px
                     style: italic
                     fill: [.9,.9,1.]
-                    stroke: { color: black , width: 3 }                    
+                    stroke: { color: black , width: 3 }
     places:
         data: { source: osm }
         filter: { name: true }
