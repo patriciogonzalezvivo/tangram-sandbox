@@ -10,6 +10,11 @@ styles:
         shaders:
             defines:
                 GRAIN_AMOUNT: .3
+            defines_ui:
+                GRAIN_AMOUNT:
+                    type: slider
+                    range: [0, 1]
+                    hint: Move the slider to add...
             blocks:
                 global: |
                     // Grain fractor on screen space with less concetration in the center

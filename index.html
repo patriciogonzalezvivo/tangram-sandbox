@@ -13,7 +13,7 @@
     <body>
         <div id="content"> </div>
         <script>
-        function fetchHTTP(url, methood){
+        function fetchHTTP(url, method){
             var request = new XMLHttpRequest(), response;
 
             request.onreadystatechange = function () {
@@ -21,7 +21,7 @@
                     response = request.responseText;
                 }
             }
-            request.open(methood ? methood : 'GET', url, false);
+            request.open(method ? method : 'GET', url, false);
             request.send();
             return response;
         }
