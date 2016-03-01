@@ -16,5 +16,5 @@ styles:
                     //
                     // Adjustable width waves
                     float waves (vec2 st, float freq, float amp, float width) {
-                        return aastep(width, zigzagDF(st, freq, amp));
+                        return aastep(width, wavesDF(st, freq, amp));
                     }
