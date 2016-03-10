@@ -2,12 +2,14 @@ cameras:
     perspective:
         type: perspective
         vanishing_point: [0, -500]
+
 lights:
     directional1:
         type: directional
         direction: [.1, .5, -1]
         diffuse: .7
         ambient: .5
+
 styles:
     buildings:
         base: polygons
@@ -15,31 +17,36 @@ styles:
             blocks:
                 color: |
                     color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
+
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 2
                 color: '#353535'
+
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 0
                 color: '#555'
+
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 1
                 color: '#666'
+
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: ferry } }
         draw:
             lines:
@@ -47,7 +54,7 @@ layers:
                 color: '#777'
                 width: 5
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { $zoom: { min: 14 } }
         draw:
             polygons:
@@ -59,8 +66,9 @@ layers:
                 polygons:
                     style: buildings
                     extrude: function () { return feature.height > 0 || $zoom >= 16; }
+
     road_labels:
-        data: { source: osm, layer: roads }
+        data: { source: mapzen, layer: roads }
         filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
 
         highway:
@@ -68,16 +76,15 @@ layers:
             draw:
                 text:
                     font:
+                        family: Helvetica
                         fill: white
-                        family: helvetica
                         size: 12px
-                        weight: 500
+                        weight: bold
         not_highway:
             filter: { not: { kind: highway }, $zoom: { min: 13 } }
             draw:
                 text:
                     font:
+                        family: Helvetica
                         fill: white
-                        family: helvetica
                         size: 11px
-                        weight: 100
