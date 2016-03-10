@@ -223,7 +223,6 @@ styles:
     base:
         base: polygons
         mix: blueprint
-        lighting: false
         shaders:
             blocks: 
                 filter: |
@@ -233,7 +232,6 @@ styles:
         base: polygons
         mix: [blueprint, geometry-dynamic-height]
         texcoords: true
-        lighting: false
         shaders:
             blocks:
                 color: |
@@ -248,7 +246,6 @@ styles:
     buildingsLines:
         base: lines
         mix: [blueprint, geometry-dynamic-height, geometry-dynamic-width]
-        lighting: false
         shaders:
             blocks:
                 filter: |
@@ -258,7 +255,6 @@ styles:
     roads:
         base: lines
         mix: blueprint
-        lighting: false
         texcoords: true
         shaders:
             blocks:
