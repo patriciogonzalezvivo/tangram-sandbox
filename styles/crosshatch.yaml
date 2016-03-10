@@ -58,7 +58,7 @@ styles:
             uniforms:
                     u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_0.png
             blocks:
-                color: |
+                filter: |
                     float pattern = 1.0-TileTexture(u_hatch,3.).a;
                     color.rgb = mix(vec3(0.302,0.302,0.306), vec3(0.976,0.953,0.890), pattern);
 
@@ -133,7 +133,7 @@ styles:
         lighting: false
         shaders:
             blocks:
-                color: |
+                filter: |
                     vec2 uv = v_texcoord;
                     color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
     buildings:
