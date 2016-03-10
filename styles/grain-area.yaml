@@ -266,7 +266,6 @@ styles:
     area:
         base: polygons
         mix: [patterns-stripes, space-constant, grid]
-        lighting: false
         blend: inlay
         shaders:
             defines:
