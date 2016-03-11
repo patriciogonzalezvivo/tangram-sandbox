@@ -35,7 +35,6 @@ styles:
                     float t = u_time*0.05; 
                     position.xyz = rotateX3D(abs(cos(t))) * rotateZ3D(abs(sin(t))*.5) * position.xyz;
     overlay_grid:
-        lighting: false
         shaders:
             blocks:
                 global: |
@@ -108,13 +107,11 @@ styles:
     base:
         base: polygons
         mix: blueprint
-        lighting: false
 
     buildings:
         base: polygons
         mix: blueprint
         texcoords: true
-        lighting: false
         shaders:
             extensions: OES_standard_derivatives
             blocks:
@@ -143,7 +140,6 @@ styles:
     buildingsLines:
         base: lines
         mix: blueprint
-        lighting: false
         shaders:
             blocks:
                 width: |
@@ -151,7 +147,6 @@ styles:
     roads:
         base: lines
         mix: blueprint
-        lighting: false
         texcoords: true
         shaders:
             blocks:
