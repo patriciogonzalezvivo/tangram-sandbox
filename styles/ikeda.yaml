@@ -323,7 +323,6 @@ styles:
                     
     buildingsLines:
         base: lines
-        mix: tools
         lighting: false
         texcoords: true
         shaders:
