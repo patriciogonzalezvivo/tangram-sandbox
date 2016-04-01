@@ -3,11 +3,10 @@
 sources:
     osm:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 cameras:
     perspective:
-        type: isometric
-        vanishing_point: [0, -500]
+        type: perspective
 lights:
     directional1:
         type: directional
@@ -17,7 +16,7 @@ lights:
         specular: 1.
     point1:
         type: point
-        position: [0, -100, 0px]
+        position: [0, -100, 0]
         origin: ground
         ambient: .2
         diffuse: .5
@@ -26,6 +25,21 @@ scene:
     background:
         color: [0.114, 0.114, 0.114]
 styles:
+    geometry-normal:
+        shaders:
+            blocks:
+                global: |
+                    #ifdef TANGRAM_FRAGMENT_SHADER
+                    // Ask to the geometry normals if this surface is a Wall
+                    bool isWall() {
+                        return dot(vec3(0., 0., 1.), worldNormal()) < 1.0 - TANGRAM_EPSILON;
+                    }
+                    //
+                    // Ask to the geometry normals if this surface is a roof
+                    bool isRoof() {
+                        return !isWall();
+                    }
+                    #endif
     generative-random:
         shaders:
             blocks:
@@ -187,12 +201,11 @@ styles:
                 filter: |
                     // Apply the grain in the amount defined on GRAIN_AMOUNT
                     color.rgb -= grain()*GRAIN_AMOUNT;
-    
     buildings:
         animated: true
         texcoords: true
         base: polygons
-        mix: filter-grain
+        mix: [filter-grain, geometry-normal]
         material:
             shininess: 1.
             specular: 0.0
@@ -202,7 +215,7 @@ styles:
                 color: |
                     color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
                     float t = fract(u_time*0.0000005);
-                    if (dot(v_normal,vec3(0.,0.,1.)) == 0.0){
+                    if (isWall()) {
                         vec2 st = vec2(v_texcoord.x*10.,worldPosition().z*0.2);
                         vec2 ipos = floor(st);
                         vec2 fpos = fract(st);
@@ -213,11 +226,10 @@ styles:
                     }
                 filter: |
                     color.rgb += vec3(1.)* min( 1.-(worldPosition().z*.001 + .7) , 0.5 );
-               
     offices:
         texcoords: true
         base: polygons
-        mix: filter-grain
+        mix: [filter-grain, geometry-normal]
         material:
             shininess: 1.
             specular: 0.0
@@ -227,7 +239,7 @@ styles:
                 color: |
                     color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
                     
-                    if (dot(v_normal,vec3(0.,0.,1.)) == 0.0){
+                    if (isWall()) {
                         vec2 st = vec2(v_texcoord.x*10.,worldPosition().z*0.2);
                         vec2 ipos = floor(st);
                         vec2 fpos = fract(st);
@@ -242,7 +254,7 @@ styles:
     modern-buildings:
         texcoords: true
         base: polygons
-        mix: filter-grain
+        mix: [filter-grain, geometry-normal]
         material:
             shininess: 1.
             specular: 1.0
@@ -269,7 +281,7 @@ styles:
                 color: |
                     color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
 
-                    if (dot(v_normal,vec3(0.,0.,1.)) == 0.0){
+                    if (isWall()) {
                         vec2 st = vec2(v_texcoord.x*10.,worldPosition().z*0.2);
                         float scale = 0.8;
                         
@@ -337,7 +349,7 @@ styles:
         material:
             ambient: 0.8
             diffuse:
-                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/sem-sky-0001.jpg
+                texture: imgs/sem-sky-0001.jpg
                 mapping: spheremap
         shaders: 
             blocks: 
@@ -364,7 +376,7 @@ layers:
                 color: '#555'
     roads:
         data: { source: osm }
-        filter: { not: { highway: service, kind: [rail, ferry] } }
+        filter: { not: { kind: [rail, ferry] } }
         properties: { width: 3 }
         draw:
             roads:

@@ -3,7 +3,7 @@
 sources:
     osm:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 cameras:
     camera1:
         type: perspective
@@ -81,16 +81,17 @@ styles:
         shaders:
             blocks:
                 global: |
+                    #ifdef TANGRAM_FRAGMENT_SHADER
                     // Ask to the geometry normals if this surface is a Wall
                     bool isWall() {
-                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                        return dot(vec3(0., 0., 1.), worldNormal()) < 1.0 - TANGRAM_EPSILON;
                     }
                     //
                     // Ask to the geometry normals if this surface is a roof
                     bool isRoof() {
-                        return dot(v_normal,vec3(0.,0.,1.)) == 0.0;
+                        return !isWall();
                     }
-    
+                    #endif
     grid:
         mix: space-tile
         shaders:
@@ -357,7 +358,7 @@ layers:
                 tile_edges: false
     roads:
         data: { source: osm }
-        filter: { not: { highway: service, kind: [rail, ferry] } }
+        filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
                 order: 5
@@ -376,7 +377,15 @@ layers:
         draw:
             buildings:
                 order: 7
-                color: Style.color.pseudoRandomColor
+                color: |
+                    function() {
+                        return [
+                            0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
+                            0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
+                            0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
+                            1
+                        ];
+                    }
         3d-buildings:
             filter: { $zoom: { min: 13 } }
             draw:
