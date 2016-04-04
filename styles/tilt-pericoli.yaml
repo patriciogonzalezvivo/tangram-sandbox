@@ -45,6 +45,9 @@ styles:
         animated: true
         base: polygons
         shaders:
+            defines:
+                PI: 3.1415926535897932384626433832795
+                HALF_PI: 1.5707963267948966192313216916398
             blocks:
                 global: |
                     mat3 rotateX3D(float phi){
@@ -60,8 +63,11 @@ styles:
                             vec3(0.,0.,1.));
                     }
                 position: |
-                    float t = u_time*0.05; 
-                    position.xyz = rotateX3D(abs(cos(t))) * rotateZ3D(abs(sin(t))*.5) * position.xyz;
+                    float z = smoothstep(0.7,1.,max((u_map_position.z)/20.,0.)*0.9);
+                    position.y += 1000.*(1.-u_map_position.z/22.);
+                    
+                    float t = u_time*0.1; 
+                    position.xyz = rotateX3D(z*HALF_PI) * rotateZ3D(sin(t)*PI*z) * position.xyz;
     space-tile:
         shaders:
             blocks:
@@ -235,7 +241,7 @@ layers:
                 color: [0.271,0.267,0.243]
     roads:
         data: { source: osm }
-        filter: { not: { highway: service, kind: [rail, ferry] } }
+        filter: { not: { kind: [rail, ferry] } }
         properties: { width: 3 }
         draw:
             ink-lines:

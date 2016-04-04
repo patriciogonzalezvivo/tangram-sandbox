@@ -11,9 +11,9 @@ cameras:
 lights:
     directional1:
         type: directional
-        direction: [-1.,-1.,-0.5]
-        ambient: .3
-        diffuse: .5
+        direction: [0.293,-0.861,-0.415]
+        ambient: .5
+        diffuse: .9
         specular: 1.
     point1:
         type: point
@@ -21,91 +21,35 @@ lights:
         origin: ground
         ambient: .2
         diffuse: .2
-        specular: .4
+        specular: .5
 scene:
     background:
         color: [0.114, 0.114, 0.114]
 styles:
-    geometry-matrices:
-        defines:
-            PI: 3.14159265358979323846
+    geometry-tilt:
+        animated: true
         shaders:
+            defines:
+                PI: 3.1415926535897932384626433832795
+                HALF_PI: 1.5707963267948966192313216916398
             blocks:
                 global: |
-                    // Rotate in 2, 3 and 4 dimensions
-                    // ================================
-                    mat2 rotate2D (float angle) {
-                        return mat2(cos(angle),-sin(angle),
-                                    sin(angle),cos(angle));
-                    }
-                    mat3 rotateX3D (float phi) {
+                    mat3 rotateX3D(float phi){
                         return mat3(
                             vec3(1.,0.,0.),
                             vec3(0.,cos(phi),-sin(phi)),
                             vec3(0.,sin(phi),cos(phi)));
                     }
-                    mat4 rotateX4D (float phi) {
-                        return mat4(
-                            vec4(1.,0.,0.,0),
-                            vec4(0.,cos(phi),-sin(phi),0.),
-                            vec4(0.,sin(phi),cos(phi),0.),
-                            vec4(0.,0.,0.,1.));
-                    }
-                    mat3 rotateY3D (float theta) {
-                        return mat3(
-                            vec3(cos(theta),0.,-sin(theta)),
-                            vec3(0.,1.,0.),
-                            vec3(sin(theta),0.,cos(theta)));
-                    }
-                    mat4 rotateY4D (float theta) {
-                        return mat4(
-                            vec4(cos(theta),0.,-sin(theta),0),
-                            vec4(0.,1.,0.,0.),
-                            vec4(sin(theta),0.,cos(theta),0.),
-                            vec4(0.,0.,0.,1.));
-                    }
-                    mat3 rotateZ3D (float psi) {
+                    mat3 rotateZ3D(float psi){
                         return mat3(
                             vec3(cos(psi),-sin(psi),0.),
                             vec3(sin(psi),cos(psi),0.),
                             vec3(0.,0.,1.));
                     }
-                    mat4 rotateZ4D (float psi) {
-                        return mat4(
-                            vec4(cos(psi),-sin(psi),0.,0),
-                            vec4(sin(psi),cos(psi),0.,0.),
-                            vec4(0.,0.,1.,0.),
-                            vec4(0.,0.,0.,1.));
-                    }
-                    //
-                    // Scale 4 dimensions
-                    // ================================
-                    mat4 scale4D (float x, float y, float z) {
-                        return mat4(
-                            vec4(x,   0.0, 0.0, 0.0),
-                            vec4(0.0, y,   0.0, 0.0),
-                            vec4(0.0, 0.0, z,   0.0),
-                            vec4(0.0, 0.0, 0.0, 1.0)
-                        );
-                    }
-                    //
-                    // Translate in 4 dimensions
-                    mat4 translate4D (float x, float y, float z) {
-                        return mat4(
-                            vec4(1.0, 0.0, 0.0, 0.0),
-                            vec4(0.0, 1.0, 0.0, 0.0),
-                            vec4(0.0, 0.0, 1.0, 0.0),
-                            vec4(x,   y,   z,   1.0)
-                        );
-                    }
-    geometry-tilt:
-        mix: geometry-matrices
-        animated: true
-        shaders:
-            blocks:
                 position: |
                     float t = u_time*0.1; 
-                    position.xyz = rotateX3D(abs(cos(t*.5))) * rotateZ3D(sin(t)) * position.xyz;
+                    float z = smoothstep(0.7,1.,max((u_map_position.z)/20.,0.)*0.9);
+                    position.xyz = rotateX3D(z*HALF_PI) * rotateZ3D(sin(t)*PI*z) * position.xyz;
     geometry-normal:
         shaders:
             blocks:
@@ -280,26 +224,14 @@ styles:
                 filter: |
                     // Apply the grain in the amount defined on GRAIN_AMOUNT
                     color.rgb -= grain()*GRAIN_AMOUNT;
-    filter-dof: 
-        shaders: 
-            blocks: 
-                position: |
-                    position.z -= 10.*u_meters_per_pixel;
-                color: |
-                    float focalDistance = 500.;
-                    float focalZoom = 1.-min(u_map_position.z/16.,1.);
-                    float focalRange = 2000.+20000.*focalZoom;
-                    float dof = 1.0;
-                    dof = clamp((abs((v_position.z)-focalDistance)-worldPosition().z*10.)/focalRange,0.,1.);
-                filter: |
-                    color.rgb += vec3(.15,.1,.05)*dof*.5;
     buildings:
         texcoords: true
         base: polygons
-        mix: [functions-map, geometry-tilt, geometry-normal, filter-grain, filter-dof]
+        mix: [functions-map, geometry-tilt, geometry-normal, filter-grain]
         material:
             shininess: 2.
-            specular: 0.0
+            specular: 1.0
+            ambient: [0.000, 0.000, 0.000]
             emission: 0.0
         shaders:
             blocks:
@@ -321,9 +253,10 @@ styles:
                             material.specular = vec4(1.) * max( 1.-(worldPosition().z*.001 + .5), 0. );
                             material.emission = vec4(0.988,0.983,0.880,1.)  * step(.5,random(ipos+floor(v_normal.xy*10.0)));
                             fpos = vec2(.8,.7)-fpos;
-                            material.emission -= clamp(dot(fpos,fpos)*100.*dof,0.,1.);
+                            material.emission -= clamp(dot(fpos,fpos),0.,1.);
                         }
                     }
+        
     offices:
         base: polygons
         mix: buildings
@@ -377,11 +310,10 @@ styles:
                         material.specular = vec4(0.957,0.988,0.976,1.0) * step(0.1,col.r);
                         material.emission = vec4(0.857,0.888,0.980,1.0) * smoothstep(0.9,1.,col.r * 2.);
                     }
-    
     roads:
         texcoords: true
         base: lines
-        mix: [geometry-tilt, filter-grain, filter-dof]
+        mix: [geometry-tilt, filter-grain]
         material:
             diffuse: .9
             emission: 0.0
@@ -421,26 +353,13 @@ styles:
                     color.rgb = vec3(0.4)*borders+n;
     earth:
         base: polygons
-        mix: [geometry-tilt, filter-grain, filter-dof]
-        shaders: 
-            blocks: 
-                position: |
-                    position.z -= 10.*u_meters_per_pixel;
+        mix: [geometry-tilt, filter-grain]
     water:
         base: polygons
         mix: [geometry-tilt, filter-grain]
         animated: true
         material:
             ambient: 0.8
-            diffuse:
-                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/sem-sky-0001.jpg
-                mapping: spheremap
-        shaders: 
-            blocks: 
-                position: |
-                    position.z -= 10.*u_meters_per_pixel;
-                normal: |
-                    normal += snoise(vec3(worldPosition().xy*0.08,u_time*.5))*0.3;
     
 layers:
     earth:
@@ -449,7 +368,6 @@ layers:
             earth:
                 order: 0
                 color: '#555'
-                extrude: 10
     landuse:
         data: { source: osm }
         draw:
@@ -464,7 +382,7 @@ layers:
                 color: '#555'
     roads:
         data: { source: osm }
-        filter: { not: { highway: service, kind: [rail, ferry] } }
+        filter: { not: { kind: [rail, ferry] } }
         properties: { width: 3 }
         draw:
             roads:
