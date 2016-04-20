@@ -1,7 +1,7 @@
 # Patricio Gonzalez Vivo - 2015
 # From Chapter about Paterns at http://thebookofshaders.com/09/
 
-include: ../geometry/matrices.yaml
+import: ../geometry/matrices.yaml
 styles:
     tiling-truchet:
         mix: geometry-matrices

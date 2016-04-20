@@ -2,8 +2,15 @@
 
 styles:
     filter-tv:
+        animated: true
         shaders: 
             blocks: 
                 filter: |
+                    vec2 tv_st = gl_FragCoord.xy/u_resolution.xy;
+                    tv_st -= .5;
+                    color *= abs(cos((gl_FragCoord.y*21.1+u_time*5.)));
+                    color *= 1.0-dot(tv_st,tv_st);
                     color *= abs(cos((gl_FragCoord.y*10.+u_time*5.)));
-
+                    
+                    
+                    

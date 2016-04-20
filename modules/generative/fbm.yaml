@@ -1,7 +1,7 @@
 # Patricio Gonzalez Vivo - 2015
 # From Chapter about Noise at http://thebookofshaders.com/11/
 
-include: noise.yaml
+import: noise.yaml
 styles:
     generative-fbm:
         mix: generative-noise

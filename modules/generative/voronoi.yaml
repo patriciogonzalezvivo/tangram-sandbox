@@ -1,7 +1,7 @@
 # Patricio Gonzalez Vivo - 2015
 # From Chapter about Cellular noise and FBM at http://thebookofshaders.com/12/
 
-include: random.yaml
+import: random.yaml
 styles:
     generative-voronoi:
         mix: generative-random

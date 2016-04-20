@@ -1,6 +1,6 @@
  # Patricio Gonzalez Vivo - 2015
 
-include: ../functions/map.yaml
+import: ../functions/map.yaml
 styles:
     geometry-dynamic-height:
         mix: functions-map

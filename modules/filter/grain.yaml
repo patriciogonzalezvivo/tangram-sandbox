@@ -3,7 +3,7 @@
 # Apply a lens grain effect to the scene
 # The amount can be set by the GRAIN_AMOUNT define [0.0~1.0]
 
-include: ../generative/fbm.yaml
+import: ../generative/fbm.yaml
 styles:
     filter-grain:
         mix: generative-fbm

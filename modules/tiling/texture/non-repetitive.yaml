@@ -1,7 +1,7 @@
 # Patricio Gonzalez Vivo - 2015
 
-include: ../../generative/random.yaml
-include: ../../space/tile.yaml
+import: ../../generative/random.yaml
+import: ../../space/tile.yaml
 styles:
     tiling-texture-non-repetitive:
     	mix: [space-tile, generative-random]

@@ -1,4 +1,8 @@
 ﻿# Author @patriciogv - 2015
+import: [/modules/filter/tv.yaml,
+        /modules/generative/random.yaml,
+        /modules/color/tools.yaml,
+        /modules/functions/aastep.yaml ]
 
 sources:
     osm:
@@ -8,61 +12,6 @@ cameras:
     perspective:
         type: perspective
 styles:
-    color-tools:
-        shaders:
-            blocks:
-                global: |
-                    // Get the intensity of a color
-                    // ================================
-                    float getIntensity (vec3 c) {
-                        return (c.r+c.g+c.b)/3.0;
-                    }
-                    float getIntensity (vec4 c) {
-                        return getIntensity(c.rgb);
-                    }
-                    //
-                    // Get the Brightness of a color
-                    // ================================
-                    float getBrightness (vec3 c) {
-                        return 0.212655 * c.r + 0.715158 * c.g + 0.072187 * c.b;
-                    }
-                    float getBrightness (vec4 c) {
-                        return getBrightness(c.rgb);
-                    }
-    generative-random:
-        shaders:
-            blocks:
-                global: |
-                    // 1D Random for 1 and 2 dimentions
-                    // ================================
-                    float random (float x) {
-                        return fract(sin(x)*1e4);
-                    }
-                    float random (vec2 xy) {
-                        return fract(sin(dot(xy.xy, vec2(12.9898,78.233)))* 43758.5453123);
-                    }
-                    //
-                    // 2D Random for 2 dimentions
-                    // ================================
-                    vec2 random2 (vec2 xy) {
-                        return fract(sin(vec2(dot(xy,vec2(127.1,311.7)),dot(xy,vec2(269.5,183.3))))*43758.5453);
-                    }
-                    //
-                    // 3D Random for 2 dimentions
-                    // ================================
-                    vec3 random3 (vec2 xy) { 
-                        return fract(sin(vec3( dot(xy,vec2(127.1,311.7)), dot(xy,vec2(269.5,183.3)), dot(xy,vec2(419.2,371.9)) ))*43758.5453); 
-                    }
-    filter-tv:
-        shaders: 
-            blocks: 
-                filter: |
-                    vec2 tv_st = gl_FragCoord.xy/u_resolution.xy;
-                    tv_st -= .5;
-                    color *= abs(cos((gl_FragCoord.y*21.1+u_time*5.)));
-                    color *= 1.0-dot(tv_st,tv_st);
-                    
-                    
     border-common:
         base: lines
         blend: add
@@ -87,8 +36,7 @@ styles:
                     vec2 st = gl_FragCoord.xy/u_resolution.xy;
                     st -= .5;
                     color *= 1.0-pow(dot(st,st)*.5,.8);
-                    color *= smoothstep(0.,1.,sin(v_texcoord.x*3.1415));
-                    
+                    color *= smoothstep(0.,1.,sin(v_texcoord.x*3.1415));                   
     border-red:
         mix: border-common
         shaders: 
@@ -106,27 +54,8 @@ styles:
             uniforms:
                 u_offset: .995
                 u_offsetColor: [.5,.5,1.]
-    interpolation-aastep:
-        shaders:
-            extensions: OES_standard_derivatives
-            blocks:
-                global: |
-                    // AntiAliased Step function
-                    //=============================
-                    float aastep(float threshold, float value) {
-                        #ifdef TANGRAM_FRAGMENT_SHADER
-                            #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
-                                float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
-                                return smoothstep(threshold-afwidth, threshold+afwidth, value);
-                            #else
-                                return step(threshold, value);
-                            #endif  
-                        #else
-                            return step(threshold, value);
-                        #endif
-                    }
     shapes-polygons:
-        mix: interpolation-aastep
+        mix: functions-aastep
         shaders:
             defines:
                 PI: 3.14159265358979323846
