@@ -1,6 +1,4 @@
 ﻿# Author @patriciogv - 2015
-import: [/modules/space/tile.yaml,
-        /modules/tiling/texture/zoom-fade.yaml]
 
 cameras:
     camera1:
@@ -43,6 +41,34 @@ scene:
     background:
         color: [0.788,0.773,0.765]
 styles:
+    space-tile:
+        shaders:
+            blocks:
+                global: |
+                    // Variant to be add to both vertex and fragments shaders
+                    varying vec3 v_pos;
+                    //
+                    // Get the coordinates in tile space
+                    // ================================
+                    vec2 getTileCoords() {
+                        return fract(v_pos.xy);
+                    }
+
+                position: |
+                    // Normalize the attribute position of a vertex
+                    v_pos = modelPosition().xyz;
+    tiling-texture-zoom-fade:
+        mix: space-tile
+        shaders:
+            blocks:
+                global: |
+                    // Tile a texture across zoom by fading between them
+                    // ================================
+                    vec4 TileTexture (sampler2D tex, float scale) {
+                        vec2 IN = getTileCoords()*scale;
+                        vec2 OUT = getTileCoords()*scale*2.;
+                        return mix(texture2D(tex,fract(IN)), texture2D(tex,fract(OUT)), fract(u_map_position.z));
+                    }
     tools:
         shaders:
             blocks: 

@@ -1,6 +1,6 @@
 # Patricio Gonzalez Vivo - 2015
 
-import: ../functions/aastep.yaml
+include: ../functions/aastep.yaml
 styles:
     patterns-stripes:
         mix: functions-aastep

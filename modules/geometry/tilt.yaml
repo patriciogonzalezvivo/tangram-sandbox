@@ -1,6 +1,6 @@
  # Patricio Gonzalez Vivo - 2015
 
-import: matrices.yaml
+include: matrices.yaml
 styles:
     geometry-tilt:
         mix: geometry-matrices

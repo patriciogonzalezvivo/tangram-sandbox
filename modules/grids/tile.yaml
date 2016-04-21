@@ -1,9 +1,9 @@
  # Patricio Gonzalez Vivo - 2015
 
-import: [grid.yaml,../space/tile.yaml]
+include: [grid.yaml,../space/tile.yaml]
 styles:
     grids-tile:
-        mix: [space-tile, grids-grid]
+        mix: [space-tile,grids-grid]
         shaders:
             blocks:
                 global: |

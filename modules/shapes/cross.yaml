@@ -1,7 +1,7 @@
 # Patricio Gonzalez Vivo - 2015
 # From Chapter about Shapes at http://thebookofshaders.com/07/
 
-import: rect.yaml
+include: rect.yaml
 styles:
     shapes-cross:
         mix: shapes-rect

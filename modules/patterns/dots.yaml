@@ -1,7 +1,7 @@
 # Patricio Gonzalez Vivo - 2015
 # From Chapter about Paterns at http://thebookofshaders.com/09/
 
-import: [../tiling/brick.yaml, ../space/tile.yaml, ../shapes/circle.yaml]
+include: [../tiling/brick.yaml, ../space/tile.yaml, ../shapes/circle.yaml]
 styles:
     patterns-dots:
         mix: [space-tile, tiling-brick, shapes-circle]
