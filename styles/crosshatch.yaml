@@ -209,7 +209,6 @@ layers:
     roads:
         data: { source: osm }
         filter: { none: [highway: service, kind: [rail, ferry]] }
-        properties: { width: 3 }
         draw:
             ink-lines:
                 order: 3
