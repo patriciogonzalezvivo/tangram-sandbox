@@ -258,6 +258,15 @@ layers:
                 outline:
                     color: '#FDF5E6'
                     width: 4
+        labels:
+            filter: { name: true, $zoom: { min: 14 } }
+            draw:
+                text:
+                    font:
+                        family: Helvetica
+                        size: 14px
+                        fill: [1.000,0.968,0.968]
+                        stroke: { color: [0.204,0.204,0.204] , width: 3  }
     buildings:
         data: { source: osm }
         draw:
@@ -279,17 +288,6 @@ layers:
                     color: white
                     width: [[12, .1px], [14, 1px], [15, 2px], [17, 4px], [18, 5px]]
                     extrude: true
-
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, $zoom: { min: 14 } }
-        draw:
-            text:
-                font:
-                    family: Helvetica
-                    size: 14px
-                    fill: [1.000,0.968,0.968]
-                    stroke: { color: [0.204,0.204,0.204] , width: 3 }
     places:
         data: { source: osm }
         filter: { name: true }
