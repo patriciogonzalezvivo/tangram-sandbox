@@ -175,7 +175,7 @@ layers:
 
     roads:
         data: { source: osm }
-        filter: { not: { highway: service, kind: [rail, ferry] } }
+        filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
                 order: 4
@@ -229,6 +229,18 @@ layers:
                 roads:
                     color: black
                     width: 3
+
+        labels:
+            filter: { name: true, $zoom: { min: 14 } }
+            draw:
+                text:
+                    font:
+                        family: helvetica
+                        size: 14px
+                        weight: bold
+                        fill: white
+                        stroke: { color: black , width: 3 }
+
     buildings:
         data:
             source: osm
@@ -243,17 +255,6 @@ layers:
                 buildings:
                     extrude: function () { return feature.height > 20 || $zoom >= 16; }
 
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, $zoom: { min: 14 } }
-        draw:
-            text:
-                font:
-                    family: helvetica
-                    size: 14px
-                    weight: bold
-                    fill: white
-                    stroke: { color: black , width: 3 }
     places:
         data: { source: osm }
         filter: { name: true }
