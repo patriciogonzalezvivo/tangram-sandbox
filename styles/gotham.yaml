@@ -6,7 +6,7 @@ sources:
         url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 cameras:
     perspective:
-        type: perspective
+        type: isometric
 lights:
     directional1:
         type: directional
@@ -312,7 +312,7 @@ styles:
                         return (0.7-dot(st-.5,st-vec2(.5,.9))*3.);
                     }
                 color: |
-                    vec2 st = v_texcoord.xy;
+                    vec2 st = fract(v_texcoord.xy*vec2(1.,.1));
                     float dir = -0.1;
                     if ( v_color.r < 0.5) {
                        if (st.x < 0.5) {

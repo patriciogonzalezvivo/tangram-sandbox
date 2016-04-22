@@ -185,52 +185,6 @@ styles:
                 filter: |
                     // Apply the grain in the amount defined on GRAIN_AMOUNT
                     color.rgb -= grain()*GRAIN_AMOUNT;
-    functions-aastep:
-        shaders:
-            extensions: OES_standard_derivatives
-            blocks:
-                global: |
-                    // AntiAliased Step function
-                    //=============================
-                    float aastep(float threshold, float value) {
-                        #ifdef TANGRAM_FRAGMENT_SHADER
-                            #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
-                                float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
-                                return smoothstep(threshold-afwidth, threshold+afwidth, value);
-                            #else
-                                return step(threshold, value);
-                            #endif  
-                        #else
-                            return step(threshold, value);
-                        #endif
-                    }
-    patterns-stripes:
-        mix: functions-aastep
-        shaders:
-            defines:
-                PI: 3.14159265358979323846
-            blocks:
-                global: |
-                    // Return a distance function of stripes
-                    float stripesDF (vec2 st) {
-                        return abs(sin(st.y*PI));
-                    }
-                    
-                    // Adjustable width stripes
-                    float stripes (vec2 st, float width) {
-                        return aastep(width,stripesDF(st));
-                    }
-                    
-                    // Faster optimisation of diagonal stripes
-                    float diagonalStripes (vec2 st) {
-                        vec2 i_st = floor(st);
-                        vec2 f_st = fract(st);
-                        if (mod(i_st.y,2.) - mod(i_st.x,2.) == 0.) {
-                            return 1.0 - aastep(f_st.x,f_st.y);
-                        } else {
-                            return aastep(f_st.x,f_st.y);
-                        }
-                    }
     grid:
         base: polygons
         mix: [grids-tile, filter-grain]
@@ -245,51 +199,16 @@ styles:
             blocks:
                 color: |
                     color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
-        patterns-stripes:
-        mix: functions-aastep
-        shaders:
-            defines:
-                PI: 3.14159265358979323846
-            blocks:
-                global: |
-                    // Return a distance function of stripes
-                    float stripesDF (vec2 st) {
-                        return abs(sin(st.y*PI));
-                    }
-                    
-                    // Adjustable width stripes
-                    float stripes (vec2 st, float width) {
-                        return aastep(width,stripesDF(st));
-                    }
-                    
-                    // Faster optimisation of diagonal stripes
-                    float diagonalStripes (vec2 st) {
-                        vec2 i_st = floor(st);
-                        vec2 f_st = fract(st);
-                        if (mod(i_st.y,2.) - mod(i_st.x,2.) == 0.) {
-                            return 1.0 - aastep(f_st.x,f_st.y);
-                        } else {
-                            return aastep(f_st.x,f_st.y);
-                        }
-                    }
     flatlines:
         base: lines
-        mix: [patterns-stripes, filter-grain]
+        mix: [filter-grain]
         lighting: false # ignore lights
         texcoords: true
         shaders:
             blocks:
                 color: |
-                    float lineWidth = 0.1;
-                    float pct = 1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
-                    color.rgb *= 1.0-vec3(0.14+pct*0.1);
-                    
-                    const float pixel_scale = 695.;
-                    float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                    vec2 st = gl_FragCoord.xy/pixel_scale;
-                    const float dot_wrap = 1000.;
-                    st += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                    color.rgb += diagonalStripes(st*30.)*0.1;
+                    vec2 st = fract(v_texcoord);
+                    color.rgb += step(.1,sin((st.x+st.y)*6.283))*.1;
 layers:
     water:
         data: { source: osm }

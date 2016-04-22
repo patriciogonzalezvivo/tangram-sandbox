@@ -145,7 +145,7 @@ styles:
         shaders:
             blocks:
                 filter: |
-                    vec2 uv = v_texcoord;
+                    vec2 uv = fract(v_texcoord*vec2(1.,.1));
                     color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
     buildings:
         base: polygons

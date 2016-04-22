@@ -130,7 +130,7 @@ styles:
                         return step(.8,random( floor(x*freq)-floor(t) ));
                     }
                 color: |
-                    vec2 st = v_texcoord.xy;
+                    vec2 st = fract(v_texcoord.xy*vec2(1.,.1));
                     float t = 12.*u_time;
                     float freq = 100.;
                     if ( v_color.r < 0.5) {

@@ -98,7 +98,7 @@ styles:
                         return 1.0-smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
                     }
                 filter: |
-                    vec2 st = v_texcoord.xy;
+                    vec2 st = fract(v_texcoord.xy*vec2(1.,.1));
                     float dir = -0.1;
                     if ( v_color.r < 0.5) {
                         if (st.x < 0.5) {
