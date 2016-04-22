@@ -316,7 +316,6 @@ layers:
                 width: function () { return Math.log($zoom); }
     roads:
         data: { source: osm }
-        properties: { width: 3 }
         draw:
             lines:
                 order: 2
