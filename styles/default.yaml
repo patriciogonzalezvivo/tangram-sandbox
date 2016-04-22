@@ -53,6 +53,26 @@ layers:
                 order: 2
                 color: '#777'
                 width: 5
+        labels:
+            filter: { name: true }
+            highway:
+                filter: { kind: highway, $zoom: { min: 7 } }
+                draw:
+                    text:
+                        font:
+                            family: Helvetica
+                            fill: white
+                            size: 12px
+                            weight: bold
+            not_highway:
+                filter: { not: { kind: highway }, $zoom: { min: 13 } }
+                draw:
+                    text:
+                        font:
+                            family: Helvetica
+                            fill: white
+                            size: 11px
+
     buildings:
         data: { source: mapzen }
         filter: { $zoom: { min: 14 } }
@@ -66,25 +86,3 @@ layers:
                 polygons:
                     style: buildings
                     extrude: function () { return feature.height > 0 || $zoom >= 16; }
-
-    road_labels:
-        data: { source: mapzen, layer: roads }
-        filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
-
-        highway:
-            filter: { kind: highway, $zoom: { min: 7 } }
-            draw:
-                text:
-                    font:
-                        family: Helvetica
-                        fill: white
-                        size: 12px
-                        weight: bold
-        not_highway:
-            filter: { not: { kind: highway }, $zoom: { min: 13 } }
-            draw:
-                text:
-                    font:
-                        family: Helvetica
-                        fill: white
-                        size: 11px
