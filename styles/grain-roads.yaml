@@ -243,7 +243,7 @@ layers:
                     extrude: function () { return feature.height > 0 || $zoom >= 16; }
     roads:
         data: { source: osm, layer: roads }
-        filter: { not: { highway: service, kind: [rail, ferry] } }
+        filter: { not: { kind: [rail, ferry] } }
         draw:
             flatlines:
                 order: 7
