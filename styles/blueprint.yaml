@@ -5,26 +5,112 @@ import:
     - http://tangrams.github.io/blocks/generative/fbm.yaml
     - http://tangrams.github.io/blocks/grids/grid.yaml
     - http://tangrams.github.io/blocks/functions/map.yaml
-    - http://tangrams.github.io/blocks/geometry/dynamic-height.yaml
     - http://tangrams.github.io/blocks/geometry/dynamic-width.yaml
 
 sources:
     osm:
         type: TopoJSON
         url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+
+scene:
+    background:
+        color: [0.,0.5,0.8]
+
 cameras:
     perspective:
         type: perspective
         vanishing_point: [0, -500]
+
 lights:
     directional1:
         type: directional
         direction: [.1, .5, -1]
         diffuse: .7
         ambient: .5
-scene:
-    background:
-        color: [0.,0.5,0.8]
+
+global:
+    order: function () { return feature.sort_key; }
+
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            base:
+                order: global.order
+                color: [.1,.1,.1]
+    earth:
+        data: { source: osm }
+        draw:
+            lines:
+                order: global.order
+                width: 1.5px
+                color: '#C1D3DC' 
+            base:
+                order: global.order
+                color: [0.080,0.080,0.080]
+    landuse:
+        data: { source: osm }
+        draw:
+            lines:
+                order: global.order
+                width: 0.5px
+                color: white 
+            base:
+                order: global.order
+                color: [0.116,0.116,0.116]
+    roads:
+        data: { source: osm }
+        filter: { not: { kind: ferry } }
+        draw:
+            roads:
+                order: global.order
+                color: '#C1D3DC'
+                width: 6
+    buildings:
+        data: { source: osm }
+        filter: { $zoom: { min: 10 } }
+        draw:
+            buildings:
+                order: global.order
+                color: [.05,.05,0.05]
+            baseline:
+                style: lines
+                order: global.order
+                width: [[12, .1px], [18, 0.5m]]
+                color: '#C1D3DC'
+        extruded:
+            filter: { $zoom: { min: 13 } }
+            draw:
+                buildings:
+                    extrude: true
+                buildingsLines:
+                    order: global.order
+                    color: white
+                    width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
+                    extrude: true
+    road_labels:
+        data: { source: osm, layer: roads }
+        filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
+        highway:
+            filter: { kind: highway, $zoom: { min: 13 } }
+            draw:
+                text:
+                    font:
+                        fill: white
+                        family: ['Helvetica Neue', Helvetica, Arial, sans-serif]
+                        size: 14px
+                        weight: 100
+        not_highway:
+            filter: { not: { kind: highway }, $zoom: { min: 17 } }
+            draw:
+                text:
+                    font:
+                        fill: white
+                        size: 12px
+                        family: ['Helvetica Neue', Helvetica, Arial, sans-serif]
+                        weight: 100
+                        style: italic
+
 styles:
     blueprint:
         base: polygons
@@ -57,7 +143,7 @@ styles:
                     color.rgb += BluePrint();
     buildings:
         base: polygons
-        mix: [blueprint, geometry-dynamic-height]
+        mix: [blueprint]
         texcoords: true
         shaders:
             blocks:
@@ -72,7 +158,7 @@ styles:
                     color.rgb += BluePrint();
     buildingsLines:
         base: lines
-        mix: [blueprint, geometry-dynamic-height, geometry-dynamic-width]
+        mix: [blueprint, geometry-dynamic-width]
         shaders:
             blocks:
                 filter: |
@@ -92,83 +178,3 @@ styles:
                 filter: |
                     // Apply this bluePrint effect as a final filter
                     color.rgb += BluePrint();
-
-layers:
-    water:
-        data: { source: osm }
-        draw:
-            base:
-                order: 3
-                color: [.1,.1,.1]
-    earth:
-        data: { source: osm }
-        draw:
-            lines:
-                order: 4
-                width: 1.5px
-                color: '#C1D3DC' 
-            base:
-                order: 0
-                color: [0.080,0.080,0.080]
-    landuse:
-        data: { source: osm }
-        draw:
-            lines:
-                order: 2
-                width: 0.5px
-                color: white 
-            base:
-                order: 1
-                color: [0.116,0.116,0.116]
-    roads:
-        data: { source: osm }
-        filter: { not: { kind: ferry } }
-        draw:
-            roads:
-                order: 4
-                color: '#C1D3DC'
-                width: 6
-    buildings:
-        data: { source: osm }
-        filter: { $zoom: { min: 10 } }
-        draw:
-            buildings:
-                order: 5
-                color: [.05,.05,0.05]
-            baseline:
-                style: lines
-                order: 5
-                width: [[12, .1px], [18, 0.5m]]
-                color: '#C1D3DC'
-        extruded:
-            filter: { $zoom: { min: 13 } }
-            draw:
-                buildings:
-                    extrude: true
-                buildingsLines:
-                    order: 6
-                    color: white
-                    width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
-                    extrude: true
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
-        highway:
-            filter: { kind: highway, $zoom: { min: 13 } }
-            draw:
-                text:
-                    font:
-                        fill: white
-                        family: ['Helvetica Neue', Helvetica, Arial, sans-serif]
-                        size: 14px
-                        weight: 100
-        not_highway:
-            filter: { not: { kind: highway }, $zoom: { min: 17 } }
-            draw:
-                text:
-                    font:
-                        fill: white
-                        size: 12px
-                        family: ['Helvetica Neue', Helvetica, Arial, sans-serif]
-                        weight: 100
-                        style: italic

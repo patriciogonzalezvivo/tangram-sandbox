@@ -6,7 +6,11 @@ import:
     - http://tangrams.github.io/blocks/space/tile.yaml
     - http://tangrams.github.io/blocks/tiling/texture/zoom-fade.yaml
     - http://tangrams.github.io/blocks/filter/hatch.yaml
-    - http://tangrams.github.io/blocks/geometry/normal.yaml
+
+sources:
+    osm:
+        type: TopoJSON
+        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 
 scene:
     background:
@@ -14,58 +18,56 @@ scene:
 
 cameras:
     cam:
-        type: isometric
+        type: perspective
 
 lights:
-    light1:
+    dir:
         type: directional
         direction: [0, 1, -.5]
         diffuse: .5
         ambient: .3
-    light2:
+    pnt:
         type: point
         position: [0, -500px, 500px]
         origin: ground
         diffuse: .5
         ambient: .3
 
-sources:
-    osm:
-        type: TopoJSON
-        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+global:
+    order: function () { return feature.sort_key; }
 
 layers:
     earth:
         data: { source: osm }
         draw:
             earth-hatch:
-                order: 0
+                order: global.order
                 color: [[14,[1.,1.,1.]],[18,[1.,1.,1.]]]
     landuse:
         data: { source: osm }
         draw:
             landuse-hatch:
-                order: 1
+                order: global.order
                 color: [0.302,0.302,0.306]
     water:
         data: { source: osm }
         draw:
             paper:
-                order: 2
+                order: global.order
                 color: '#343434'
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             ink-lines:
-                order: 3
+                order: global.order
                 color: '#343434'
                 width: 8
     buildings:
         data: { source: osm }
         draw:
             buildings:
-                order: 4
+                order: global.order
                 color: Style.color.pseudoRandomColor
         extruded:
             filter: { $zoom: { min: 13 } }
@@ -73,7 +75,7 @@ layers:
                 buildings:
                     extrude: true
                 buildingsLines:
-                    order: 6
+                    order: global.order
                     width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
                     extrude: true
                     color: [0.217,0.217,0.217]
@@ -139,7 +141,7 @@ styles:
                     color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
     buildings:
         base: polygons
-        mix: [color-tools, generative-noise, filter-hatch, geometry-normal]
+        mix: [color-tools, generative-noise, filter-hatch]
         texcoords: true
         material:
             ambient: 1.
@@ -151,27 +153,13 @@ styles:
                 filter: |
                     vec2 uv = v_texcoord;
                     float b = getBrightness(light_accumulator_diffuse.rgb);
-                    float pattern = 1.0;
-                    if ( isWall() ){
-                        // Walls
-                        b *=  clamp(uv.y*1.5,0.0,1.0)+0.2;
-                        pattern = 1.-getHatch(uv,b);
-                        vec2 edge = vec2(0.1,0.05)*noise(uv*20.);
-                        vec2 blend = smoothstep(vec2(0.0),edge,uv)*smoothstep(vec2(0.0),edge,vec2(1.)-uv);
-                        pattern = mix(1.0,pattern,blend.x*blend.y);
-                    } else {
-                        // Roof
-                        b *= 1.8;
-                        //uv = worldPosition().xy*0.01;
-                        const float pixel_scale = 695.;
-                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                        uv = gl_FragCoord.xy/pixel_scale;
-                        const float dot_wrap = 1000.;
-                        uv += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                        uv *= 5.00;
-                        pattern = 1.-getHatch(uv,b);
-                    }
-                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
+                    b *=  clamp(uv.y*1.5,0.0,1.0)+0.2;
+
+                    float pattern = 1.-getHatch(uv,b);
+                    vec2 edge = vec2(0.1,0.05)*noise(uv*20.);
+                    vec2 blend = smoothstep(vec2(0.0),edge,uv)*smoothstep(vec2(0.0),edge,vec2(1.)-uv);
+
+                    color.rgb = mix(vec3(0.302,0.302,0.306), vec3(0.976,0.953,0.890), mix(1.0,pattern,blend.x*blend.y));
     buildingsLines:
         base: lines
         lighting: false

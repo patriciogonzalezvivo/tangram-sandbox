@@ -11,9 +11,90 @@ sources:
     osm:
         type: TopoJSON
         url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+
+scene:
+    background: 
+        color: [0.012, 0.012, 0.106]
+
 cameras:
-    perspective:
+    cam:
         type: perspective
+
+global:
+    order: function () { return feature.sort_key; }
+
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            border-red:
+                order: global.order
+                color: [0.757, 0.961, 1.000]
+                width: 1px
+            border-green:
+                order: global.order
+                color: [0.757, 0.961, 1.000]
+                width: 1px
+            border-blue:
+                order: global.order
+                color: [0.757, 0.961, 1.000]
+                width: 1px
+    water:
+        data: { source: osm }
+        filter: { kind: lake }
+        draw:
+            border-red:
+                order: global.order
+                color: [0.757, 0.961, 1.000]
+                width: .8px
+            border-green:
+                order: global.order
+                color: [0.757, 0.961, 1.000]
+                width: .8px
+            border-blue:
+                order: global.order
+                color: [0.757, 0.961, 1.000]
+                width: .8px
+    boundaries:
+        data: { source: osm }
+        draw:
+            border-red:
+                order: global.order
+                color: [0.451, 0.573, 0.596]
+                width: .4px
+            border-green: 
+                order: global.order
+                color: [0.451, 0.573, 0.596]
+                width: .4px
+            border-blue: 
+                order: global.order
+                color: [0.451, 0.573, 0.596]
+                width: .4px
+    roads:
+        data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
+        draw:
+            border-red:
+                order: global.order
+                color: [0.451, 0.573, 0.596]
+                width: .3px
+            border-green: 
+                order: global.order
+                color: [0.451, 0.573, 0.596]
+                width: .3px
+            border-blue: 
+                order: global.order
+                color: [0.451, 0.573, 0.596]
+                width: .3px
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        draw:
+            icons:
+                color: Style.color.pseudoRandomColor
+                size: [[13, 20px], [15, 40px]]
+                interactive: true
+
 styles:
     border-common:
         base: lines
@@ -122,76 +203,3 @@ styles:
                     }
                     
                     color.a = max(color.r,max(color.g,color.b))*(1.0-rad);
-scene:
-    background: 
-        color: [0.012, 0.012, 0.106]
-layers:
-    earth:
-        data: { source: osm }
-        draw:
-            border-red:
-                order: 0
-                color: [0.757, 0.961, 1.000]
-                width: 1px
-            border-green:
-                order: 0
-                color: [0.757, 0.961, 1.000]
-                width: 1px
-            border-blue:
-                order: 0
-                color: [0.757, 0.961, 1.000]
-                width: 1px
-    water:
-        data: { source: osm }
-        filter: { kind: lake }
-        draw:
-            border-red:
-                order: 0
-                color: [0.757, 0.961, 1.000]
-                width: .8px
-            border-green:
-                order: 0
-                color: [0.757, 0.961, 1.000]
-                width: .8px
-            border-blue:
-                order: 0
-                color: [0.757, 0.961, 1.000]
-                width: .8px
-    boundaries:
-        data: { source: osm }
-        draw:
-            border-red:
-                order: 0
-                color: [0.451, 0.573, 0.596]
-                width: .4px
-            border-green: 
-                order: 0
-                color: [0.451, 0.573, 0.596]
-                width: .4px
-            border-blue: 
-                order: 0
-                color: [0.451, 0.573, 0.596]
-                width: .4px
-    roads:
-        data: { source: osm }
-        draw:
-            border-red:
-                order: 0
-                color: [0.451, 0.573, 0.596]
-                width: .3px
-            border-green: 
-                order: 0
-                color: [0.451, 0.573, 0.596]
-                width: .3px
-            border-blue: 
-                order: 0
-                color: [0.451, 0.573, 0.596]
-                width: .3px
-    places:
-        data: { source: osm }
-        filter: { name: true }
-        draw:
-            icons:
-                color: Style.color.pseudoRandomColor
-                size: [[13, 20px], [15, 40px]]
-                interactive: true

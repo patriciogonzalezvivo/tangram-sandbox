@@ -1,15 +1,63 @@
+sources:
+    osm:
+        type: TopoJSON
+        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+
 cameras:
-    perspective:
+    cam:
         type: perspective
         vanishing_point: [0, -500]
 
 lights:
-    directional1:
+    dir:
         type: directional
         direction: [.1, .5, -1]
         diffuse: .7
         ambient: .5
 
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: function () { return feature.sort_key; }
+                color: '#353535'
+    earth:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: function () { return feature.sort_key; }
+                color: '#555'
+    landuse:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: function () { return feature.sort_key; }
+                color: '#666'
+    roads:
+        data: { source: osm }
+        filter: { not: { kind: ferry } }
+        draw:
+            lines:
+                order: function () { return feature.sort_key; }
+                color: '#777'
+                width: 5
+        labels:
+            filter: { name: true }
+            draw:
+                text:
+                    font:
+                        family: Helvetica
+                        fill: white
+                        size: 11px
+    buildings:
+        data: { source: osm }
+        draw:
+            polygons:
+                style: buildings
+                order: function () { return feature.sort_key; }
+                color: '#999'
+                extrude: true
 styles:
     buildings:
         base: polygons
@@ -17,72 +65,3 @@ styles:
             blocks:
                 color: |
                     color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
-
-sources:
-    mapzen:
-        type: TopoJSON
-        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
-layers:
-    water:
-        data: { source: mapzen }
-        draw:
-            polygons:
-                order: 2
-                color: '#353535'
-
-    earth:
-        data: { source: mapzen }
-        draw:
-            polygons:
-                order: 0
-                color: '#555'
-
-    landuse:
-        data: { source: mapzen }
-        draw:
-            polygons:
-                order: 1
-                color: '#666'
-
-    roads:
-        data: { source: mapzen }
-        filter: { not: { kind: ferry } }
-        draw:
-            lines:
-                order: 2
-                color: '#777'
-                width: 5
-        labels:
-            filter: { name: true }
-            highway:
-                filter: { kind: highway, $zoom: { min: 7 } }
-                draw:
-                    text:
-                        font:
-                            family: Helvetica
-                            fill: white
-                            size: 12px
-                            weight: bold
-            not_highway:
-                filter: { not: { kind: highway }, $zoom: { min: 13 } }
-                draw:
-                    text:
-                        font:
-                            family: Helvetica
-                            fill: white
-                            size: 11px
-
-    buildings:
-        data: { source: mapzen }
-        filter: { $zoom: { min: 14 } }
-        draw:
-            polygons:
-                order: 50
-                color: '#999'
-        extruded:
-            filter: { $zoom: { min: 15 } }
-            draw:
-                polygons:
-                    style: buildings
-                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
