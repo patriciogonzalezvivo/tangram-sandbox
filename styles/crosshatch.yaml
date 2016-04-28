@@ -35,6 +35,15 @@ lights:
 
 global:
     order: function () { return feature.sort_key; }
+    pseudoRandomColor: |
+        function() {
+            return [
+                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
+                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
+                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
+                1
+            ];
+        }
 
 layers:
     earth:
@@ -68,7 +77,7 @@ layers:
         draw:
             buildings:
                 order: global.order
-                color: Style.color.pseudoRandomColor
+                color: global.pseudoRandomColor
         extruded:
             filter: { $zoom: { min: 13 } }
             draw:
