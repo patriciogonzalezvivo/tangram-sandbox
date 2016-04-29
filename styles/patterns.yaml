@@ -47,7 +47,6 @@ global:
             ];
         }
 
-
 layers:
     earth:
         data: { source: osm }

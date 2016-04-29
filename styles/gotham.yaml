@@ -10,6 +10,10 @@ sources:
         type: TopoJSON
         url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 
+textures:
+    sem:
+        url: imgs/sem-sky-0001.jpg
+
 scene:
     background:
         color: [0.114, 0.114, 0.114]
@@ -65,7 +69,11 @@ layers:
                 width: 15
         oneway:
             filter: { oneway: yes }
-            draw: roads: { color: red } }
+            draw: 
+                roads: 
+                    order: global.order
+                    color: red
+                    width: 15
     buildings:
         data: { source: osm }
         filter: { $zoom: { min: 10 } }
@@ -236,7 +244,7 @@ styles:
         material:
             ambient: 0.8
             diffuse:
-                texture: imgs/sem-sky-0001.jpg
+                texture: sem
                 mapping: spheremap
         shaders: 
             blocks: 

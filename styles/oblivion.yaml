@@ -14,6 +14,10 @@ sources:
         type: TopoJSON
         url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 
+textures:
+    sem:
+        url: imgs/sem-sky-0001.jpg
+
 scene:
     background:
         color: black
@@ -194,7 +198,7 @@ styles:
         material:
             ambient: [0.812, 0.812, 0.812]
             diffuse:
-                texture: imgs/sem-sky-0001.jpg
+                texture: sem
                 mapping: spheremap
         shaders:
             blocks:

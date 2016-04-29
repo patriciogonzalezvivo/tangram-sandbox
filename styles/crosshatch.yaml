@@ -12,6 +12,14 @@ sources:
         type: TopoJSON
         url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 
+textures:
+    hatch_0: 
+        url: imgs/hatch_0.png
+    hatch_2: 
+        url: imgs/hatch_2.png
+    paper:
+        url: imgs/normal-0031.jpg
+
 scene:
     background:
         color: [0.302,0.302,0.306]
@@ -117,7 +125,7 @@ styles:
         mix: tiling-texture-zoom-fade 
         shaders:
             uniforms:
-                    u_hatch: imgs/hatch_0.png
+                    u_hatch: hatch_0
             blocks:
                 filter: |
                     float pattern = 1.0-TileTexture(u_hatch,3.).a;
@@ -127,13 +135,13 @@ styles:
         mix: earth-hatch
         shaders:
             uniforms:
-                    u_hatch: imgs/hatch_2.png
+                    u_hatch: hatch_2
     paper:
         base: polygons
         texcoords: true
         material:
             normal:
-                texture: imgs/normal-0031.jpg
+                texture: paper
                 mapping: planar
                 scale: 0.001
             ambient: 1.
