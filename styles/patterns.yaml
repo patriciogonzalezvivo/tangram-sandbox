@@ -1,17 +1,19 @@
 ﻿# Author @patriciogv - 2015
 
 cameras:
-    camera1:
+    cam:
         type: perspective
         focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
         vanishing_point: [-250, -250] # relative to center of screen, in pixels
 lights:
-    light1:
+    
+    dir:
         type: directional
         direction: [0, 1, -.5]
         diffuse: .5
         ambient: .3
-    light2:
+
+    pnt:
         type: point
         position: [0, 0, 500px]
         origin: ground

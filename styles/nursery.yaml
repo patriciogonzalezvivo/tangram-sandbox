@@ -1,18 +1,35 @@
 # Author @patriciogv - 2015
 
+import:
+    - http://tangrams.github.io/blocks/color/tools.yaml
+    - http://tangrams.github.io/blocks/generative/random.yaml
+    - http://tangrams.github.io/blocks/geometry/matrices.yaml
+    - http://tangrams.github.io/blocks/tiling/tile.yaml
+    - http://tangrams.github.io/blocks/tiling/brick.yaml
+    - http://tangrams.github.io/blocks/shapes/circle.yaml
+
+sources:
+    osm:
+        type: TopoJSON
+        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+
+textures:
+    matress:
+        url: imgs/normal-0001.jpg
+
 cameras:
-    camera1:
+    cam:
         type: perspective
-        focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
-        vanishing_point: [-250, -250] # relative to center of screen, in pixels
+        focal_length: [[16, 2], [20, 6]]
+        vanishing_point: [-250, -250]
 
 lights:
-    light1:
+    dir:
         type: directional
         direction: [0, 1, -.5]
         diffuse: .5
         ambient: .2
-    light2:
+    pnt:
         type: point
         position: [0, 0, 500px]
         origin: ground
@@ -20,23 +37,116 @@ lights:
         diffuse: .5
         specular: .2
 
+global:
+    order: function () { return feature.sort_key; }
+    pseudoRandomColor: |
+        function() {
+            return [
+                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
+                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
+                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
+                1
+            ];
+        }
+
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            floor:
+                order: global.order
+                color: '#ddeeee'
+    landuse:
+        data: { source: osm }
+        draw:
+            floor:
+                order: global.order
+                color: [0.502,0.369,0.494]
+
+    water:
+        data: { source: osm }
+        draw:
+            floor:
+                order: global.order
+                color: '#88bbee'
+
+    roads:
+        data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
+        draw:
+            lines:
+                order: global.order
+                color: gray
+                width: 8
+        highway:
+            filter:
+                kind: highway
+            draw:
+                lines:
+                    color: [0.855,0.463,0.255]
+                    width: 12
+                outline:
+                    order: global.order
+                    style: lines
+                    color: grey
+                    width: 15
+        tunnel:
+            filter: { is_tunnel: yes }
+            draw:
+                lines:
+                    color: tan
+        minor_road:
+            filter:
+                kind: minor_road
+            draw:
+                lines:
+                    order: global.order
+                    color: lightgrey
+                    width: 5
+        path:
+            filter:
+                kind: path
+            draw:
+                lines:
+                    order: global.order
+                    color: [0.8, 0.8, 0.8]
+                    width: 3
+    buildings:
+        data: { source: osm }
+        draw:
+            patterns:
+                order: global.order
+                color: global.pseudoRandomColor
+                extrude: true
+    places:
+        data: { source: osm }
+        draw:
+            text:
+                font:
+                    family: helvetica
+                    size: 18px
+                    weight: bold
+                    fill: [0.232,0.170,0.229]
+                    stroke: { color: white , width: 3 }
+
 styles:
     floor:
         base: polygons
         material:
             normal:
-                texture: imgs/normal-0001.jpg
+                texture: matress
                 mapping: planar
                 scale: 0.02
             ambient: 0.8
             diffuse: 1
             specular: 0
-    walls:
+    patterns:
         base: polygons
+        mix: [color-tools, generative-random, geometry-matrices, tiling-tile, tiling-brick, shapes-circle]
         texcoords: true
         material:
             normal:
-                texture: imgs/normal-0001.jpg
+                texture: matress
                 mapping: triplanar
                 scale: 0.02
             ambient: 0.8
@@ -45,62 +155,27 @@ styles:
         shaders:
             blocks:
                 global: |
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
-
-                    float random( in float _x){
-                        return fract(sin(_x)*1e4);
-                    }
-
-                    vec2 rotate2D(vec2 _st, float _angle){
-                      _st -= 0.5;
-                      _st =  mat2(cos(_angle),-sin(_angle),
-                                  sin(_angle),cos(_angle)) * _st;
-                      _st += 0.5;
-                      return _st;
-                    }
-
-                    vec2 tile(vec2 _st, float _zoom){
-                      _st *= _zoom;
-                      return fract(_st);
-                    }
-
-                    vec2 brickTile(vec2 _st, float _zoom){
-                        _st *= _zoom;
-                        if (fract(_st.y * 0.5) > 0.5){
-                            _st.x += 0.5;
-                        }
-                        return fract(_st);
-                    }
-
-                    float shape(float _radius, float _shape){
+                    float shape (float _radius, float _shape) {
                       return 1.-smoothstep(_shape-(_shape*0.01),_shape+(_shape*0.01),_radius);
                     }
 
-                    float circle(vec2 _st, float _radius){
-                      vec2 pos = vec2(0.5)-_st;
-                      _radius *= 0.75;
-                      return 1.-smoothstep(_radius-(_radius*0.01),_radius+(_radius*0.01),dot(pos,pos)*3.14);
-                    }
-
                     float nuts(in vec2 st) {
-
                         float rows = 10.0;
-                        vec2 pos = brickTile(st,rows);
+                        vec2 pos = brick(st, rows);
+                        float angle = PI*0.25;
 
-                        float angle = 3.1415*0.25;
-
-                        if (fract(st.y * 0.5 * rows) > 0.5){
+                        if (fract(st.y * 0.5 * rows) > 0.5) {
                             angle *= -1.0;
                         }
 
-                        pos = rotate2D(pos,angle);
 
                         pos *= 2.0;
-                        float pct = (1.0+cos(3.1415*pos.x))*0.5;
+                        pos -= 1.;
+                        pos = rotate2D(angle) * pos;
+                        pos += 1.;
 
-                        return clamp(1.0-smoothstep( 0.5,0.6, pow(pct,pos.y) ) * 1.0-smoothstep( 0.79,0.81, pow(pct,2.0-pos.y )),0.0,1.0);
+                        float pct = (1.0+cos(PI*pos.x))*0.5;
+                        return clamp(1.0-smoothstep( 0.5,0.6, pow(pct,pos.y))*1.0-smoothstep(0.79,0.81,pow(pct,2.0-pos.y)),0.0,1.0);
                     }
 
                     float flower(in vec2 st){
@@ -112,9 +187,9 @@ styles:
                         float shape1 = 0.5-0.2*cos(a*5.0);
                         float shape2 = 0.15-0.03*cos(a*5.0);
 
-                        float pct = shape(r,shape1);
-                        pct -= shape(r,shape2);
-                        pct += circle(st,0.0005);
+                        float pct = shape(r, shape1);
+                        pct -= shape(r, shape2);
+                        pct += circle(st, 0.0005);
 
                         return pct;
                     }
@@ -125,17 +200,16 @@ styles:
                         float r = length(pos)*2.0;
                         float a = atan(pos.y,pos.x);
 
-                        //float f = abs(cos(a*12.)*sin(a*3.))*.8+.1;
                         float f = abs(cos(a*12.)*sin(a*3.))*.6+0.15;
 
                         return 1.0-shape(r,f);
                     }
 
-                    float stripes(in vec2 _pos, float _angle, float _brigtness){
+                    float stripes(in vec2 pos, float angle, float brigtness){
                         float scale = 20.0;
-                        _pos *= scale;
-                        _pos = rotate2D(_pos, _angle );
-                        return 1.0-smoothstep(-1.+_brigtness*2.0,1.,abs(sin(_pos.x*3.1415)));
+                        pos *= scale;
+                        pos = rotate2D(angle) * pos;
+                        return 1.0-smoothstep(-1.+brigtness*2.0,1.,abs(sin(pos.x*PI)));
                     }
 
                 color: |
@@ -150,143 +224,18 @@ styles:
                     if (b > 0.85){
                         pattern = nuts(st);
                     } else if (b > 0.75){
-                        st = brickTile(st,4.);
+                        st = brick(st,4.);
                         pattern = flower(st);
                     } else if (b > 0.6){
-                        st = brickTile(st,3.);
+                        st = brick(st,3.);
                         pattern = snowFlake(st);
                     } else if (b > 0.4){
-                        pattern = stripes(st, 3.1415*0.25, 0.25);
+                        pattern = stripes(st, PI*0.25, 0.25);
                     } else if (b > 0.2){
-                        pattern = 1.0-stripes(st, -3.1415*0.25, 0.25);
+                        pattern = 1.0-stripes(st, -PI*0.25, 0.25);
                     } else {
                         st = tile(st,5.);
                         pattern = 1.0-circle(st,0.1);
                     }
 
                     color.rgb = mix(vec3(1.),color.rgb,pattern);
-
-
-sources:
-    osm:
-        type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
-layers:
-    earth:
-        data:
-            source: osm
-            layer: earth
-        draw:
-            floor:
-                order: 0
-                color: '#ddeeee'
-    landuse:
-        data:
-            source: osm
-            layer: landuse
-        draw:
-            floor:
-                order: 1
-                color: [0.502,0.369,0.494]
-
-    water:
-        data:
-            source: osm
-            layer: water
-        draw:
-            floor:
-                order: 2
-                color: '#88bbee'
-
-    roads:
-        data: { source: osm }
-        filter: { not: { kind: [rail, ferry] } }
-        draw:
-            lines:
-                order: 8
-                color: gray
-                width: 8
-        highway:
-            filter:
-                kind: highway
-            draw:
-                lines:
-                    color: [0.855,0.463,0.255]
-                    width: 12
-                outline:
-                    order: 3
-                    style: lines
-                    color: grey
-                    width: 15
-        tunnel:
-            filter:
-                is_tunnel: yes
-            draw:
-                lines:
-                    color: tan
-            rail:
-                filter:
-                    kind: rail
-                visible: false
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                lines:
-                    order: -1
-                    color: lightgrey
-                    width: 5
-        path:
-            filter:
-                kind: path
-            draw:
-                lines:
-                    order: -2
-                    color: [0.8, 0.8, 0.8]
-                    width: 3
-        rail:
-            filter:
-                kind: rail
-                is_tunnel: no
-            draw:
-                lines:
-                    order: -3
-                    color: pink
-                    width: 3
-
-    buildings:
-        data:
-            source: osm
-            layer: buildings
-        draw:
-            walls:
-                order: 9
-                color: Style.color.pseudoRandomColor
-        3d-buildings:
-            filter: { $zoom: { min: 15 } }
-            draw:
-                walls:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
-
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, $zoom: { min: 14 } }
-        draw:
-            text:
-                font:
-                    family: helvetica
-                    size: 12px
-                    fill: white
-                    stroke: { color: [0.232,0.170,0.229] , width: 3 }
-    places:
-        data: { source: osm }
-        filter: { name: true }
-        draw:
-            text:
-                font:
-                    family: helvetica
-                    size: 18px
-                    weight: bold
-                    fill: [0.232,0.170,0.229]
-                    stroke: { color: white , width: 3 }
