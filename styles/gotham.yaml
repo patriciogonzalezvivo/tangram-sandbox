@@ -1,14 +1,10 @@
 ﻿# Author @patriciogv - 2015
 
 import:
+    - default.yaml
     - http://tangrams.github.io/blocks/filter/grain.yaml
     - http://tangrams.github.io/blocks/space/tile.yaml
     - http://tangrams.github.io/blocks/geometry/normal.yaml
-
-sources:
-    osm:
-        type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 
 textures:
     sem:
@@ -18,13 +14,8 @@ scene:
     background:
         color: [0.114, 0.114, 0.114]
 
-cameras:
-    cam:
-        type: perspective
-
 lights:
     dir:
-        type: directional
         direction: [-1.,-1.,-0.5]
         ambient: .3
         diffuse: .5
@@ -37,34 +28,22 @@ lights:
         diffuse: .5
         specular: .4
 
-global:
-    order: function () { return feature.sort_key; }
-
 layers:
     earth:
-        data: { source: osm }
         draw:
             earth:
-                order: global.order
                 color: '#555'
     landuse:
-        data: { source: osm }
         draw:
-            earth:
-                order: global.order
+            landuse:
                 color: '#666'
     water:
-        data: { source: osm }
         draw:
             water:
-                order: global.order
                 color: '#222'
     roads:
-        data: { source: osm }
-        filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
-                order: global.order
                 color: black
                 width: 15
         oneway:
@@ -75,7 +54,9 @@ layers:
                     color: red
                     width: 15
     buildings:
-        data: { source: osm }
+        draw:
+            buildings:
+                visible: false
         offices:
             filter: function(){ return feature.height > 100; }
             draw:
@@ -85,7 +66,6 @@ layers:
                     style: offices
                     extrude: true
         buildings:
-            filter: function(){ return feature.height < 100; }
             draw:
                 polygons:
                     order: global.order
@@ -93,12 +73,6 @@ layers:
                     style: buildings
                     extrude: true
 styles:
-    earth:
-        base: polygons
-        mix: filter-grain
-    landuse:
-        base: polygons
-        mix: filter-grain
     water:
         base: polygons
         mix: filter-grain
@@ -112,6 +86,51 @@ styles:
         #     blocks: 
         #         normal: |
         #             normal += snoise(vec3(worldPosition().xy*0.08,u_time*.5))*0.03;
+    earth:
+        base: polygons
+        mix: filter-grain
+    landuse:
+        base: polygons
+        mix: filter-grain
+    roads:
+        animated: true
+        texcoords: true
+        lighting: true
+        base: lines
+        mix: filter-grain
+        material:
+            diffuse: .9
+            emission: 0.0
+        shaders:
+            blocks:
+                color: |
+                    vec2 st = fract(v_texcoord.xy*vec2(1.,.1));
+                    float dir = -0.1;
+                    if ( v_color.r < 0.5) {
+                       if (st.x < 0.5) {
+                         st.y = 1.-st.y;
+                       }
+                       st.x = fract(st.x*2.0);
+                    }
+                    float v = u_time*dir;
+                    st *= vec2(4.,1.);
+                    st += vec2(1.);
+                    vec2 ipos = floor(st);
+                    vec2 fpos = fract(st);
+                    fpos = fpos+vec2(.0,v*random(ipos.x));
+                    ipos = floor(fpos*vec2(10.));
+                    fpos = fract(fpos*vec2(1.,10.));
+                    
+                    st = worldPosition().xy*0.04;
+                    float n = noise(st);
+                    
+                    material.emission = vec4(0.957,0.988,0.976,1.0) * max(0.0,(0.7-dot(fpos-.5,fpos-vec2(.5,.9))*3.) * step(0.5,random(ipos.y)));
+                    
+                    float lineWidth = 0.2;
+                    float borders = 1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
+                    material.emission *= 1.-borders;
+                    
+                    color.rgb = vec3(0.4)*borders+n;
     buildings:
         # animated: true
         texcoords: true
@@ -162,41 +181,3 @@ styles:
                     }
                 filter: |
                     color.rgb += vec3(1.)* min( 1.-(worldPosition().z*.001 + .7) , 0.5 );
-    roads:
-        animated: true
-        texcoords: true
-        base: lines
-        mix: filter-grain
-        material:
-            diffuse: .9
-            emission: 0.0
-        shaders:
-            blocks:
-                color: |
-                    vec2 st = fract(v_texcoord.xy*vec2(1.,.1));
-                    float dir = -0.1;
-                    if ( v_color.r < 0.5) {
-                       if (st.x < 0.5) {
-                         st.y = 1.-st.y;
-                       }
-                       st.x = fract(st.x*2.0);
-                    }
-                    float v = u_time*dir;
-                    st *= vec2(4.,1.);
-                    st += vec2(1.);
-                    vec2 ipos = floor(st);
-                    vec2 fpos = fract(st);
-                    fpos = fpos+vec2(.0,v*random(ipos.x));
-                    ipos = floor(fpos*vec2(10.));
-                    fpos = fract(fpos*vec2(1.,10.));
-                    
-                    st = worldPosition().xy*0.04;
-                    float n = noise(st);
-                    
-                    material.emission = vec4(0.957,0.988,0.976,1.0) * max(0.0,(0.7-dot(fpos-.5,fpos-vec2(.5,.9))*3.) * step(0.5,random(ipos.y)));
-                    
-                    float lineWidth = 0.2;
-                    float borders = 1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
-                    material.emission *= 1.-borders;
-                    
-                    color.rgb = vec3(0.4)*borders+n;

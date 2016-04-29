@@ -1,16 +1,12 @@
 ﻿# Author @patriciogv - 2015
 
 import:
+    - default.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/generative/noise.yaml
     - http://tangrams.github.io/blocks/space/tile.yaml
     - http://tangrams.github.io/blocks/tiling/texture/zoom-fade.yaml
     - http://tangrams.github.io/blocks/filter/hatch.yaml
-
-sources:
-    osm:
-        type: TopoJSON
-        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 
 textures:
     hatch_0: 
@@ -24,15 +20,8 @@ scene:
     background:
         color: [0.302,0.302,0.306]
 
-cameras:
-    cam:
-        type: perspective
-
 lights:
     dir:
-        type: directional
-        direction: [0, 1, -.5]
-        diffuse: .5
         ambient: .3
     pnt:
         type: point
@@ -41,50 +30,26 @@ lights:
         diffuse: .5
         ambient: .3
 
-global:
-    order: function () { return feature.sort_key; }
-    pseudoRandomColor: |
-        function() {
-            return [
-                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
-                1
-            ];
-        }
-
 layers:
     earth:
-        data: { source: osm }
         draw:
             earth:
-                order: global.order
                 color: [[14,[1.,1.,1.]],[18,[1.,1.,1.]]]
     landuse:
-        data: { source: osm }
         draw:
             landuse:
-                order: global.order
                 color: [0.302,0.302,0.306]
     water:
-        data: { source: osm }
         draw:
             water:
-                order: global.order
                 color: '#343434'
     roads:
-        data: { source: osm }
-        filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
-                order: global.order
                 color: '#343434'
-                width: 8
     buildings:
-        data: { source: osm }
         draw:
             buildings:
-                order: global.order
                 color: global.pseudoRandomColor
                 extrude: true
             buildingsLines:
@@ -111,7 +76,7 @@ styles:
         mix: tiling-texture-zoom-fade 
         shaders:
             uniforms:
-                    u_hatch: hatch_0
+                u_hatch: hatch_0
             blocks:
                 filter: |
                     float pattern = 1.0-TileTexture(u_hatch,3.).a;
@@ -121,7 +86,7 @@ styles:
         mix: earth
         shaders:
             uniforms:
-                    u_hatch: hatch_2
+                u_hatch: hatch_2
     water:
         base: polygons
         texcoords: true
@@ -136,7 +101,6 @@ styles:
         base: lines
         mix: generative-noise
         texcoords: true
-        lighting: false
         shaders:
             blocks:
                 filter: |

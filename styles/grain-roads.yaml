@@ -1,153 +1,37 @@
 ﻿# Authors @patriciogv & @meetar - 2015
 
 import:
-    - http://tangrams.github.io/blocks/filter/grain.yaml
-    - http://tangrams.github.io/blocks/grids/tile.yaml
-
-sources:
-    osm:
-        type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
-cameras:
-    cam:
-        type: perspective
-        vanishing_point: [0, -500]
-
-lights:
-    dir:
-        type: directional
-        direction: [.1, .5, -1]
-        diffuse: .5
-        ambient: .5
-
-global:
-    order: function () { return feature.sort_key; }
+    - grain.yaml
 
 layers:
-    water:
-        data: { source: osm }
-        draw:
-            grid:
-                order: global.order
-                color: '#353535'
-    earth:
-        data: { source: osm }
-        draw:
-            grid:
-                order: global.order
-                color: '#555'
-    landuse:
-        data: { source: osm }
-        draw:
-            grid:
-                order: global.order
-                color: '#666'
-    buildings:
-        data: { source: osm }
-        draw:
-            polygons:
-                style: buildings
-                order: global.order
-                color: '#999'
-                extrude: true
     roads:
-        data: { source: osm }
-        filter: { $zoom: {min: 7}, not: { kind: [rail, ferry] } }
         draw:
-            lines:
-                order: global.order
+            roads:
                 color: [0.988, 0.988, 0.988]
-                width: [[7,0.0px], [10, .5px], [15, .75px], [17, 5m]]
         highway:
             filter: { kind: highway }
             draw:
-                flatlines:
-                    order: global.order
+                roads:
                     color: [1.000,0.897,0.058]
-                    width: [[8,0px], [8,.25px], [11, 1.5px], [14, 2px], [16, 4px], [17, 10m]]
             link:
                 filter: { is_link: yes } # on- and off-ramps, etc
                 draw:
-                    flatlines:
+                    roads:
                         color: [1.000,0.933,0.710]
-                        width: [[8,0px], [14, 3px], [16, 5px], [18, 10m]]
                 tunnel-link:
                     filter: {is_tunnel: yes, $zoom: {min: 13} }
                     draw:
-                        flatlines:
+                        roads:
                             color: [0.805, 0.748, 0.557]
         tunnel:
             filter: {is_tunnel: yes }
             draw:
-                flatlines:
-                    order: global.order
+                roads:
                     color: [0.805,0.748,0.557]
-        labels:
-            filter: { name: true }
-            highway:
-                filter: { kind: highway, $zoom: { min: 5 } }
-                draw:
-                    text:
-                        font:
-                            fill: black
-                            size: 16px
-                            family: helvetica
-                            weight: 600
-                            stroke: { color: white, width: 4 }
-
-            not_highway:
-                filter: { not: { kind: highway }, $zoom: { min: 13 } }
-                draw:
-                    text:
-                        font:
-                            fill: black
-                            stroke: { color: white, width: 3 }
-                            size: 16px
-                            family: helvetica
-                            weight: 500
-
-                major_road:
-                    filter: { kind: major_road, $zoom: { min: 14 } }
-                    draw:
-                        text:
-                            font:
-                                size: 16px
-                                family: helvetica
-                                weight: 100
-                                stroke: { color: white, width: 4 }
-                minor_road:
-                    filter: { kind: minor_road, railway: false, $zoom: { min: 15 } }
-                    draw:
-                        text:
-                            font:
-                                size: 14px
-                                family: helvetica
-                                weight: 100
-                                stroke: { color: white, width: 4 }
-                small:
-                    filter: { highway: [residential, unclassified], $zoom: { max: 15 } }
-                    visible: false
-
 styles:
-    grid:
-        base: polygons
-        mix: [grids-tile, filter-grain]
-        shaders:
-            blocks:
-                color: |
-                    color.rgb += vec3(.2)*tileGrid();
-    buildings:
-        base: polygons
-        mix: filter-grain
-        shaders:
-            blocks:
-                color: |
-                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
-    flatlines:
+    roads:
         base: lines
-        mix: [filter-grain]
-        lighting: false # ignore lights
+        mix: filter-grain
         texcoords: true
         shaders:
             blocks:

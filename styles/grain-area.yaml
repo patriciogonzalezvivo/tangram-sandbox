@@ -1,85 +1,20 @@
 ﻿# Author @patriciogv - 2015
 
 import:
+    - grain.yaml
     - http://tangrams.github.io/blocks/filter/grain.yaml
-    - http://tangrams.github.io/blocks/space/tile.yaml
     - http://tangrams.github.io/blocks/space/constant.yaml
     - http://tangrams.github.io/blocks/grids/grid.yaml
-    - http://tangrams.github.io/blocks/grids/tile.yaml
     - http://tangrams.github.io/blocks/patterns/stripes.yaml
 
-sources:
-    osm:
-        type: TopoJSON
-        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
-cameras:
-    cam:
-        type: perspective
-        vanishing_point: [0, -500]
-
-lights:
-    dir:
-        type: directional
-        direction: [.1, .5, -1]
-        diffuse: .7
-        ambient: .5
-
-global:
-    order: function () { return feature.sort_key; }
-
 layers:
-    water:
-        data: { source: osm }
-        draw:
-            grid:
-                order: global.order
-                color: '#353535'
-    earth:
-        data: { source: osm }
-        draw:
-            grid:
-                order: global.order
-                color: [0.348,0.348,0.348]
     landuse:
-        data: { source: osm }
         draw:
-            area:
-                order: global.order
+            landuse:
                 color: [1.000,0.014,0.187]
-    buildings:
-        data: { source: osm }
-        draw:
-            polygons:
-                style: buildings
-                order: global.order
-                color: '#999'
-                extrude: true
-    roads:
-        data: { source: osm, layer: roads }
-        filter: { not: { kind: [rail, ferry] } }
-        draw:
-            lines:
-                order: global.order
-                color: [0.83, 0.83, 0.83]
-                width: function () { return Math.log($zoom); }
 
 styles:
-    grid:
-        base: polygons
-        mix: [grids-tile, filter-grain]
-        shaders:
-            blocks:
-                color: |
-                    color.rgb += vec3(.2)*tileGrid();
-    buildings:
-        base: polygons
-        mix: filter-grain
-        shaders:
-            blocks:
-                color: |
-                    color.rgb *= vec3(min((worldPosition().z*.001+.5),1.));
-    area:
+    landuse:
         base: polygons
         mix: [patterns-stripes, space-constant, grid]
         blend: inlay

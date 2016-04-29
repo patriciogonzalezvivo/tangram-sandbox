@@ -1,6 +1,7 @@
 ﻿# Author @patriciogv - 2015
 
 import:
+    - default.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/generative/fbm.yaml
     - http://tangrams.github.io/blocks/grids/grid.yaml
@@ -8,77 +9,38 @@ import:
     - http://tangrams.github.io/blocks/geometry/dynamic-width.yaml
     - http://tangrams.github.io/blocks/geometry/normal.yaml
 
-sources:
-    osm:
-        type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
 scene:
     background:
         color: [0.,0.5,0.8]
 
-cameras:
-    perspective:
-        type: perspective
-        vanishing_point: [0, -500]
-
-lights:
-    directional1:
-        type: directional
-        direction: [.1, .5, -1]
-        diffuse: .7
-        ambient: .5
-
-global:
-    order: function () { return feature.sort_key; }
-
 layers:
     water:
-        data: { source: osm }
         draw:
             water:
-                order: global.order
                 color: [.1,.1,.1]
     earth:
-        data: { source: osm }
         draw:
             lines:
                 order: global.order
                 width: 1.5px
                 color: '#C1D3DC' 
             earth:
-                order: global.order
                 color: [0.080,0.080,0.080]
     landuse:
-        data: { source: osm }
         draw:
             lines:
                 order: global.order
                 width: 0.5px
                 color: white 
             landuse:
-                order: global.order
                 color: [0.116,0.116,0.116]
     roads:
-        data: { source: osm }
-        filter: { not: { kind: ferry } }
         draw:
             roads:
-                order: global.order
                 color: '#C1D3DC'
-                width: 6
-            text:
-                font:
-                    fill: white
-                    family: ['Helvetica Neue', Helvetica, Arial, sans-serif]
-                    size: 14px
-                    weight: 100
     buildings:
-        data: { source: osm }
-        filter: { $zoom: { min: 10 } }
         draw:
             buildings:
-                order: global.order
                 color: [.05,.05,0.05]
                 extrude: true
             baseline:

@@ -1,3 +1,5 @@
+# Author @patriciogv - 2015
+
 sources:
     osm:
         type: TopoJSON
@@ -15,50 +17,113 @@ lights:
         diffuse: .7
         ambient: .5
 
+global:
+    order: function () { return feature.sort_key; }
+
 layers:
     water:
         data: { source: osm }
         draw:
-            polygons:
-                order: function () { return feature.sort_key; }
+            water:
+                order: global.order
                 color: '#353535'
     earth:
         data: { source: osm }
         draw:
-            polygons:
-                order: function () { return feature.sort_key; }
+            earth:
+                order: global.order
                 color: '#555'
     landuse:
         data: { source: osm }
         draw:
-            polygons:
-                order: function () { return feature.sort_key; }
+            landuse:
+                order: global.order
                 color: '#666'
     roads:
         data: { source: osm }
-        filter: { not: { kind: ferry } }
+        filter: { not: { kind: [rail, ferry] } }
         draw:
-            lines:
-                order: function () { return feature.sort_key; }
-                color: '#777'
-                width: 5
+            roads:
+                order: global.order
+                color: [0.988, 0.988, 0.988]
+                width: [[7,0.0px], [10, .5px], [15, .75px], [17, 5m]]
+        highway:
+            filter: { kind: highway }
+            draw:
+                roads:
+                    order: global.order
+                    width: [[8,0px], [8,.25px], [11, 1.5px], [14, 2px], [16, 4px], [17, 10m]]
+            link:
+                filter: { is_link: yes } # on- and off-ramps, etc
+                draw:
+                    roads:
+                        width: [[8,0px], [14, 3px], [16, 5px], [18, 10m]]
+                tunnel-link:
+                    filter: {is_tunnel: yes, $zoom: {min: 13} }
+        tunnel:
+            filter: {is_tunnel: yes }
+            draw:
+                roads:
+                    order: global.order
         labels:
             filter: { name: true }
-            draw:
-                text:
-                    font:
-                        family: Helvetica
-                        fill: white
-                        size: 11px
+            highway:
+                filter: { kind: highway, $zoom: { min: 5 } }
+                draw:
+                    text:
+                        font:
+                            fill: black
+                            size: 16px
+                            family: helvetica
+                            weight: 600
+                            stroke: { color: white, width: 4 }
+
+            not_highway:
+                filter: { not: { kind: highway }, $zoom: { min: 13 } }
+                draw:
+                    text:
+                        font:
+                            fill: black
+                            stroke: { color: white, width: 3 }
+                            size: 16px
+                            family: helvetica
+                            weight: 500
+
+                major_road:
+                    filter: { kind: major_road, $zoom: { min: 14 } }
+                    draw:
+                        text:
+                            font:
+                                size: 16px
+                                family: helvetica
+                                weight: 100
+                                stroke: { color: white, width: 4 }
+                minor_road:
+                    filter: { kind: minor_road, railway: false, $zoom: { min: 15 } }
+                    draw:
+                        text:
+                            font:
+                                size: 14px
+                                family: helvetica
+                                weight: 100
+                                stroke: { color: white, width: 4 }
     buildings:
         data: { source: osm }
         draw:
-            polygons:
-                style: buildings
-                order: function () { return feature.sort_key; }
+            buildings:
+                order: global.order
                 color: '#999'
                 extrude: true
 styles:
+    water:
+        base: polygons
+    earth:
+        base: polygons
+    landuse:
+        base: polygons
+    roads:
+        base: lines
+        lighting: false
     buildings:
         base: polygons
         shaders:
