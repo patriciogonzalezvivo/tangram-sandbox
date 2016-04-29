@@ -6,6 +6,7 @@ import:
     - http://tangrams.github.io/blocks/grids/grid.yaml
     - http://tangrams.github.io/blocks/functions/map.yaml
     - http://tangrams.github.io/blocks/geometry/dynamic-width.yaml
+    - http://tangrams.github.io/blocks/geometry/normal.yaml
 
 sources:
     osm:
@@ -35,7 +36,7 @@ layers:
     water:
         data: { source: osm }
         draw:
-            base:
+            water:
                 order: global.order
                 color: [.1,.1,.1]
     earth:
@@ -45,7 +46,7 @@ layers:
                 order: global.order
                 width: 1.5px
                 color: '#C1D3DC' 
-            base:
+            earth:
                 order: global.order
                 color: [0.080,0.080,0.080]
     landuse:
@@ -55,7 +56,7 @@ layers:
                 order: global.order
                 width: 0.5px
                 color: white 
-            base:
+            landuse:
                 order: global.order
                 color: [0.116,0.116,0.116]
     roads:
@@ -66,6 +67,12 @@ layers:
                 order: global.order
                 color: '#C1D3DC'
                 width: 6
+            text:
+                font:
+                    fill: white
+                    family: ['Helvetica Neue', Helvetica, Arial, sans-serif]
+                    size: 14px
+                    weight: 100
     buildings:
         data: { source: osm }
         filter: { $zoom: { min: 10 } }
@@ -73,43 +80,17 @@ layers:
             buildings:
                 order: global.order
                 color: [.05,.05,0.05]
+                extrude: true
             baseline:
                 style: lines
                 order: global.order
                 width: [[12, .1px], [18, 0.5m]]
                 color: '#C1D3DC'
-        extruded:
-            filter: { $zoom: { min: 13 } }
-            draw:
-                buildings:
-                    extrude: true
-                buildingsLines:
-                    order: global.order
-                    color: white
-                    width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
-                    extrude: true
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
-        highway:
-            filter: { kind: highway, $zoom: { min: 13 } }
-            draw:
-                text:
-                    font:
-                        fill: white
-                        family: ['Helvetica Neue', Helvetica, Arial, sans-serif]
-                        size: 14px
-                        weight: 100
-        not_highway:
-            filter: { not: { kind: highway }, $zoom: { min: 17 } }
-            draw:
-                text:
-                    font:
-                        fill: white
-                        size: 12px
-                        family: ['Helvetica Neue', Helvetica, Arial, sans-serif]
-                        weight: 100
-                        style: italic
+            buildingsLines:
+                order: function () { return feature.sort_key + 1; }
+                color: white
+                width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
+                extrude: true
 
 styles:
     blueprint:
@@ -133,36 +114,36 @@ styles:
                         return background;
                     }
                     #endif
-    base:
+                filter: |
+                    color.rgb += BluePrint();
+    earth:
         base: polygons
         mix: blueprint
-        shaders:
-            blocks: 
-                filter: |
-                    // Apply this bluePrint effect as a final filter
-                    color.rgb += BluePrint();
+    water:
+        base: polygons
+        mix: blueprint
+    landuse:
+        base: polygons
+        mix: blueprint
     buildings:
         base: polygons
-        mix: [blueprint]
+        mix: [blueprint, geometry-normal]
         texcoords: true
         shaders:
             blocks:
                 color: |
-                    if (dot(v_normal,vec3(0.,0.,1.)) == 0.0){
+                    if (isWall()){
                         // Put lines at the edge of walls
                         float lineWidth = 0.003*(u_tile_origin.z/20.0);
                         color.rgb = 1.0-vec3(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
                     }
-                filter: |
-                    // Apply this bluePrint effect as a final filter
-                    color.rgb += BluePrint();
     buildingsLines:
         base: lines
         mix: [blueprint, geometry-dynamic-width]
         shaders:
             blocks:
-                filter: |
-                    color.rgb = mix(BluePrint(),
+                color: |
+                    color.rgb = mix(vec3(0.),
                                     vec3(1.),
                                     min(max(0.001,(u_map_position.z-13.))/3.,1.0) );
     roads:
@@ -175,6 +156,3 @@ styles:
                     float lineWidth = 0.1;
                     float pct = 1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
                     color.rgb = vec3(0.14+pct*0.1);
-                filter: |
-                    // Apply this bluePrint effect as a final filter
-                    color.rgb += BluePrint();
