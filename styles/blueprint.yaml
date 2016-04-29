@@ -132,7 +132,7 @@ styles:
         shaders:
             blocks:
                 color: |
-                    if (isWall()){
+                    if (isWall()) {
                         // Put lines at the edge of walls
                         float lineWidth = 0.003*(u_tile_origin.z/20.0);
                         color.rgb = 1.0-vec3(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));

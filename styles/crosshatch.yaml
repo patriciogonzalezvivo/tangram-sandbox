@@ -57,26 +57,26 @@ layers:
     earth:
         data: { source: osm }
         draw:
-            earth-hatch:
+            earth:
                 order: global.order
                 color: [[14,[1.,1.,1.]],[18,[1.,1.,1.]]]
     landuse:
         data: { source: osm }
         draw:
-            landuse-hatch:
+            landuse:
                 order: global.order
                 color: [0.302,0.302,0.306]
     water:
         data: { source: osm }
         draw:
-            paper:
+            water:
                 order: global.order
                 color: '#343434'
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }
         draw:
-            ink-lines:
+            roads:
                 order: global.order
                 color: '#343434'
                 width: 8
@@ -86,16 +86,12 @@ layers:
             buildings:
                 order: global.order
                 color: global.pseudoRandomColor
-        extruded:
-            filter: { $zoom: { min: 13 } }
-            draw:
-                buildings:
-                    extrude: true
-                buildingsLines:
-                    order: global.order
-                    width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
-                    extrude: true
-                    color: [0.217,0.217,0.217]
+                extrude: true
+            buildingsLines:
+                order: global.order
+                width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
+                extrude: true
+                color: [0.217,0.217,0.217]
     places:
         data: { source: osm }
         filter: { name: true }
@@ -107,19 +103,9 @@ layers:
                     style: italic
                     fill: black
                     stroke: { color: [0.976,0.953,0.890] , width: 7 }
-    landuse_labels:
-        data: { source: osm }
-        filter: { name: true, kind: park, $zoom: { min: 16 } }
-        draw:
-            text:
-                font:
-                    family: Baskerville
-                    size: 18px
-                    style: italic
-                    fill: black
-                    stroke: { color: [0.976,0.953,0.890] , width: 7 }
+            
 styles:
-    earth-hatch:
+    earth:
         base: polygons
         lighting: false
         mix: tiling-texture-zoom-fade 
@@ -130,13 +116,13 @@ styles:
                 filter: |
                     float pattern = 1.0-TileTexture(u_hatch,3.).a;
                     color.rgb = mix(vec3(0.302,0.302,0.306), vec3(0.976,0.953,0.890), pattern);
-    landuse-hatch:
+    landuse:
         base: polygons
-        mix: earth-hatch
+        mix: earth
         shaders:
             uniforms:
                     u_hatch: hatch_2
-    paper:
+    water:
         base: polygons
         texcoords: true
         material:
@@ -146,7 +132,7 @@ styles:
                 scale: 0.001
             ambient: 1.
             diffuse: 1.
-    ink-lines:
+    roads:
         base: lines
         mix: generative-noise
         texcoords: true
