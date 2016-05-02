@@ -1,90 +1,75 @@
 ﻿# Author @patriciogv - 2015
 
 import:
+    - default.yaml
     - http://tangrams.github.io/blocks/generative/random.yaml
     - http://tangrams.github.io/blocks/space/tile.yaml
     - http://tangrams.github.io/blocks/geometry/normal.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
 
-sources:
-    osm:
-        type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
-cameras:
-    cam:
-        type: perspective
-        focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
-        vanishing_point: [-250, -250] # relative to center of screen, in pixels
-
-global:
-    order: function () { return feature.sort_key; }
-    pseudoRandomColor: |
-        function() {
-            return [
-                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
-                1
-            ];
-        }
+scene:
+    background:
+        color: black
 
 layers:
+    water:
+        data: { source: osm }
+        draw:
+            water:
+                color: black
     earth:
         data: { source: osm }
         draw:
-            simple-grid:
-                order: global.order
+            earth:
                 color: [0.362,0.362,0.362]
             outline:
-                order: global.order
+                order: function () { return feature.sort_key + 10; }
                 style: lines
-                color: [1.000,1.000,1.000]
+                color: w
                 width: 2px
                 tile_edges: false
     landuse:
         data: { source: osm }
         draw:
-            lines:
-                order: global.order
+            landuse:
                 color: [0.703,0.703,0.703]
-                width: 1px
-    water:
-        data: { source: osm }
-        draw:
-            numeric-grid:
-                order: global.order
-                color: [1.000,1.000,1.000]
-            
+                width: 1px 
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
-                order: global.order
-                color: [0, 0, 0]
-                width: 8
-            outline:
-                style: lines
-                order: function () { return feature.sort_key - 1; }
-                color: [0.773,0.763,0.763]
-                width: 8.5
+                color: black
         oneway:
             filter: { oneway: yes }
             draw: { roads: { color: red } }
+        labels:
+            highway:
+                draw:
+                    text:
+                        font:
+                            fill: white
+                            stroke:
+                                color: black
+            # not_highway:
+            #     draw:
+            #         text:
+            #             font:
+            #                 fill: white
+            #                 stroke:
+            #                     color: black
+                        
     buildings:
         data: { source: osm }
         draw:
             buildings:
-                order: global.order
                 color: global.pseudoRandomColor
-                extrude: true        
+                extrude: true
             buildingsLines:
                 order: global.order
                 color: [0.687,0.660,0.660]
-                width: .5px
+                width: 1px
                 extrude: true
-
 styles:
     grid:
         mix: space-tile
@@ -112,48 +97,10 @@ styles:
                         return color;
                     }
                     vec3 TileGrid(){ return mix(TileGrid(1.),TileGrid(2.),fract(u_map_position.z)); }
-    roads:
-        base: lines
-        mix: generative-random
-        animated: true
-        texcoords: true
-        shaders:
-            blocks:
-                global: |
-                    float randomSerie(float x, float freq, float t) {
-                        return step(.8,random( floor(x*freq)-floor(t) ));
-                    }
-                color: |
-                    vec2 st = fract(v_texcoord.xy*vec2(1.,.1));
-                    float t = 22.*u_time;
-                    float freq = 100.;
-                    if ( v_color.r < 0.5) {
-                        float cols = 2.;
-                        if (fract(st.x*cols* 0.5) < 0.5){
-                            t *= -1.0;
-                        }
-                    }
-                    float offset = 0.025;
-                    color.r = randomSerie(st.y, freq, t+offset);
-                    color.g = randomSerie(st.y, freq, t);
-                    color.b = randomSerie(st.y, freq, t-offset);
-                    color.rgb *= step(0.1,st.x)-step(0.9,st.x);
-    simple-grid:
+    water:
         base: polygons
         mix: [grid, generative-random]
-        animated: false
-        shaders:
-            blocks:
-                color: |
-                    color.rgb *= TileGrid();
-                    vec2 st = u_tile_origin.xy+floor(getTileCoords()*2.);
-                    float t = u_time*.8+random(st);
-                    float time_i = floor(t);
-                    float time_f = fract(t);
-                    color.rgb += step(0.9,random(st+time_i))*(1.0-time_f);
-    numeric-grid:
-        base: polygons
-        mix: [grid, generative-random]
+        lighting: false
         animated: true
         shaders:
             blocks:
@@ -234,11 +181,59 @@ styles:
                         // pct = 100.*random(digits_st_i+floor(crosses_st)+floor(u_time*20.));
                         color.rgb += vec3(char(digits_st_f,pct));
                     }
+    earth:
+        base: polygons
+        mix: [grid, generative-random]
+        animated: false
+        lighting: false
+        shaders:
+            blocks:
+                color: |
+                    color.rgb *= TileGrid();
+                    vec2 st = u_tile_origin.xy+floor(getTileCoords()*2.);
+                    float t = u_time*.8+random(st);
+                    float time_i = floor(t);
+                    float time_f = fract(t);
+                    color.rgb += step(0.9,random(st+time_i))*(1.0-time_f);
+    landuse:
+        base: lines
+        lighting: false
+    roads:
+        base: lines
+        mix: generative-random
+        animated: true
+        texcoords: true
+        shaders:
+            blocks:
+                global: |
+                    float randomSerie(float x, float freq, float t) {
+                        return step(.8,random( floor(x*freq)-floor(t) ));
+                    }
+                color: |
+                    vec2 st = fract(v_texcoord.xy*vec2(1.,.1));
+                    float t = 22.*u_time;
+                    float freq = 100.;
+                    if ( v_color.r < 0.5) {
+                        float cols = 2.;
+                        if (fract(st.x*cols* 0.5) < 0.5){
+                            t *= -1.0;
+                        }
+                    }
+                    float offset = 0.025;
+                    color.r = randomSerie(st.y, freq, t+offset);
+                    color.g = randomSerie(st.y, freq, t);
+                    color.b = randomSerie(st.y, freq, t-offset);
+                    
+                    color.rgb *= step(0.15,st.x)-step(0.85,st.x);
+                    color.rgb += 1.-clamp(step(0.04,st.x)-step(0.96,st.x),0.,1.);
+
+
     buildings:
         base: polygons
         mix: [generative-random, color-tools, geometry-normal]
         animated: true
         texcoords: true
+        lighting: false
         shaders:
             blocks:
                 global: |
@@ -316,6 +311,7 @@ styles:
         base: lines
         lighting: false
         texcoords: true
+        lighting: false
         shaders:
             blocks:
                 position: |

@@ -1,14 +1,10 @@
 # Author @patriciogv - 2015
 
 import:
+    - default.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/generative/noise.yaml
     - http://tangrams.github.io/blocks/geometry/matrices.yaml
-
-sources:
-    osm:
-        type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 
 textures:
     sem: 
@@ -17,12 +13,6 @@ textures:
         url: imgs/normal-0015.jpg
     wood:
         url: imgs/normal-0021.jpg
-
-cameras:
-    cam:
-        type: perspective
-        focal_length: [[16, 2], [20, 6]]
-        vanishing_point: [-250, -250]
 
 lights:
     dir:
@@ -38,79 +28,33 @@ lights:
         diffuse: .5
         specular: .2
 
-global:
-    order: function () { return feature.sort_key; }
-
 layers:
-    earth:
-        data: { source: osm }
-        draw:
-            earth:
-                order: global.order
-                color: [0.933,0.890,0.839]
-    landuse:
-        data:
-            source: osm
-            layer: landuse
-        draw:
-            landuse:
-                order: global.order
-                color: [0.902,0.843,0.757]
-
     water:
         data: { source: osm }
         draw:
             water:
-                order: global.order
                 color: '#88bbee'
-
+    earth:
+        data: { source: osm }
+        draw:
+            earth:
+                color: [0.933,0.890,0.839]
+    landuse:
+        data: { source: osm }
+        draw:
+            landuse:
+                color: [0.902,0.843,0.757]
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
-                order: global.order
                 color: [0.710,0.686,0.647]
                 width: 8
-            text:
-                font:
-                    family: Helvetica
-                    size: 14px
-                    fill: [1.000,0.968,0.968]
-                    stroke: { color: [0.204,0.204,0.204] , width: 3 }
-        highway:
-            filter:
-                kind: highway
-            draw:
-                roads:
-                    color: [0.784,0.765,0.729]
-                    width: 12
-        tunnel:
-            filter:
-                is_tunnel: yes
-            draw:
-                roads:
-                    color: tan
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                roads:
-                    color: lightgrey
-                    width: 5
-        path:
-            filter:
-                kind: path
-            draw:
-                roads:
-                    color: [0.8, 0.8, 0.8]
-                    width: 3
-
     buildings:
         data: { source: osm }
         draw:
             buildings:
-                order: global.order
                 color: Style.color.pseudoRandomColor
                 extrude: true
     places:
@@ -123,8 +67,6 @@ layers:
                     typeface: 18px Helvetica
                     fill: [0.204,0.204,0.204]
                     stroke: { color: white , width: 4 }
-
-
 styles:
     water:
         base: polygons
@@ -139,6 +81,19 @@ styles:
             blocks:
                 normal: |
                     normal += snoise(vec3(worldPosition().xy*0.08,u_time*.5))*0.02;
+    earth:
+        base: polygons
+        material:
+            normal:
+                texture: sand
+                mapping: planar
+                scale: 0.01
+            ambient: 0.8
+            diffuse: 1
+            specular: 0
+    landuse:
+        base: polygons
+        mix: earth
     roads:
         base: lines
         mix: [generative-noise]
@@ -159,19 +114,6 @@ styles:
                     normal = mix(normal, waterNormal, pct );
                 color: |
                     color.rgb = mix(vec3(.6), vec3(0.400,0.576,0.718), pow(pct,2.));
-    earth:
-        base: polygons
-        material:
-            normal:
-                texture: sand
-                mapping: planar
-                scale: 0.01
-            ambient: 0.8
-            diffuse: 1
-            specular: 0
-    landuse:
-        base: polygons
-        mix: earth
     buildings:
         base: polygons
         mix: [generative-noise, geometry-matrices]

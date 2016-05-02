@@ -53,7 +53,7 @@ layers:
                 color: global.pseudoRandomColor
                 extrude: true
             buildingsLines:
-                order: global.order
+                order: function () { return feature.sort_key + 1; }
                 width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
                 extrude: true
                 color: [0.217,0.217,0.217]

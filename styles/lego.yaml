@@ -1,22 +1,12 @@
 # Author @patriciogv - 2015
 
 import:
+    - default.yaml
     - http://tangrams.github.io/blocks/generative/random.yaml
     - http://tangrams.github.io/blocks/tiling/tile.yaml
     - http://tangrams.github.io/blocks/geometry/normal.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/shapes/circle.yaml
-
-sources:
-    osm:
-        type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
-cameras:
-    cam:
-        type: perspective
-        focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
-        vanishing_point: [-250, -250] # relative to center of screen, in pixels
 
 lights:
     dir:
@@ -32,114 +22,32 @@ lights:
         diffuse: .3
         specular: .2
 
-global:
-    order: function () { return feature.sort_key; }
-    pseudoRandomColor: |
-        function() {
-            return [
-                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
-                1
-            ];
-        }
-
 layers:
     earth:
         data: { source: osm }
         draw:
-            floor:
-                order: global.order
+            earth:
                 color: [0.094,0.573,0.255]
     landuse:
         data: { source: osm }
         draw:
-            floor:
-                order: global.order
+            landuse:
                 color: white
-
     water:
-        data:
-            source: osm
-            layer: water
+        data: { source: osm }
         draw:
-            floor:
-                order: global.order
+            water:
                 color: [0.016,0.341,0.651]
-
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
-                order: global.order
                 color: gray
-                width: 8
-            outline:
-                order: global.order
-                style: roads
-        highway:
-            filter:
-                kind: highway
-            draw:
-                roads:
-                    color: black
-                    width: 12
-                outline:
-                    color: grey
-                    width: 15
-        tunnel:
-            filter:
-                is_tunnel: yes
-            draw:
-                roads:
-                    color: black
-            rail:
-                filter:
-                    kind: rail
-                draw:
-                    roads:
-                        width: 0
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                roads:
-                    order: global.order
-                    color: lightgrey
-                    width: 5
-        path:
-            filter:
-                kind: path
-            draw:
-                roads:
-                    color: [0.8, 0.8, 0.8]
-                    width: 3
-        rail:
-            filter:
-                kind: rail
-                is_tunnel: no
-            draw:
-                roads:
-                    color: black
-                    width: 3
-
-        labels:
-            filter: { name: true, $zoom: { min: 14 } }
-            draw:
-                text:
-                    font:
-                        family: helvetica
-                        size: 14px
-                        weight: bold
-                        fill: white
-                        stroke: { color: black , width: 3 }
-
     buildings:
         data: { source: osm }
         draw:
             buildings:
-                order: global.order
                 color: global.pseudoRandomColor
                 extrude: true
     places:
@@ -201,9 +109,21 @@ styles:
                     normal += vec3(cos(a),sin(a),0.)*circle(st,0.4);
                     normal *= 1.0-circle(st,0.26);
                     normal.b = 1.0;
+    # ====================================================================
+    water:
+        base: polygons
+        mix: floor
+    earth:
+        base: polygons
+        mix: floor
+    landuse:
+        base: polygons
+        mix: floor
     roads:
         base: lines
         mix: lego
+        lighting: true
+        texcoords: true
         shaders:
             blocks:
                 normal: |

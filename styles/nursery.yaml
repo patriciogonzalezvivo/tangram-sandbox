@@ -1,6 +1,7 @@
 # Author @patriciogv - 2015
 
 import:
+    - default.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/generative/random.yaml
     - http://tangrams.github.io/blocks/geometry/matrices.yaml
@@ -8,20 +9,9 @@ import:
     - http://tangrams.github.io/blocks/tiling/brick.yaml
     - http://tangrams.github.io/blocks/shapes/circle.yaml
 
-sources:
-    osm:
-        type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
 textures:
     matress:
         url: imgs/normal-0001.jpg
-
-cameras:
-    cam:
-        type: perspective
-        focal_length: [[16, 2], [20, 6]]
-        vanishing_point: [-250, -250]
 
 lights:
     dir:
@@ -37,84 +27,37 @@ lights:
         diffuse: .5
         specular: .2
 
-global:
-    order: function () { return feature.sort_key; }
-    pseudoRandomColor: |
-        function() {
-            return [
-                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
-                1
-            ];
-        }
-
 layers:
+    water:
+        data: { source: osm }
+        draw:
+            water:
+                order: global.order
+                color: '#88bbee'
     earth:
         data: { source: osm }
         draw:
-            floor:
+            earth:
                 order: global.order
                 color: '#ddeeee'
     landuse:
         data: { source: osm }
         draw:
-            floor:
+            landuse:
                 order: global.order
                 color: [0.502,0.369,0.494]
-
-    water:
-        data: { source: osm }
-        draw:
-            floor:
-                order: global.order
-                color: '#88bbee'
-
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }
         draw:
-            lines:
+            roads:
                 order: global.order
                 color: gray
                 width: 8
-        highway:
-            filter:
-                kind: highway
-            draw:
-                lines:
-                    color: [0.855,0.463,0.255]
-                    width: 12
-                outline:
-                    order: global.order
-                    style: lines
-                    color: grey
-                    width: 15
-        tunnel:
-            filter: { is_tunnel: yes }
-            draw:
-                lines:
-                    color: tan
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                lines:
-                    order: global.order
-                    color: lightgrey
-                    width: 5
-        path:
-            filter:
-                kind: path
-            draw:
-                lines:
-                    order: global.order
-                    color: [0.8, 0.8, 0.8]
-                    width: 3
     buildings:
         data: { source: osm }
         draw:
-            patterns:
+            buildings:
                 order: global.order
                 color: global.pseudoRandomColor
                 extrude: true
@@ -128,10 +71,8 @@ layers:
                     weight: bold
                     fill: [0.232,0.170,0.229]
                     stroke: { color: white , width: 3 }
-
 styles:
     floor:
-        base: polygons
         material:
             normal:
                 texture: matress
@@ -140,7 +81,20 @@ styles:
             ambient: 0.8
             diffuse: 1
             specular: 0
-    patterns:
+    water:
+        base: polygons
+        mix: floor
+    earth:
+        base: polygons
+        mix: floor
+    landuse:
+        base: polygons
+        mix: floor
+    roads:
+        base: lines
+        mix: floor
+        lighting: true
+    buildings:
         base: polygons
         mix: [color-tools, generative-random, geometry-matrices, tiling-tile, tiling-brick, shapes-circle]
         texcoords: true

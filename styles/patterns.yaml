@@ -1,6 +1,7 @@
 ﻿# Author @patriciogv - 2015
 
 import:
+    - default.yaml
     - http://tangrams.github.io/blocks/generative/random.yaml
     - http://tangrams.github.io/blocks/space/tile.yaml
     - http://tangrams.github.io/blocks/geometry/normal.yaml
@@ -10,17 +11,6 @@ import:
     - http://tangrams.github.io/blocks/tiling/brick.yaml
     - http://tangrams.github.io/blocks/shapes/circle.yaml
     - http://tangrams.github.io/blocks/functions/aastep.yaml
-
-sources:
-    osm:
-        type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
-cameras:
-    cam:
-        type: perspective
-        focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
-        vanishing_point: [-250, -250] # relative to center of screen, in pixels
 
 lights:
     dir:
@@ -35,24 +25,11 @@ lights:
         ambient: .3
         diffuse: .3
 
-global:
-    order: function () { return feature.sort_key; }
-    pseudoRandomColor: |
-        function() {
-            return [
-                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
-                1
-            ];
-        }
-
 layers:
     earth:
         data: { source: osm }
         draw:
-            plain:
-                order: global.order
+            earth:
                 color: '#ddeeee'
             outline:
                 order: global.order
@@ -62,9 +39,9 @@ layers:
     landuse:
         data: { source: osm }
         draw:
-            plain:
-                order: global.order
+            landuse:
                 color: '#aaffaa'
+                visible: false
             outline:
                 order: global.order
                 style: lines
@@ -74,70 +51,24 @@ layers:
     water:
         data: { source: osm }
         draw:
-            polygons:
-                order: global.order
+            water:
                 color: '#343434'
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }
         draw:
-            lines:
-                order: global.order
+            roads:
                 color: '#343434'
-                width: 8
-            outline:
-                order: global.order
-                style: lines
-                color: '#FDF5E6'
-                width: 10
-        highway:
-            filter: { kind: highway }
-            draw:
-                lines:
-                    color: '#343434'
-                    width: 12
-                outline:
-                    color: '#FDF5E6'
-                    width: 14
-        tunnel:
-            filter: { is_tunnel: yes }
-            draw:
-                lines:
-                    color: '#343434'
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                lines:
-                    color: '#343434'
-                    width: 5
-                outline:
-                    color: '#FDF5E6'
-                    width: 6
-        path:
-            filter:
-                kind: path
-            draw:
-                lines:
-                    color: '#343434'
-                    width: 3
-                outline:
-                    color: '#FDF5E6'
-                    width: 4
-        labels:
-            filter: { name: true, $zoom: { min: 14 } }
-            draw:
-                text:
-                    font:
-                        family: Helvetica
-                        size: 14px
-                        fill: [1.000,0.968,0.968]
-                        stroke: { color: [0.204,0.204,0.204] , width: 3  }
+            text:
+                font:
+                    family: Helvetica
+                    size: 14px
+                    fill: [1.000,0.968,0.968]
+                    stroke: { color: [0.204,0.204,0.204] , width: 3  }
     buildings:
         data: { source: osm }
         draw:
             buildings:
-                order: global.order
                 color: global.pseudoRandomColor
                 extrude: true
             outline:
@@ -161,7 +92,6 @@ layers:
                     weight: bold
                     fill: [0.204,0.204,0.204]
                     stroke: { color: white , width: 4 }
-
 styles:
     patterns:
         mix: [space-tile, geometry-matrices, functions-aastep]
@@ -187,6 +117,22 @@ styles:
                     vec2 st = getTileCoords()*1.768;
                     float pattern = stripes(st, 0.785375, .5);
                     color.rgb = mix(vec3(0.704), vec3(1.000,0.968,0.908), pattern);
+    water:
+        base: polygons
+    earth:
+        base: polygons
+        mix: plain
+    landuse:
+        base: polygons
+        mix: plain
+    roads:
+        base: lines
+        texcoords: true
+        shaders:
+            blocks:
+                color: |
+                    float x = v_texcoord.x;
+                    color.rgb += 1.-clamp(step(.15,x) - step(.85,x),0.,1.);
     buildings:
         base: polygons
         mix: [patterns, color-tools, generative-random, shapes-circle, tiling-brick, tiling-tile, geometry-normal]

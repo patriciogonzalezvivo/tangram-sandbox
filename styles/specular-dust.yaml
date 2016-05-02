@@ -1,22 +1,12 @@
 # Author @patriciogv - 2015
 
 import:
+    - default.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/generative/fbm.yaml
 
-sources:
-    osm:
-        type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
-cameras:
-    cam:
-        type: perspective
-        focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
-        vanishing_point: [-250, -250] # relative to center of screen, in pixels
-
 lights:
-    light1:
+    dir:
         type: directional
         direction: [0, 1, -.5]
         diffuse: .3
@@ -43,88 +33,33 @@ lights:
         diffuse: .15
         specular: [.5,0.,.5]
 
-global:
-    order: function () { return feature.sort_key; }
-    pseudoRandomColor: |
-        function() {
-            return [
-                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
-                1
-            ];
-        }
-
 layers:
-    earth:
-        data: { source: osm }
-        draw:
-            polygons:
-                order: global.order
-                color: '#ddeeee'
-    landuse:
-        data: { source: osm }
-        draw:
-            floor:
-                order: global.order
-                color: [0.502,0.369,0.494]
     water:
         data: { source: osm }
         draw:
             water:
-                order: global.order
                 color: '#88bbee'
+    earth:
+        data: { source: osm }
+        draw:
+            earth:
+                color: '#ddeeee'
+    landuse:
+        data: { source: osm }
+        draw:
+            landuse:
+                color: [0.502,0.369,0.494]
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
-                order: global.order
                 color: gray
                 width: 8
-            text:
-                order: global.order
-                font:
-                    family: helvetica
-                    size: 12px
-                    fill: white
-                    stroke: [0,0,0]
-        highway:
-            filter:
-                kind: highway
-                draw:
-                    roads:
-                        color: [0.855,0.463,0.255]
-                        width: 12
-                    outline:
-                        style: roads
-                        color: grey
-                        width: 18
-        tunnel:
-            filter:
-                is_tunnel: yes
-            draw:
-                roads:
-                    color: tan
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                roads:
-                    color: lightgrey
-                    width: 5
-        path:
-            filter:
-                kind: path
-            draw:
-                roads:
-                    color: [0.8, 0.8, 0.8]
-                    width: 3
     buildings:
         data: { source: osm }
         draw:
             buildings:
-                order: global.order
                 color: global.pseudoRandomColor
                 extrude: true
     places:
@@ -132,13 +67,11 @@ layers:
         filter: { name: true }
         draw:
             text:
-                order: global.order
                 font:
                     family: helvetica
                     size: 12px
                     fill: [0,0,0]
                     stroke: { color: white, width: 3 }
-
 styles:
     water:
         base: polygons
@@ -158,7 +91,6 @@ styles:
                     float rnd = random(ipos+t);
                     material.specular *= rnd*rnd;
     floor:
-        base: polygons
         animated: true
         mix: [generative-fbm, color-tools]
         material:
@@ -172,6 +104,12 @@ styles:
                     float b = getBrightness(color.rgb);
                     vec2 pos = worldPosition().xy*0.1;
                     material.specular *= fbm(vec3(pos,u_time*0.3));
+    earth:
+        base: polygons
+        mix: floor
+    landuse:
+        base: polygons
+        mix: floor
     roads:
         base: lines
         mix: floor
