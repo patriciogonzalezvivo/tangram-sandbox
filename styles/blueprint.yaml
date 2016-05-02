@@ -17,31 +17,29 @@ layers:
     water:
         draw:
             water:
-                color: [.1,.1,.1]
+                color: '#176BCB'
     earth:
         draw:
             lines:
-                order: global.order
+                order: function () { return feature.sort_key + 1; }
                 width: 1.5px
                 color: '#C1D3DC' 
             earth:
-                color: [0.080,0.080,0.080]
+                color: '#007FD4'
     landuse:
         draw:
-            lines:
+            landuse:
                 order: global.order
                 width: 0.5px
-                color: white 
-            landuse:
-                color: [0.116,0.116,0.116]
+                color: white
     roads:
         draw:
             roads:
-                color: '#C1D3DC'
+                color: '#176BCB'
     buildings:
         draw:
             buildings:
-                color: [.05,.05,0.05]
+                color: '#007FD4'
                 extrude: true
             baseline:
                 style: lines
@@ -68,9 +66,11 @@ styles:
                         vec2 pos = gl_FragCoord.xy;
                         vec2 st = pos/u_resolution.xy-vec2(.5);
                         // Interpolate circularly (+ dust FBn noise) this two colors
-                        vec3 background = mix(  vec3(0.,0.5,0.8), // Cyan
-                                                vec3(0.,0.0,0.3), // Dark blue
-                                                dot(st,st) + (fbm(pos*0.6)*0.1) );
+                        //vec3 background = mix(  vec3(0.,0.5,0.8), // Cyan
+                        //                        vec3(0.,0.0,0.3), // Dark blue
+                        //                        dot(st,st) + (fbm(pos*0.6)*0.1) );
+
+                        vec3 background = -vec3(0.5) * (dot(st,st) + (fbm(pos*0.6)*0.1));
                         if (grid(pos,0.01)) { background += vec3(0.05); }
                         if (grid(pos,0.1)) { background += vec3(0.02); }
                         return background;
@@ -85,7 +85,7 @@ styles:
         base: polygons
         mix: blueprint
     landuse:
-        base: polygons
+        base: lines
         mix: blueprint
     buildings:
         base: polygons
@@ -97,7 +97,9 @@ styles:
                     if (isWall()) {
                         // Put lines at the edge of walls
                         float lineWidth = 0.003*(u_tile_origin.z/20.0);
-                        color.rgb = 1.0-vec3(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
+                        color.rgb = mix(color.rgb,
+                                        vec3(1.),
+                                        1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x)));
                     }
     buildingsLines:
         base: lines
@@ -105,7 +107,7 @@ styles:
         shaders:
             blocks:
                 color: |
-                    color.rgb = mix(vec3(0.),
+                    color.rgb = mix(vec3(0.090,0.420,0.796),
                                     vec3(1.),
                                     min(max(0.001,(u_map_position.z-13.))/3.,1.0) );
     roads:
@@ -117,4 +119,6 @@ styles:
                 color: |
                     float lineWidth = 0.1;
                     float pct = 1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
-                    color.rgb = vec3(0.14+pct*0.1);
+                    color.rgb = mix(color.rgb,
+                                    vec3(1.),
+                                    0.14+pct*0.1);
