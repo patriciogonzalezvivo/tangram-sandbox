@@ -20,14 +20,12 @@ layers:
     earth:
         data: { source: osm }
         draw:
+            lines:
+                order: global.order-top
+                color: white
+                width: 2px
             earth:
                 color: [0.362,0.362,0.362]
-            outline:
-                order: function () { return feature.sort_key + 10; }
-                style: lines
-                color: w
-                width: 2px
-                tile_edges: false
     landuse:
         data: { source: osm }
         draw:

@@ -12,27 +12,26 @@ scene:
         color: black
 
 layers:
+    water:
+        data: { source: osm }
+        draw:
+            water:
+                color: [0.201,0.481,0.264]
     earth:
         data: { source: osm }
         draw:
-            earth:
-                color: [0.201,0.481,0.264]
-            outline:
-                order: function () { return feature.sort_key + 100; }
-                style: lines
+            lines:
+                order: global.order-top
                 color: white
                 width: 2px
+            earth:
+                color: [0.201,0.481,0.264]
     landuse:
         data: { source: osm }
         draw:
             landuse:
                 color: [0.643,0.851,0.690]
                 visible: false
-    water:
-        data: { source: osm }
-        draw:
-            water:
-                color: [0.201,0.481,0.264]
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }

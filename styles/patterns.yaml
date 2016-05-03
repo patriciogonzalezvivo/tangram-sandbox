@@ -26,33 +26,26 @@ lights:
         diffuse: .3
 
 layers:
-    earth:
-        data: { source: osm }
-        draw:
-            earth:
-                color: '#ddeeee'
-            outline:
-                order: global.order
-                style: lines
-                color: [0.204,0.204,0.204]
-                width: 2
-    landuse:
-        data: { source: osm }
-        draw:
-            landuse:
-                color: '#aaffaa'
-                visible: false
-            outline:
-                order: global.order
-                style: lines
-                color: [0.204,0.204,0.204]
-                width: 2
-
     water:
         data: { source: osm }
         draw:
             water:
                 color: '#343434'
+    earth:
+        data: { source: osm }
+        draw:
+            earth:
+                color: '#ddeeee'
+    landuse:
+        data: { source: osm }
+        draw:
+            lines:
+                order: global.order
+                color: [0.204,0.204,0.204]
+                width: 2px
+            landuse:
+                color: '#aaffaa'
+                visible: false
     roads:
         data: { source: osm }
         filter: { not: { kind: [rail, ferry] } }
@@ -71,13 +64,12 @@ layers:
             buildings:
                 color: global.pseudoRandomColor
                 extrude: true
-            outline:
-                style: lines
+            lines:
                 order: global.order
                 color: white
                 width: [[12, .1px], [14, 1px], [15, 2px], [17, 5px], [18, 10px]]
-            buildings-lines:
-                order: function () { return feature.sort_key + 1; }
+            buildingsLines:
+                order: global.order-top
                 color: white
                 width: [[12, .1px], [14, 1px], [15, 2px], [17, 4px], [18, 5px]]
                 extrude: true
@@ -171,7 +163,7 @@ styles:
                         pattern = stripes(st,angle,gradient);
                     }
                     color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
-    buildings-lines:
+    buildingsLines:
         base: lines
         mix: patterns
         texcoords: true

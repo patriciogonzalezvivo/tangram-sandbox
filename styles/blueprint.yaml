@@ -21,7 +21,7 @@ layers:
     earth:
         draw:
             lines:
-                order: function () { return feature.sort_key + 1; }
+                order: global.order-top
                 width: 1.5px
                 color: '#C1D3DC' 
             earth:
@@ -47,7 +47,7 @@ layers:
                 width: [[12, .1px], [18, 0.5m]]
                 color: '#C1D3DC'
             buildingsLines:
-                order: function () { return feature.sort_key + 1; }
+                order: global.order-top
                 color: white
                 width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
                 extrude: true

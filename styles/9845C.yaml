@@ -1,6 +1,7 @@
 ﻿# Author @patriciogv - 2015
 
 import:
+    - http://tangrams.github.io/blocks/filter/global.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/generative/random.yaml
     - http://tangrams.github.io/blocks/filter/tv.yaml
@@ -19,19 +20,7 @@ scene:
 cameras:
     cam:
         type: perspective
-
-global:
-    order: function () { return feature.sort_key; }
-    pseudoRandomColor: |
-        function() {
-            return [
-                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
-                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
-                1
-            ];
-        }
-
+        
 layers:
     earth:
         data: { source: osm }
