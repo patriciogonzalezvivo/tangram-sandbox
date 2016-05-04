@@ -52,17 +52,13 @@ layers:
     landuse:
         draw:
             landuse:
-                # color: [0.676, 0.802, 0.810]
                 color: [0.741,0.753,0.765]
-                # color: [0.941,0.925,0.922]
     boundaries:
         data: { source: osm }
         filter: { $zoom: {max: 15}}
         draw:
             patterns-lines-dots:
                 order: global.order
-                # color: [0.800, 0.759, 0.743]
-                # color: [0.388,0.408,0.431]
                 color: [0.169,0.169,0.200]
                 width: 1px
     roads:
@@ -88,7 +84,6 @@ layers:
     buildings:
         draw:
             buildings:
-                # color: [0.741,0.753,0.765]
                 color: [0.941,0.925,0.922]
 styles:
     water:
@@ -116,6 +111,11 @@ styles:
                     elevation = .5+elevation;
                     color = texture2D(u_palette,vec2(pow(elevation,2.),.5));
                     normal = (sampleRaster(0).rgb-.5)*2.;
+    patterns-lines-dots:
+        shaders:
+            defines:
+                dash_size: .5
+                dash_scale: .2
     landuse:
         base: polygons
         mix: [geometry-matrices, functions-map, color-tools, functions-aastep, space-tile]
@@ -135,7 +135,7 @@ styles:
                     vec3 n = (sampleRaster(0).rgb-.5)*2.;
                     float pct = map(u_map_position.z,1.,15.,0.0,1.0, true);
                     pct = mix((1.-pct*pct),dot(n, vec3(0.5, 0.8, .6)),pct);
-                    color.a = stripes(st,pct)*.25;
+                    color.a = stripes(st,pct)*.125;
     roads:
         base: lines
         mix: [blueprint, patterns-lines-outline]
