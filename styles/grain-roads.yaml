@@ -2,6 +2,7 @@
 
 import:
     - grain.yaml
+    - http://tangrams.github.io/blocks/patterns/lines/stripes.yaml
 
 layers:
     roads:
@@ -31,10 +32,4 @@ layers:
 styles:
     roads:
         base: lines
-        mix: filter-grain
-        texcoords: true
-        shaders:
-            blocks:
-                color: |
-                    vec2 st = fract(v_texcoord);
-                    color.rgb += step(.1,sin((st.x+st.y)*6.283))*.1;
+        mix: [patterns-lines-stripes, filter-grain]

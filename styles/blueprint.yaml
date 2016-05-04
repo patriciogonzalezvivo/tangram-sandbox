@@ -8,6 +8,7 @@ import:
     - http://tangrams.github.io/blocks/functions/map.yaml
     - http://tangrams.github.io/blocks/geometry/dynamic-width.yaml
     - http://tangrams.github.io/blocks/geometry/normal.yaml
+    - http://tangrams.github.io/blocks/patterns/lines/outline.yaml
 
 scene:
     background:
@@ -112,13 +113,8 @@ styles:
                                     min(max(0.001,(u_map_position.z-13.))/3.,1.0) );
     roads:
         base: lines
-        mix: blueprint
-        texcoords: true
+        mix: [blueprint, patterns-lines-outline]
         shaders:
-            blocks:
-                color: |
-                    float lineWidth = 0.1;
-                    float pct = 1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
-                    color.rgb = mix(color.rgb,
-                                    vec3(1.),
-                                    0.14+pct*0.1);
+            defines:
+                outline_width: 0.15
+                outline_color: vec3(0.286,0.605,0.831)
