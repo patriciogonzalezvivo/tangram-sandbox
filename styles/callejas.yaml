@@ -60,7 +60,7 @@ layers:
         draw:
             patterns-lines-dots:
                 order: global.order
-                color: [0.169,0.169,0.200]
+                color: black
                 width: 1px
     roads:
         filter: { $zoom: {min: 7}, not: { kind: [rail, ferry] } }
@@ -97,14 +97,14 @@ layers:
                 - kind: [city,town]
         draw:
             icons:
-                color: [0.941,0.925,0.922]
+                color: white
                 size: 15px
             text:
                 offset: [0,-16px]
                 font:
                     transform: uppercase
                     typeface: Helvetica
-                    fill: [1,1,1,.8]
+                    fill: white
                     # stroke: { color: [0.941,0.925,0.922] , width: 4 }
 styles:
     water:
