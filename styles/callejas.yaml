@@ -10,6 +10,7 @@ import:
     - http://tangrams.github.io/blocks/shapes/cross.yaml
     - http://tangrams.github.io/blocks/patterns/lines/dash.yaml
     - http://tangrams.github.io/blocks/patterns/lines/outline.yaml
+    - http://tangrams.github.io/blocks/shapes/cross.yaml
 
 sources:
     osm:
@@ -32,9 +33,9 @@ textures:
 lights:
     dir:
         type: directional
-        direction: [.5, .5, -.5]
+        direction: [.5, .5, -.25]
         diffuse: 1.
-        ambient: .2
+        ambient: .5
 
 scene:
     background: 
@@ -48,7 +49,7 @@ layers:
     earth:
         draw:
             earth:
-                color: [0.392,0.427,0.467]
+                color: [0.302,0.310,0.349]
     landuse:
         draw:
             landuse:
@@ -85,6 +86,26 @@ layers:
         draw:
             buildings:
                 color: [0.941,0.925,0.922]
+    places:
+        data: { source: osm }
+        filter: 
+            all:
+                - { population: { min: 500000 } }
+            any:
+                - { capital: yes }
+                - { state_capital: yes }
+                - kind: [city,town]
+        draw:
+            icons:
+                color: [0.941,0.925,0.922]
+                size: 15px
+            text:
+                offset: [0,-16px]
+                font:
+                    transform: uppercase
+                    typeface: Helvetica
+                    fill: [1,1,1,.8]
+                    # stroke: { color: [0.941,0.925,0.922] , width: 4 }
 styles:
     water:
         base: polygons
@@ -108,8 +129,8 @@ styles:
                     }
                 color: |
                     float elevation = (unpack(sampleRaster(1)) - .5) * 20.;
-                    elevation = .5+elevation;
-                    color = texture2D(u_palette,vec2(pow(elevation,2.),.5));
+                    elevation = elevation;
+                    color = max(color,texture2D(u_palette,vec2(pow(elevation,2.),.5)));
                     normal = (sampleRaster(0).rgb-.5)*2.;
     patterns-lines-dots:
         shaders:
@@ -143,3 +164,12 @@ styles:
             defines:
                 outline_width: 0.1
                 outline_color: vec3(0.302,0.310,0.349)
+    icons:
+        base: points
+        mix: [shapes-cross]
+        v_texcoord: true
+        shaders:
+            blocks:
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    color.a = clamp(cross(st,vec2(2.,.5)),0.,1.)*.75;
