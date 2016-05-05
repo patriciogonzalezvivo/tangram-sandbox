@@ -2,7 +2,7 @@
 
 import:
     - grain.yaml
-    - http://tangrams.github.io/blocks/patterns/lines/stripes.yaml
+    - http://tangrams.github.io/blocks/lines/stripes.yaml
 
 layers:
     roads:
@@ -32,4 +32,4 @@ layers:
 styles:
     roads:
         base: lines
-        mix: [patterns-lines-stripes, filter-grain]
+        mix: [lines-stripes, filter-grain]

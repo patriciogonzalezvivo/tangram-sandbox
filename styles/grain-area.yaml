@@ -4,7 +4,6 @@ import:
     - grain.yaml
     - http://tangrams.github.io/blocks/filter/grain.yaml
     - http://tangrams.github.io/blocks/space/constant.yaml
-    - http://tangrams.github.io/blocks/grids/grid.yaml
     - http://tangrams.github.io/blocks/patterns/stripes.yaml
 
 layers:
@@ -16,7 +15,7 @@ layers:
 styles:
     landuse:
         base: polygons
-        mix: [patterns-stripes, space-constant, grid]
+        mix: [patterns-stripes, space-constant]
         blend: inlay
         shaders:
             defines:

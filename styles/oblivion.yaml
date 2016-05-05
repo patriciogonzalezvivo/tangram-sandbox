@@ -4,7 +4,6 @@ import:
     - http://tangrams.github.io/blocks/generative/noise.yaml
     - http://tangrams.github.io/blocks/space/screen.yaml
     - http://tangrams.github.io/blocks/space/constant.yaml
-    - http://tangrams.github.io/blocks/grids/grid.yaml
     - http://tangrams.github.io/blocks/patterns/stripes.yaml
     - http://tangrams.github.io/blocks/geometry/tilt.yaml
     - http://tangrams.github.io/blocks/shapes/cross.yaml

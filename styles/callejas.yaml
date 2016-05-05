@@ -6,10 +6,10 @@ import:
     - http://tangrams.github.io/blocks/functions/map.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/geometry/matrices.yaml
-    - http://tangrams.github.io/blocks/grids/tile.yaml
+    - http://tangrams.github.io/blocks/patterns/grid.yaml
     - http://tangrams.github.io/blocks/shapes/cross.yaml
-    - http://tangrams.github.io/blocks/patterns/lines/dash.yaml
-    - http://tangrams.github.io/blocks/patterns/lines/outline.yaml
+    - http://tangrams.github.io/blocks/lines/dash.yaml
+    - http://tangrams.github.io/blocks/lines/outline.yaml
     - http://tangrams.github.io/blocks/shapes/cross.yaml
 
 sources:
@@ -58,7 +58,7 @@ layers:
         data: { source: osm }
         filter: { $zoom: {max: 15}}
         draw:
-            patterns-lines-dots:
+            lines-dots:
                 order: global.order
                 color: black
                 width: 1px
@@ -109,7 +109,7 @@ layers:
 styles:
     water:
         base: polygons
-        mix: [grids-tile]
+        mix: [patterns-grid]
         lighting: false
         shaders:
             blocks:
@@ -132,7 +132,7 @@ styles:
                     elevation = elevation;
                     color = max(color,texture2D(u_palette,vec2(pow(elevation,2.),.5)));
                     normal = (sampleRaster(0).rgb-.5)*2.;
-    patterns-lines-dots:
+    lines-dots:
         shaders:
             defines:
                 dash_size: .5
@@ -159,7 +159,7 @@ styles:
                     color.a = stripes(st,pct)*.125;
     roads:
         base: lines
-        mix: [blueprint, patterns-lines-outline]
+        mix: [blueprint, lines-outline]
         shaders:
             defines:
                 outline_width: 0.1

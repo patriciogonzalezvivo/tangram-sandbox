@@ -4,11 +4,11 @@ import:
     - default.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/generative/fbm.yaml
-    - http://tangrams.github.io/blocks/grids/grid.yaml
+    - http://tangrams.github.io/blocks/patterns/grid.yaml
     - http://tangrams.github.io/blocks/functions/map.yaml
     - http://tangrams.github.io/blocks/geometry/dynamic-width.yaml
     - http://tangrams.github.io/blocks/geometry/normal.yaml
-    - http://tangrams.github.io/blocks/patterns/lines/outline.yaml
+    - http://tangrams.github.io/blocks/lines/outline.yaml
 
 scene:
     background:
@@ -56,7 +56,7 @@ layers:
 styles:
     blueprint:
         base: polygons
-        mix: [color-tools, generative-fbm, grids-grid]
+        mix: [color-tools, generative-fbm, patterns-grid]
         shaders:
             blocks:
                 global: |
@@ -113,7 +113,7 @@ styles:
                                     min(max(0.001,(u_map_position.z-13.))/3.,1.0) );
     roads:
         base: lines
-        mix: [blueprint, patterns-lines-outline]
+        mix: [blueprint, lines-outline]
         shaders:
             defines:
                 outline_width: 0.15

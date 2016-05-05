@@ -3,8 +3,8 @@ author: Patricio Gonzalez Vivo (@patriciogv) - 2016
 import:
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/geometry/projections.yaml
-    - http://tangrams.github.io/blocks/grids/tile.yaml
-    - http://tangrams.github.io/blocks/patterns/lines/dash.yaml
+    - http://tangrams.github.io/blocks/patterns/grid.yaml
+    - http://tangrams.github.io/blocks/lines/dash.yaml
     - http://tangrams.github.io/blocks/shapes/cross.yaml
     
 sources:
@@ -103,7 +103,7 @@ layers:
         data: { source: osm }
         filter: { $zoom: {max: 15}}
         draw:
-            patterns-lines-dots:
+            lines-dots:
                 order: global.order
                 color: white
                 width: 1px
@@ -166,7 +166,7 @@ styles:
                     }
     water:
         base: polygons
-        mix: [grids-tile, picture]
+        mix: [patterns-grid, picture]
         shaders:
             blocks:
                 color: |
@@ -178,7 +178,7 @@ styles:
     roads:
         base: lines
         lighting: false
-    patterns-lines-dots:
+    lines-dots:
         shaders:
             defines:
                 dash_size: .5
