@@ -5,7 +5,7 @@ import:
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/generative/noise.yaml
     - http://tangrams.github.io/blocks/space/tile.yaml
-    - http://tangrams.github.io/blocks/tiling/texture/zoom-fade.yaml
+    - http://tangrams.github.io/blocks/texture/zoom-fade.yaml
     - http://tangrams.github.io/blocks/filter/hatch.yaml
 
 textures:
@@ -73,7 +73,7 @@ styles:
     earth:
         base: polygons
         lighting: false
-        mix: tiling-texture-zoom-fade 
+        mix: texture-zoom-fade 
         shaders:
             uniforms:
                 u_hatch: hatch_0
