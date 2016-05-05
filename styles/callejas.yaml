@@ -135,8 +135,8 @@ styles:
     lines-dots:
         shaders:
             defines:
-                dash_size: .5
-                dash_scale: .2
+                DASH_SIZE: .5
+                DASH_SCALE: .2
     landuse:
         base: polygons
         mix: [geometry-matrices, functions-map, color-tools, functions-aastep, space-tile]

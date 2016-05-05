@@ -181,8 +181,8 @@ styles:
     lines-dots:
         shaders:
             defines:
-                dash_size: .5
-                dash_scale: .3
+                DASH_SIZE: .5
+                DASH_SCALE: .3
     icons:
         base: points
         mix: [shapes-cross]

@@ -116,5 +116,5 @@ styles:
         mix: [blueprint, lines-outline]
         shaders:
             defines:
-                outline_width: 0.15
-                outline_color: vec3(0.286,0.605,0.831)
+                OUTLINE_WIDTH: 0.15
+                OUTLINE_COLOR: vec3(0.286,0.605,0.831)
