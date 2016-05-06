@@ -58,7 +58,7 @@ layers:
         data: { source: osm }
         filter: { $zoom: {max: 15}}
         draw:
-            lines-dots:
+            lines-dash:
                 order: global.order
                 color: black
                 width: 1px
@@ -132,7 +132,7 @@ styles:
                     elevation = elevation;
                     color = max(color,texture2D(u_palette,vec2(pow(elevation,2.),.5)));
                     normal = (sampleRaster(0).rgb-.5)*2.;
-    lines-dots:
+    lines-dash:
         shaders:
             defines:
                 DASH_SIZE: .5
