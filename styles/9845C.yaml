@@ -1,7 +1,7 @@
 ﻿# Author @patriciogv - 2015
 
 import:
-    - http://tangrams.github.io/blocks/filter/global.yaml
+    - http://tangrams.github.io/blocks/global.yaml
     - http://tangrams.github.io/blocks/color/tools.yaml
     - http://tangrams.github.io/blocks/generative/random.yaml
     - http://tangrams.github.io/blocks/filter/tv.yaml
