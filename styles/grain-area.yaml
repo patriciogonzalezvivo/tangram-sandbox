@@ -2,9 +2,9 @@
 
 import:
     - grain.yaml
-    - http://tangrams.github.io/blocks/filter/grain.yaml
-    - http://tangrams.github.io/blocks/space/constant.yaml
-    - http://tangrams.github.io/blocks/patterns/stripes.yaml
+    - https://tangrams.github.io/blocks/filter/grain.yaml
+    - https://tangrams.github.io/blocks/space/constant.yaml
+    - https://tangrams.github.io/blocks/patterns/stripes.yaml
 
 layers:
     landuse:

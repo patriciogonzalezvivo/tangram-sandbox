@@ -1,11 +1,11 @@
 author: Patricio Gonzalez Vivo (@patriciogv) - 2016 
 
 import:
-    - http://tangrams.github.io/blocks/color/tools.yaml
-    - http://tangrams.github.io/blocks/geometry/projections.yaml
-    - http://tangrams.github.io/blocks/patterns/grid.yaml
-    - http://tangrams.github.io/blocks/lines/dash.yaml
-    - http://tangrams.github.io/blocks/shapes/cross.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/geometry/projections.yaml
+    - https://tangrams.github.io/blocks/patterns/grid.yaml
+    - https://tangrams.github.io/blocks/lines/dash.yaml
+    - https://tangrams.github.io/blocks/shapes/cross.yaml
     
 sources:
     osm:

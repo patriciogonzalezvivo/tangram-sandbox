@@ -2,15 +2,15 @@
 
 import:
     - default.yaml
-    - http://tangrams.github.io/blocks/functions/aastep.yaml
-    - http://tangrams.github.io/blocks/functions/map.yaml
-    - http://tangrams.github.io/blocks/color/tools.yaml
-    - http://tangrams.github.io/blocks/geometry/matrices.yaml
-    - http://tangrams.github.io/blocks/patterns/grid.yaml
-    - http://tangrams.github.io/blocks/shapes/cross.yaml
-    - http://tangrams.github.io/blocks/lines/dash.yaml
-    - http://tangrams.github.io/blocks/lines/outline.yaml
-    - http://tangrams.github.io/blocks/shapes/cross.yaml
+    - https://tangrams.github.io/blocks/functions/aastep.yaml
+    - https://tangrams.github.io/blocks/functions/map.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/geometry/matrices.yaml
+    - https://tangrams.github.io/blocks/patterns/grid.yaml
+    - https://tangrams.github.io/blocks/shapes/cross.yaml
+    - https://tangrams.github.io/blocks/lines/dash.yaml
+    - https://tangrams.github.io/blocks/lines/outline.yaml
+    - https://tangrams.github.io/blocks/shapes/cross.yaml
 
 sources:
     osm:

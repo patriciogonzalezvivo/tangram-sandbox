@@ -2,12 +2,12 @@
 
 import:
     - default.yaml
-    - http://tangrams.github.io/blocks/color/tools.yaml
-    - http://tangrams.github.io/blocks/generative/random.yaml
-    - http://tangrams.github.io/blocks/geometry/matrices.yaml
-    - http://tangrams.github.io/blocks/tiling/tile.yaml
-    - http://tangrams.github.io/blocks/tiling/brick.yaml
-    - http://tangrams.github.io/blocks/shapes/circle.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/generative/random.yaml
+    - https://tangrams.github.io/blocks/geometry/matrices.yaml
+    - https://tangrams.github.io/blocks/tiling/tile.yaml
+    - https://tangrams.github.io/blocks/tiling/brick.yaml
+    - https://tangrams.github.io/blocks/shapes/circle.yaml
 
 textures:
     matress:

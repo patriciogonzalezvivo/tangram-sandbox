@@ -2,9 +2,9 @@
 
 import:
     - default.yaml
-    - http://tangrams.github.io/blocks/filter/grain.yaml
-    - http://tangrams.github.io/blocks/space/tile.yaml
-    - http://tangrams.github.io/blocks/geometry/normal.yaml
+    - https://tangrams.github.io/blocks/filter/grain.yaml
+    - https://tangrams.github.io/blocks/space/tile.yaml
+    - https://tangrams.github.io/blocks/geometry/normal.yaml
 
 textures:
     sem:

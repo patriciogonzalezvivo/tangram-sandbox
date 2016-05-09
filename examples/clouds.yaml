@@ -1,8 +1,8 @@
 ﻿# Author @patriciogv - 2015
 
 import:
-    - http://tangrams.github.io/blocks/geometry/matrices.yaml
-    - http://tangrams.github.io/blocks/geometry/projections.yaml
+    - https://tangrams.github.io/blocks/geometry/matrices.yaml
+    - https://tangrams.github.io/blocks/geometry/projections.yaml
 
 sources:
     osm:

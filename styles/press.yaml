@@ -1,10 +1,10 @@
 ﻿# Author @patriciogv - 2015
 
 import:
-    - http://tangrams.github.io/blocks/functions/aastep.yaml
-    - http://tangrams.github.io/blocks/functions/pulse.yaml
-    - http://tangrams.github.io/blocks/patterns/stripes.yaml
-    - http://tangrams.github.io/blocks/space/screen.yaml
+    - https://tangrams.github.io/blocks/functions/aastep.yaml
+    - https://tangrams.github.io/blocks/functions/pulse.yaml
+    - https://tangrams.github.io/blocks/patterns/stripes.yaml
+    - https://tangrams.github.io/blocks/space/screen.yaml
 
 sources:
     osm:

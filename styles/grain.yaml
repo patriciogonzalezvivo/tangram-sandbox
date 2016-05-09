@@ -2,8 +2,8 @@
 
 import:
     - default.yaml
-    - http://tangrams.github.io/blocks/filter/grain.yaml
-    - http://tangrams.github.io/blocks/patterns/grid.yaml
+    - https://tangrams.github.io/blocks/filter/grain.yaml
+    - https://tangrams.github.io/blocks/patterns/grid.yaml
 
 styles:
     grid:

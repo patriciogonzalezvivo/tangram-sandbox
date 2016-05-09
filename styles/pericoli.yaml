@@ -2,12 +2,12 @@
 
 import:
     - default.yaml
-    - http://tangrams.github.io/blocks/color/tools.yaml
-    - http://tangrams.github.io/blocks/generative/noise.yaml
-    - http://tangrams.github.io/blocks/geometry/normal.yaml
-    - http://tangrams.github.io/blocks/space/tile.yaml
-    - http://tangrams.github.io/blocks/texture/zoom-fade.yaml
-    - http://tangrams.github.io/blocks/filter/hatch.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/generative/noise.yaml
+    - https://tangrams.github.io/blocks/geometry/normal.yaml
+    - https://tangrams.github.io/blocks/space/tile.yaml
+    - https://tangrams.github.io/blocks/texture/zoom-fade.yaml
+    - https://tangrams.github.io/blocks/filter/hatch.yaml
 
 textures:
     hatch_0: 

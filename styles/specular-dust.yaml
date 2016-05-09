@@ -2,8 +2,8 @@
 
 import:
     - default.yaml
-    - http://tangrams.github.io/blocks/color/tools.yaml
-    - http://tangrams.github.io/blocks/generative/fbm.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/generative/fbm.yaml
 
 lights:
     dir:

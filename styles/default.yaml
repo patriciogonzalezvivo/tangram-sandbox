@@ -1,7 +1,7 @@
 # Author @patriciogv - 2015
 
 import:
-    - http://tangrams.github.io/blocks/global.yaml
+    - https://tangrams.github.io/blocks/global.yaml
 
 sources:
     osm:

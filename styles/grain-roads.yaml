@@ -2,7 +2,7 @@
 
 import:
     - grain.yaml
-    - http://tangrams.github.io/blocks/lines/stripes.yaml
+    - https://tangrams.github.io/blocks/lines/stripes.yaml
 
 layers:
     roads:

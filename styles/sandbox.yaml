@@ -2,9 +2,9 @@
 
 import:
     - default.yaml
-    - http://tangrams.github.io/blocks/color/tools.yaml
-    - http://tangrams.github.io/blocks/generative/noise.yaml
-    - http://tangrams.github.io/blocks/geometry/matrices.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/generative/noise.yaml
+    - https://tangrams.github.io/blocks/geometry/matrices.yaml
 
 textures:
     sem: 

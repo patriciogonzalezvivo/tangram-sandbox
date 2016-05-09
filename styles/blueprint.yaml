@@ -2,13 +2,13 @@
 
 import:
     - default.yaml
-    - http://tangrams.github.io/blocks/color/tools.yaml
-    - http://tangrams.github.io/blocks/generative/fbm.yaml
-    - http://tangrams.github.io/blocks/patterns/grid.yaml
-    - http://tangrams.github.io/blocks/functions/map.yaml
-    - http://tangrams.github.io/blocks/geometry/dynamic-width.yaml
-    - http://tangrams.github.io/blocks/geometry/normal.yaml
-    - http://tangrams.github.io/blocks/lines/outline.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/generative/fbm.yaml
+    - https://tangrams.github.io/blocks/patterns/grid.yaml
+    - https://tangrams.github.io/blocks/functions/map.yaml
+    - https://tangrams.github.io/blocks/geometry/dynamic-width.yaml
+    - https://tangrams.github.io/blocks/geometry/normal.yaml
+    - https://tangrams.github.io/blocks/lines/outline.yaml
 
 scene:
     background:

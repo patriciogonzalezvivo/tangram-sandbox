@@ -2,10 +2,10 @@
 
 import:
     - default.yaml
-    - http://tangrams.github.io/blocks/generative/random.yaml
-    - http://tangrams.github.io/blocks/space/tile.yaml
-    - http://tangrams.github.io/blocks/geometry/normal.yaml
-    - http://tangrams.github.io/blocks/shapes/cross.yaml
+    - https://tangrams.github.io/blocks/generative/random.yaml
+    - https://tangrams.github.io/blocks/space/tile.yaml
+    - https://tangrams.github.io/blocks/geometry/normal.yaml
+    - https://tangrams.github.io/blocks/shapes/cross.yaml
 
 scene:
     background:
