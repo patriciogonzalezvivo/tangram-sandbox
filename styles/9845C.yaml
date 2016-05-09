@@ -1,12 +1,21 @@
 ﻿# Author @patriciogv - 2015
 
 import:
+<<<<<<< HEAD
     - https://tangrams.github.io/blocks/filter/global.yaml
     - https://tangrams.github.io/blocks/color/tools.yaml
     - https://tangrams.github.io/blocks/generative/random.yaml
     - https://tangrams.github.io/blocks/filter/tv.yaml
     - https://tangrams.github.io/blocks/shapes/polygons.yaml
     - https://tangrams.github.io/blocks/shapes/cross.yaml
+=======
+    - http://tangrams.github.io/blocks/global.yaml
+    - http://tangrams.github.io/blocks/color/tools.yaml
+    - http://tangrams.github.io/blocks/generative/random.yaml
+    - http://tangrams.github.io/blocks/filter/tv.yaml
+    - http://tangrams.github.io/blocks/shapes/polygons.yaml
+    - http://tangrams.github.io/blocks/shapes/cross.yaml
+>>>>>>> 3b9802596ebae8ce63b055b3edc832bbad41e958
 
 sources:
     osm:

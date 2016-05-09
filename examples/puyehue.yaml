@@ -103,7 +103,7 @@ layers:
         data: { source: osm }
         filter: { $zoom: {max: 15}}
         draw:
-            lines-dots:
+            lines-dash:
                 order: global.order
                 color: white
                 width: 1px
@@ -178,7 +178,7 @@ styles:
     roads:
         base: lines
         lighting: false
-    lines-dots:
+    lines-dash:
         shaders:
             defines:
                 DASH_SIZE: .5
