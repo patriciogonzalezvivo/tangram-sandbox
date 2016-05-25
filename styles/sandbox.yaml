@@ -5,10 +5,9 @@ import:
     - https://tangrams.github.io/blocks/color/tools.yaml
     - https://tangrams.github.io/blocks/generative/noise.yaml
     - https://tangrams.github.io/blocks/geometry/matrices.yaml
+    - https://tangrams.github.io/blocks/fx/water.yaml
 
 textures:
-    sem: 
-        url: imgs/sem-sky-0001.jpg
     sand:
         url: imgs/normal-0015.jpg
     wood:
@@ -70,17 +69,8 @@ layers:
 styles:
     water:
         base: polygons
-        mix: [generative-noise]
-        animated: true
-        material:
-            ambient: .7
-            diffuse:
-                texture: sem
-                mapping: spheremap
-        shaders:
-            blocks:
-                normal: |
-                    normal += snoise(vec3(worldPosition().xy*0.08,u_time*.5))*0.02;
+        mix: [fx-water]
+
     earth:
         base: polygons
         material:

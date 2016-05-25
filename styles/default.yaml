@@ -68,48 +68,6 @@ layers:
             draw:
                 roads:
                     order: global.order
-        labels:
-            filter: { name: true }
-            highway:
-                filter: { kind: highway, $zoom: { min: 5 } }
-                draw:
-                    text:
-                        font:
-                            fill: black
-                            size: 16px
-                            family: helvetica
-                            weight: 600
-                            stroke: { color: white, width: 4 }
-
-            not_highway:
-                filter: { not: { kind: highway }, $zoom: { min: 13 } }
-                draw:
-                    text:
-                        font:
-                            fill: black
-                            stroke: { color: white, width: 3 }
-                            size: 16px
-                            family: helvetica
-                            weight: 500
-
-                major_road:
-                    filter: { kind: major_road, $zoom: { min: 14 } }
-                    draw:
-                        text:
-                            font:
-                                size: 16px
-                                family: helvetica
-                                weight: 100
-                                stroke: { color: white, width: 4 }
-                minor_road:
-                    filter: { kind: minor_road, railway: false, $zoom: { min: 15 } }
-                    draw:
-                        text:
-                            font:
-                                size: 14px
-                                family: helvetica
-                                weight: 100
-                                stroke: { color: white, width: 4 }
     buildings:
         data: { source: osm }
         draw:
