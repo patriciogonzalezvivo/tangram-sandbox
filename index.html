@@ -4,14 +4,22 @@
         <meta charset="utf-8">
         <title>Tangram Sandbox</title>
 
-        <!-- My stuff -->
-        <link type='text/css' rel='stylesheet' href="css/index-style.css">
-        <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/build/GlslCanvas.min.js"></script>
-        <script type="text/javascript" src="lib/marked.js"></script>
+        <script type="text/javascript" src="https://rawgit.com/chjj/marked/master/lib/marked.js"></script>
+        <link rel="stylesheet" href="https://mapzen.com/common/styleguide/styles/styleguide.css">
 
+        <style>
+            img {
+                display: inline;
+                margin-left: auto;
+                margin-right: auto;
+                max-width: 300px;
+            }
+        </style>
     </head>
     <body>
-        <div id="content"> </div>
+        <div class="container">
+            <div id="content"> </div>
+        </div>
         <script>
         function fetchHTTP(url, method){
             var request = new XMLHttpRequest(), response;

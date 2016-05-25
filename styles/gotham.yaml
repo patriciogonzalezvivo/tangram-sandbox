@@ -5,10 +5,7 @@ import:
     - https://tangrams.github.io/blocks/filter/grain.yaml
     - https://tangrams.github.io/blocks/space/tile.yaml
     - https://tangrams.github.io/blocks/geometry/normal.yaml
-
-textures:
-    sem:
-        url: imgs/sem-sky-0001.jpg
+    - https://tangrams.github.io/blocks/fx/water.yaml
 
 scene:
     background:
@@ -75,17 +72,12 @@ layers:
 styles:
     water:
         base: polygons
-        mix: filter-grain
-        # animated: true
-        # material:
-        #     ambient: 0.8
-        #     diffuse:
-        #         texture: sem
-        #         mapping: spheremap
-        # shaders: 
-        #     blocks: 
-        #         normal: |
-        #             normal += snoise(vec3(worldPosition().xy*0.08,u_time*.5))*0.03;
+        mix: 
+            - filter-grain
+            - fx-water
+        material:
+            ambient: 0.8
+            
     earth:
         base: polygons
         mix: filter-grain
