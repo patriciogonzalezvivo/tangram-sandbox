@@ -6,6 +6,9 @@ Pushing the limits of how 3D maps can look like on [Tangram.js](https://github.c
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/elevation.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/elevation#10.97291/40.7461/-74.0931)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/elevation-ramp.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/elevation-ramp#10.97291/40.7461/-74.0931)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/elevation-stripes.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/elevation-stripes#10.97291/40.7461/-74.0931)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/elevation-puyehue.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/elevation-puyehue.yaml#6.911187391391961/-38.361/-66.853)
+
+
 
 ## Materials & Procedural Textures
 

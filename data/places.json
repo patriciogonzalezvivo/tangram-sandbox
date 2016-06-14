@@ -1,0 +1,108 @@
+
+{
+    "bue-nyc": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": { 
+                    "type": "LineString",
+                    "coordinates": [ [-58.450925, -34.642733], [-73.96625, 40.78343] ]
+                },
+                "properties": {
+                    "name": "BUE-NYC"
+                }
+            }
+        ]
+    },
+    "eyeo": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": { 
+                    "type": "LineString",
+                    "coordinates": [ [-73.96625, 40.78343], [ -93.267834, 44.963541] ]
+                },
+                "properties": {
+                    "name": "NYC-MIN"
+                }
+            }
+        ]
+    },
+    "places": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-72.117222, -40.590278]
+                },
+                "properties": {
+                    "name": "Puyehue"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-58.450925, -34.642733 ]
+                },
+                "properties": {
+                    "name": "Buenos Aires"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [ -43.450258, -22.923188 ]
+                },
+                "properties": {
+                    "name": "Rio de Janeiro"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [ -73.96625, 40.78343]
+                },
+                "properties": {
+                    "name": "New York"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [ -93.267834, 44.963541]
+                },
+                "properties": {
+                    "name": "Minneapolis"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [ -122.4425, 37.77823]
+                },
+                "properties": {
+                    "name": "San Francisco"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [ 20.46513, 44.80401]
+                },
+                "properties": {
+                    "name": "Belgrade"
+                }
+            }
+        ]
+    }
+}
