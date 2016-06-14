@@ -1,10 +1,9 @@
 author: Patricio Gonzalez Vivo (@patriciogv) - 2016 
 
 import:
-    - elevation-stripes.yaml
+    - elevation-places.yaml
     - https://tangrams.github.io/blocks/geometry/projections.yaml
     - https://tangrams.github.io/blocks/color/tools.yaml
-    - https://tangrams.github.io/blocks/points/shape.yaml
 
 sources:
     places: 
@@ -14,23 +13,6 @@ sources:
 textures:
     puyehue:
         url: imgs/lansat-puyehue.jpg
-
-layers:
-    places:
-        data: { source: places }
-        draw:
-            points-shape:
-                color: [0,0,0,0]
-                size: 30px
-                collide: false
-            text:
-                offset: [0, -25px]
-                font:
-                    transform: uppercase
-                    typeface: Helvetica
-                    fill: white
-                    size: 15px
-                    stroke: { color: black, width: 5 }
 
 styles:        
     picture:
@@ -60,12 +42,3 @@ styles:
     earth:
         base: polygons
         mix: [elevation-ramp, picture]
-
-    points-shape:
-        animated: true
-        shaders:
-            defines:
-                SHAPE_SIDES: 3
-                SHAPE_SIZE: 1.
-                SHAPE_BORDER_WIDTH: 0.15
-                SHAPE_BORDER_COLOR: vec3(1.0)

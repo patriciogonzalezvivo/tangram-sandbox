@@ -35,7 +35,6 @@ layers:
             landuse:
                 visible: false
                 color: [0.000, 1.000, 0.480]
-
     boundaries:
         data: { source: osm }
         draw:
