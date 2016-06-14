@@ -1,236 +1,62 @@
 ﻿# Author @patriciogv - 2015
 
-cameras:
-    camera1:
-        type: isometric
+import:
+    - default.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/generative/noise.yaml
+    - https://tangrams.github.io/blocks/space/tile.yaml
+    - https://tangrams.github.io/blocks/texture/zoom-fade.yaml
+    - https://tangrams.github.io/blocks/filter/hatch.yaml
+
+textures:
+    hatch_0: 
+        url: imgs/hatch_0.png
+    hatch_2: 
+        url: imgs/hatch_2.png
+    paper:
+        url: imgs/normal-0031.jpg
+
+scene:
+    background:
+        color: [0.302,0.302,0.306]
 
 lights:
-    light1:
-        type: directional
-        direction: [0, 1, -.5]
-        diffuse: .5
+    dir:
         ambient: .3
-    light2:
+    pnt:
         type: point
         position: [0, -500px, 500px]
         origin: ground
         diffuse: .5
         ambient: .3
 
-scene:
-    background:
-        color: [0.302,0.302,0.306]
-
-styles:
-    space-tile:
-        shaders:
-            blocks:
-                global: |
-                    // Variant to be add to both vertex and fragments shaders
-                    varying vec3 v_pos;
-                    //
-                    // Get the coordinates in tile space
-                    // ================================
-                    vec2 getTileCoords() {
-                        return fract(v_pos.xy);
-                    }
-
-                position: |
-                    // Normalize the attribute position of a vertex
-                    v_pos = modelPosition().xyz;
-    tiling-texture-zoom-fade:
-        mix: space-tile
-        shaders:
-            blocks:
-                global: |
-                    // Tile a texture across zoom by fading between them
-                    // ================================
-                    vec4 TileTexture (sampler2D tex, float scale) {
-                        vec2 IN = getTileCoords()*scale;
-                        vec2 OUT = getTileCoords()*scale*2.;
-                        return mix(texture2D(tex,fract(IN)), texture2D(tex,fract(OUT)), fract(u_map_position.z));
-                    }
-    earth-hatch:
-        base: polygons
-        lighting: false
-        mix: tiling-texture-zoom-fade 
-        shaders:
-            uniforms:
-                    u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_0.png
-            blocks:
-                color: |
-                    float pattern = 1.0-TileTexture(u_hatch,3.).a;
-                    color.rgb = mix(vec3(0.302,0.302,0.306), vec3(0.976,0.953,0.890), pattern);
-
-    landuse-hatch:
-        base: polygons
-        mix: earth-hatch
-        shaders:
-            uniforms:
-                    u_hatch: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch_2.png
-    paper:
-        base: polygons
-        texcoords: true
-        material:
-            normal:
-                texture: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/normal-0031.jpg
-                mapping: planar
-                scale: 0.001
-            ambient: 1.
-            diffuse: 1.
-    tools:
-        shaders:
-            blocks: 
-                global: |
-                    // Coord System
-                    //================================
-                    varying vec3 v_pos;
-                    vec2 TileCoords(){return fract(v_pos.xy*0.0002445);}
-                    // Color
-                    //================================
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
-                    // Random & Noise
-                    //================================
-                    float random(in vec2 _st){
-                        return fract(sin(dot(_st.xy,
-                                             vec2(12.9898,78.233)))*
-                            43758.5453123);
-                    }
-                    float noise (in vec2 _st) {
-                        vec2 i = floor(_st);
-                        vec2 f = fract(_st);
-                        float a = random(i);
-                        float b = random(i + vec2(1.0, 0.0));
-                        float c = random(i + vec2(0.0, 1.0));
-                        float d = random(i + vec2(1.0, 1.0));
-                        vec2 u = f * f * (3.0 - 2.0 * f);
-                        return mix(a, b, u.x) +
-                                (c - a)* u.y * (1.0 - u.x) +
-                                (d - b) * u.x * u.y;
-                    }
-                    // Cross Hatch LUT
-                    //==============================
-                    float hatch( sampler2D hatchmap, vec2 st, float brightness ){
-                        st  = fract(st)/3.;
-                        brightness = clamp(brightness,0.,0.9999999);
-                        vec2 pos1 = vec2(floor(brightness*9.0)/3.,
-                                         floor(brightness*3.0)/3.) + st;
-                        float minBrightness = clamp(brightness-0.111111111,0.,1.0);
-                        vec2 pos2 = vec2(floor(minBrightness*9.0)/3.,
-                                         floor(minBrightness*3.0)/3.)+st;
-                        return mix(texture2D( hatchmap,fract(pos1) ).a,
-                                   texture2D( hatchmap,fract(pos2) ).a,
-                                   1.0-fract(brightness*9.0));
-                    }
-                position: |
-                    v_pos = a_position.xyz * 32767.;
-    ink-lines:
-        base: lines
-        mix: tools
-        texcoords: true
-        lighting: false
-        shaders:
-            blocks:
-                color: |
-                    vec2 uv = v_texcoord;
-                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
-    buildings:
-        base: polygons
-        mix: tools
-        texcoords: true
-        material:
-            ambient: 1.
-            diffuse: 1.
-        shaders:
-            uniforms:
-                u_hatchmap: https://cdn.rawgit.com/tangrams/tangram-sandbox/gh-pages/styles/imgs/hatch-0002.png
-            blocks:
-                position: |
-                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
-                filter: |
-                    vec2 uv = v_texcoord;
-                    float b = getBrightness(light_accumulator_diffuse.rgb);
-                    float pattern = 1.0;
-                    if ( dot(v_normal,vec3(0.,0.,1.)) == 0.0 ){
-                        // Walls
-                        b *=  clamp(uv.y*1.5,0.0,1.0)+0.2;
-                        pattern = 1.-hatch(u_hatchmap,uv,b);
-                        vec2 edge = vec2(0.1,0.05)*noise(uv*20.);
-                        vec2 blend = smoothstep(vec2(0.0),edge,uv)*smoothstep(vec2(0.0),edge,vec2(1.)-uv);
-                        pattern = mix(1.0,pattern,blend.x*blend.y);
-                    } else {
-                        // Roof
-                        b *= 1.8;
-                        //uv = worldPosition().xy*0.01;
-                        const float pixel_scale = 695.;
-                        float meter_pixels = u_meters_per_pixel / u_device_pixel_ratio;
-                        uv = gl_FragCoord.xy/pixel_scale;
-                        const float dot_wrap = 1000.;
-                        uv += mod(u_map_position.xy / meter_pixels, dot_wrap)/pixel_scale;
-                        uv *= 5.00;
-                        pattern = 1.-hatch(u_hatchmap,uv,b);
-                    }
-                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),pattern);
-    buildingsLines:
-        base: lines
-        lighting: false
-        shaders:
-            blocks:
-                width: |
-                    width *= 0.2+min(pow(position.z*0.006,2.),.6);
-                position: |
-                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
-sources:
-    osm:
-        type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
 layers:
     earth:
-        data: { source: osm }
         draw:
-            earth-hatch:
-                order: 0
+            earth:
                 color: [[14,[1.,1.,1.]],[18,[1.,1.,1.]]]
     landuse:
-        data: { source: osm }
         draw:
-            landuse-hatch:
-                order: 1
+            landuse:
                 color: [0.302,0.302,0.306]
     water:
-        data: { source: osm }
         draw:
-            paper:
-                order: 2
+            water:
                 color: '#343434'
     roads:
-        data: { source: osm }
-        filter: { not: { highway: service, kind: [rail, ferry] } }
-        properties: { width: 3 }
         draw:
-            ink-lines:
-                order: 3
+            roads:
                 color: '#343434'
-                width: 8
     buildings:
-        data: { source: osm }
         draw:
             buildings:
-                order: 4
-                color: Style.color.pseudoRandomColor()
-        extruded:
-            filter: { $zoom: { min: 13 } }
-            draw:
-                buildings:
-                    extrude: true
-                buildingsLines:
-                    order: 6
-                    width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
-                    extrude: true
-                    color: [0.217,0.217,0.217]
+                color: global.pseudoRandomColor
+                extrude: true
+            buildingsLines:
+                order: global.order-top
+                width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
+                extrude: true
+                color: [0.217,0.217,0.217]
     places:
         data: { source: osm }
         filter: { name: true }
@@ -242,14 +68,71 @@ layers:
                     style: italic
                     fill: black
                     stroke: { color: [0.976,0.953,0.890] , width: 7 }
-    landuse_labels:
-        data: { source: osm }
-        filter: { name: true, kind: park, $zoom: { min: 16 } }
-        draw:
-            text:
-                font:
-                    family: Baskerville
-                    size: 18px
-                    style: italic
-                    fill: black
-                    stroke: { color: [0.976,0.953,0.890] , width: 7 }
+            
+styles:
+    earth:
+        base: polygons
+        lighting: false
+        mix: texture-zoom-fade 
+        shaders:
+            uniforms:
+                u_hatch: hatch_0
+            blocks:
+                filter: |
+                    float pattern = 1.0-TileTexture(u_hatch,3.).a;
+                    color.rgb = mix(vec3(0.302,0.302,0.306), vec3(0.976,0.953,0.890), pattern);
+    landuse:
+        base: polygons
+        mix: earth
+        shaders:
+            uniforms:
+                u_hatch: hatch_2
+    water:
+        base: polygons
+        texcoords: true
+        material:
+            normal:
+                texture: paper
+                mapping: planar
+                scale: 0.001
+            ambient: 1.
+            diffuse: 1.
+    roads:
+        base: lines
+        mix: generative-noise
+        texcoords: true
+        shaders:
+            blocks:
+                filter: |
+                    vec2 uv = fract(v_texcoord*vec2(1.,.1));
+                    color.rgb = mix(vec3(0.302,0.302,0.306),vec3(0.976,0.953,0.890),1.0-(smoothstep(0.0,0.1,uv.x) * smoothstep(0.0,0.1,1.0-uv.x)+noise(uv*vec2(2.,70.)) ));
+    buildings:
+        base: polygons
+        mix: [color-tools, generative-noise, filter-hatch]
+        texcoords: true
+        material:
+            ambient: 1.
+            diffuse: 1.
+        shaders:
+            blocks:
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
+                filter: |
+                    vec2 uv = v_texcoord;
+                    float b = getBrightness(light_accumulator_diffuse.rgb);
+                    b *=  clamp(uv.y*1.5,0.0,1.0)+0.2;
+
+                    float pattern = 1.-getHatch(uv,b);
+                    vec2 edge = vec2(0.1,0.05)*noise(uv*20.);
+                    vec2 blend = smoothstep(vec2(0.0),edge,uv)*smoothstep(vec2(0.0),edge,vec2(1.)-uv);
+
+                    color.rgb = mix(vec3(0.302,0.302,0.306), vec3(0.976,0.953,0.890), mix(1.0,pattern,blend.x*blend.y));
+    buildingsLines:
+        base: lines
+        lighting: false
+        shaders:
+            blocks:
+                width: |
+                    width *= 0.2+min(pow(position.z*0.006,2.),.6);
+                position: |
+                    position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);

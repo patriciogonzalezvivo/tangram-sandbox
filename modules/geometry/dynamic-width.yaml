@@ -1,8 +1,0 @@
- # Patricio Gonzalez Vivo - 2015
-
-styles:
-    geometry-dynamic-width:
-        shaders:
-            blocks:
-                width: |
-                    width *= 0.2+min(pow(position.z*0.006,2.),.6);

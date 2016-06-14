@@ -1,79 +1,104 @@
 ﻿# Author @patriciogv - 2015
 
+import:
+    - https://tangrams.github.io/blocks/functions/aastep.yaml
+    - https://tangrams.github.io/blocks/functions/pulse.yaml
+    - https://tangrams.github.io/blocks/patterns/stripes.yaml
+    - https://tangrams.github.io/blocks/space/screen.yaml
+
 sources:
     osm:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+
 scene:
     background:
         color: white
+
 cameras:
-    perspective:
-        type: perspective
-lights:
-    directional1:
-        type: directional
-        direction: [.1, .5, -1]
-        diffuse: .7
-        ambient: .5
+    cam:
+        type: flat
+
+global:
+    order: function () { return feature.sort_key; }
+                    
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            waves:
+                order: global.order
+                cap: round
+                width: 8px
+                color: [0.824, 0.812, 0.804]
+                width: 5px
+        lakes:
+            filter: { kind: [lake, riverbank, dock, water, basin, reservoir, playa, canal, dam, ditch, drain, river, stream]}
+            draw: 
+                lines:
+                    order: global.order
+                    color: black
+                    cap: round
+                    width: .5px
+    earth:
+        data: { source: osm }
+        draw:
+            border:
+                order: 10000
+                color: black
+                cap: round
+                width: 6px
+    landuse:
+        data: { source: osm }
+        draw:
+            hatch:
+                order: global.order
+                color: '#464C40'
+    buildings:
+        data: { source: osm }
+        draw:
+            b_border:
+                order: global.order
+                color: [[10,[1,1,1]],[15,[1,1,1]],[18,[0.306, 0.306, 0.306]]]
+                width: [[10, 1], [12, 1px],[14, 1px], [16, 2px], [17, 3px], [18, 5px]]
+    roads:
+        data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
+        draw:
+            lines:
+                order: global.order
+                color: black
+                width: [[5, .25px],[15, .5px],[85, 10]]
+            outlines:
+                style: lines
+                order: global.order
+                color: white
+                width: [[5, 2.px],[15, 4px],[85, 60]]
+    
+    boundaries:
+        data: { source: osm }
+        draw:
+            lines:
+                order: global.order
+                color: black
+                width: .3px
+            outlines:
+                style: lines
+                order: global.order
+                color: white
+                width: 3px
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        draw:
+            text:
+                font:
+                    typeface: Italic 14px Times
+                    fill: black
+                    stroke: { color: white , width: 5 }
+                
 
 styles:
-    functions-aastep:
-        shaders:
-            extensions: OES_standard_derivatives
-            blocks:
-                global: |
-                    // AntiAliased Step function
-                    //=============================
-                    float aastep(float threshold, float value) {
-                        #ifdef TANGRAM_FRAGMENT_SHADER
-                            #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
-                                float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
-                                return smoothstep(threshold-afwidth, threshold+afwidth, value);
-                            #else
-                                return step(threshold, value);
-                            #endif  
-                        #else
-                            return step(threshold, value);
-                        #endif
-                    }
-    functions-pulse:
-        shaders:
-            blocks:
-                global: |
-                    float pulse (float x, float p, float w) {
-                        x = abs(x - p);
-                        if (x>w) return 0.0;
-                        x /= w;
-                        return 1.0 - x*x*(3.0-2.0*x);
-                    }
-    patterns-stripes:
-        mix: functions-aastep
-        shaders:
-            defines:
-                PI: 3.14159265358979323846
-            blocks:
-                global: |
-                    // Return a distance function of stripes
-                    float stripesDF (vec2 st) {
-                        return abs(sin(st.y*PI));
-                    }
-                    
-                    // Adjustable width stripes
-                    float stripes (vec2 st, float width) {
-                        return aastep(width,stripesDF(st));
-                    }
-                    
-                    // Faster optimisation of diagonal stripes
-                    float diagonalStripes (vec2 st) {
-                        vec2 i_st = floor(st);
-                        vec2 f_st = fract(st);
-                        if (mod(i_st.y,2.) - mod(i_st.x,2.) == 0.) {
-                            return 1.0 - aastep(f_st.x,f_st.y);
-                        } else {
-                            return aastep(f_st.x,f_st.y);
-                        }
-                    }
     pallete:
         shaders:
             blocks: 
@@ -82,7 +107,7 @@ styles:
                     //================================
                     float radio = 0.05;
                     vec2 size = vec2(1.,.6);
-                    vec3 background = vec3(0.996,0.996,0.918);
+                    vec3 background = vec3(1.);
                     vec3 midle = vec3(0.824, 0.812, 0.804);
                     vec3 foreground = vec3(0.275,0.298,0.251);
     border:
@@ -108,116 +133,18 @@ styles:
                     
     waves:
         base: polygons
-        mix: [pallete, patterns-stripes]
+        mix: [space-screen, pallete, patterns-stripes]
         shaders: 
             blocks: 
                 color: |
-                    vec2 st = (gl_FragCoord.xy / u_resolution.xy);
-                    float aspect = u_resolution.x/u_resolution.y;
-                    // size.x *= aspect;
-
-                    vec2 pos = st;
-                    pos.x = pos.x*aspect;
+                    vec2 pos = getScreenNonStretchCoords();
                     pos.y += sin(pos.x*30.)*.01;
                     color.rgb = mix(color.rgb,background,stripes(pos*200.,.4));
     hatch:
         base: polygons
-        mix: [functions-aastep, pallete]
+        mix: [functions-aastep, pallete, patterns-stripes, space-screen]
         shaders: 
             blocks: 
-                global: |
-                    mat2 rotate2d(float angle){
-                        return mat2(cos(angle),-sin(angle),
-                                    sin(angle),cos(angle));
-                    }
-                    float stripes(vec2 st){
-                        st = rotate2d(.72)*st;
-                        st *= 92.;
-                        return aastep(.3,abs(sin(st.y*3.14159265358)));
-                    }
                 color: |
-                    vec2 st = (gl_FragCoord.xy / u_resolution.xy);
-                    float aspect = u_resolution.x/u_resolution.y;
-                    // size.x *= aspect;
-                    color.rgb = mix(color.rgb,background,stripes(st*3.));
-                    
-layers:
-    water:
-        data: { source: osm }
-        draw:
-            waves:
-                order: 0
-                cap: round
-                width: 8px
-                color: [0.824, 0.812, 0.804]
-                width: 5px
-        lakes:
-            filter: { kind: [lake, riverbank, dock, water, basin, reservoir, playa, canal, dam, ditch, drain, river, stream]}
-            draw: 
-                lines:
-                    order: 1
-                    color: black
-                    cap: round
-                    width: .5px
-    earth:
-        data: { source: osm }
-        draw:
-            border:
-                order: 5
-                color: black
-                cap: round
-                width: 6px
-            
-    landuse:
-        data: { source: osm }
-        draw:
-            hatch:
-                order: 2
-                color: #464C40
-    buildings:
-        data: { source: osm }
-        filter: { $zoom: { min: 10 } }
-        draw:
-            b_border:
-                order: 6
-                color: [[10,[1,1,1]],[15,[1,1,1]],[18,[0.306, 0.306, 0.306]]]
-                width: [[10, 1], [12, 1px],[14, 1px], [16, 2px], [17, 3px], [18, 5px]]
-    roads:
-        data: { source: osm }
-        filter: { not: { kind: [rail, ferry] } }
-        properties: { width: 3 }
-        draw:
-            lines:
-                order: 4
-                color: black
-                width: [[5, .25px],[15, .5px],[85, 10]]
-            outlines:
-                style: lines
-                order: 3
-                color: white
-                width: [[5, 2.px],[15, 4px],[85, 60]]
-    
-    boundaries:
-        data: { source: osm }
-        properties: { width: 3 }
-        draw:
-            lines:
-                order: 5
-                color: black
-                width: .3px
-            outlines:
-                style: lines
-                order: 4
-                color: white
-                width: 3px
-    
-    places:
-        data: { source: osm }
-        filter: { name: true }
-        draw:
-            text:
-                font:
-                    typeface: Italic 14px Times
-                    fill: black
-                    stroke: { color: white , width: 5 }
-                
+                    vec2 st = getScreenNonStretchCoords();
+                    color.rgb = mix(color.rgb,background,diagonalStripes(st*300.));

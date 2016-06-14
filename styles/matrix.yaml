@@ -1,33 +1,112 @@
 ﻿# Author @patriciogv - 2015
 
-cameras:
-    camera1:
-        type: perspective
-        focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
-        vanishing_point: [-250, -250] # relative to center of screen, in pixels
+import:
+    - default.yaml
+    - https://tangrams.github.io/blocks/generative/random.yaml
+    - https://tangrams.github.io/blocks/space/tile.yaml
+    - https://tangrams.github.io/blocks/geometry/normal.yaml
+    - https://tangrams.github.io/blocks/shapes/cross.yaml
+
 scene:
     background:
         color: black
+
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            water:
+                color: [0.201,0.481,0.264]
+    earth:
+        data: { source: osm }
+        draw:
+            lines:
+                order: global.order-top
+                color: white
+                width: 2px
+            earth:
+                color: [0.201,0.481,0.264]
+    landuse:
+        data: { source: osm }
+        draw:
+            landuse:
+                color: [0.643,0.851,0.690]
+                visible: false
+    roads:
+        data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
+        draw:
+            roads:
+                color: [0, 0, 0]
+                width: 8
+            text:
+                font:
+                    family: Courier
+                    size: 14px
+                    fill: white
+                    stroke: { color: black , width: 6 }
+        oneway:
+            filter: { oneway: yes }
+            draw: { roads: { color: red } }
+    buildings:
+        data: { source: osm }
+        draw:
+            buildings:
+                color: [0, 0, 0]
+                extrude: true
+            buildingsLines:
+                order: global.order
+                color: [0.643,0.851,0.690]
+                width: [[12, .1px], [14, 0.5px], [15, 1.5px], [17, 1.5px], [18, 2px]]
+                extrude: true
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        draw:
+            places_label:
+                font:
+                    family: Courier
+                    size: 20px
+                    weight: bold
+                    fill: white
+                    stroke: { color: black , width: 6 }
+            places_icons:
+                color: [0.643,0.851,0.690]
+                size: [[13, 40px], [15, 60px]]
+                interactive: true
 styles:
-    space-tile:
+    matrix:
+        mix: [space-tile, generative-random]
+        texcoords: true
         shaders:
             blocks:
                 global: |
-                    // Variant to be add to both vertex and fragments shaders
-                    varying vec3 v_pos;
-                    //
-                    // Get the coordinates in tile space
-                    // ================================
-                    vec2 getTileCoords() {
-                        return fract(v_pos.xy);
+                    //  Matrix
+                    //=============================
+                    float randomChar(in vec2 outer,in vec2 inner){
+                        float grid = 5.;
+                        vec2 margin = vec2(.2,.05);
+                        float seed = 23.;
+                        vec2 borders = step(margin,inner)*step(margin,1.-inner);
+                        return step(.5,random(outer*seed+floor(inner*grid))) * borders.x * borders.y;
                     }
-
-                position: |
-                    // Normalize the attribute position of a vertex
-                    v_pos = modelPosition().xyz;
-    matrix:
-        mix: space-tile
-        texcoords: true
+    tiledCross:
+        base: polygons
+        mix: [space-tile, shapes-cross]
+        animated: false
+        shaders:
+            blocks:
+                color: |
+                    vec2 pos = (getTileCoords()+vec2(.5));
+                    float pct = clamp(cross(fract(pos),vec2(.007,.002)),0.0,1.0);
+                    color.rgb *= pct;
+                    pos = (getTileCoords()*10.+vec2(.5));
+                    pct = clamp(cross(fract(pos),vec2(.3,.1)),0.0,0.8);
+                    color.rgb = clamp(color.rgb+vec3(0.173,0.235,0.200)*pct,vec3(0.0),vec3(1.0));
+    water:
+        base: polygons
+        mix: matrix
+        animated: false
         shaders:
             blocks:
                 global: |
@@ -46,47 +125,14 @@ styles:
                         return pct;
                     }
                     float TileGrid(){ return mix(TileGrid(1.),TileGrid(2.),fract(u_map_position.z)); }
-                    // Random
-                    //=============================
-                    float random(float x){ return fract(sin(x)*43758.5453);}
-                    float random(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
-                    //  Matrix
-                    //=============================
-                    float randomChar(in vec2 outer,in vec2 inner){
-                        float grid = 5.;
-                        vec2 margin = vec2(.2,.05);
-                        float seed = 23.;
-                        vec2 borders = step(margin,inner)*step(margin,1.-inner);
-                        return step(.5,random(outer*seed+floor(inner*grid))) * borders.x * borders.y;
-                    }
-                    //  Grid
-                    //=============================
-                    float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
-                        _pos = fract(_pos*_zoom);
-                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) -
-                                 smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
-                        return clamp(g.x+g.y,0.0,1.0);
-                    }
-                    //  Crosses
-                    //=============================
-                    float box(in vec2 _st, in vec2 _size){
-                        _size = vec2(0.5) - _size*0.5;
-                        vec2 uv = smoothstep(_size,
-                                            _size+vec2(0.001),
-                                            _st);
-                        uv *= smoothstep(_size,
-                                        _size+vec2(0.001),
-                                        vec2(1.0)-_st);
-                        return uv.x*uv.y;
-                    }
-                    float cross(in vec2 _st, float _size){
-                        return  box(_st, vec2(_size*0.5,_size*0.125)) +
-                                box(_st, vec2(_size*0.125,_size*0.5));
-                    }
-                    float cross(in vec2 _st, vec2 _size){
-                        return  box(_st, vec2(_size.x*0.5,_size.y*0.125)) +
-                                box(_st, vec2(_size.y*0.125,_size.x*0.5));
-                    }
+                color: |
+                    color.rgb = mix(vec3(0.031,0.047,0.035),color.rgb,TileGrid());
+    earth:
+        base: polygons
+        mix: tiledCross
+    landuse:
+        base: polygons
+        mix: tiledCross
     roads:
         base: lines
         mix: matrix
@@ -94,7 +140,7 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec2 st = v_texcoord.xy;
+                    vec2 st = fract(v_texcoord.xy*vec2(1.,.1));
                     vec2 rows = vec2(1.,20.);
                     float t = u_time*12.;
                     vec2 ipos = vec2(0.);
@@ -110,45 +156,29 @@ styles:
                     vec2 center = (.5-fpos);
                     float pct = random(ipos);
                     color.rgb = vec3(0.7,0.999,0.780) * ( randomChar(ipos,fpos) * pct * 1.5 );
-
-
-    grid:
-        base: polygons
-        mix: matrix
-        animated: false
-        shaders:
-            blocks:
-                color: |
-                    color.rgb = mix(vec3(0.031,0.047,0.035),color.rgb,TileGrid());
-
-    tiledCross:
-        base: polygons
-        mix: matrix
-        animated: false
-        shaders:
-            blocks:
-                color: |
-                    vec2 pos = (getTileCoords()+vec2(.5));
-                    float pct = clamp(cross(fract(pos),0.1),0.0,1.0);
-                    color.rgb *= pct;
-                    pos = (getTileCoords()*10.+vec2(.5));
-                    pct = clamp(cross(fract(pos),0.3),0.0,0.8);
-                    color.rgb = clamp(color.rgb+vec3(0.173,0.235,0.200)*pct,vec3(0.0),vec3(1.0));
-
     buildings:
         base: polygons
-        mix: matrix
+        mix: [matrix, geometry-normal]
         blend: add
         animated: true
         shaders:
             blocks:
+                global: |
+                    //  Grid
+                    //=============================
+                    float grid (in vec2 _pos, in float _zoom, in float _lineWidth){
+                        _pos = fract(_pos*_zoom);
+                        vec2 g = smoothstep(vec2(0.5-_lineWidth),vec2(0.5),_pos) -
+                                 smoothstep(vec2(0.5),vec2(0.5+_lineWidth),_pos);
+                        return clamp(g.x+g.y,0.0,1.0);
+                    }
                 position: |
                     position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
                 color: |
                     vec3 pos = worldPosition().xyz*0.01;
                     vec2 uv = v_texcoord.xy;
                     float pct = grid(v_texcoord,10.,0.1)*0.5;
-                    {
+                    if (isWall()) {
                         // Wall
                         vec2 st = v_texcoord.xy;
                         float rows = 30.0;
@@ -165,8 +195,8 @@ styles:
                     }
     buildingsLines:
         base: lines
-        mix: matrix
         lighting: false
+        blend: add
         shaders:
             blocks:
                 width: |
@@ -175,7 +205,7 @@ styles:
                     position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
     places_icons:
         base: points
-        mix: matrix
+        mix: [shapes-cross]
         animated: false
         shaders:
             blocks:
@@ -190,8 +220,8 @@ styles:
                     st = rotate2d(0.78539816339)*st;
                     st += vec2(0.5);
                     color.rgb = vec3(0.0);
-                    color.a = clamp(cross(st,vec2(.7,1.)),0.,1.)*.9;
-                    color += v_color * clamp(cross(st,.5),0.,1.)*.9;
+                    color.a = clamp(cross(st,vec2(.5,.3)),0.,1.)*.9;
+                    color += v_color * clamp(cross(st,vec2(.3,.1)),0.,1.)*.9;
     places_label:
         base: text
         animated: false
@@ -214,127 +244,3 @@ styles:
                     col *= 0.9 + 0.1 * sin(10.0 * time + st.y * rows);
                     col *= 0.97 + 0.03 * sin(110.0 * time);
                     color = vec4(col,max(col.x,max(col.y,col.z)));
-sources:
-    osm:
-        type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-layers:
-    earth:
-        data: { source: osm }
-        draw:
-            tiledCross:
-                order: 0
-                color: [0.201,0.481,0.264]
-    landuse:
-        data: { source: osm }
-        draw:
-            tiledCross:
-                order: 1
-                color: [0.643,0.851,0.690]
-
-    water:
-        data: { source: osm }
-        draw:
-            grid:
-                order: 3
-                color: [0.201,0.481,0.264]
-            outline:
-                order: 2
-                style: lines
-                color: [0.757,0.784,0.710]
-                width: 1px
-                tile_edges: false
-    roads:
-        data: { source: osm }
-        filter: { not: { kind: [rail, ferry] } }
-        draw:
-            roads:
-                order: 4
-                color: [0, 0, 0]
-                width: 8
-        oneway:
-            filter: { oneway: yes }
-            draw: { roads: { color: red } }
-        highway:
-            filter:
-                kind: highway
-            draw:
-                roads:
-                    order: 5
-                    width: 12
-                outline:
-                    style: lines
-                    order: 4
-                    color: [1, 1, 1]
-                    width: 13
-        tunnel:
-            filter:
-                is_tunnel: yes
-            draw:
-                roads:
-                    color: tan
-            rail:
-                filter:
-                    kind: rail
-                visible: false
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                roads:
-                    width: 5
-        path:
-            filter:
-                kind: path
-            draw:
-                roads:
-                    width: 3
-        rail:
-            filter:
-                kind: rail
-                is_tunnel: no
-            draw:
-                roads:
-                    width: 3
-    buildings:
-        data: { source: osm }
-        draw:
-            buildings:
-                order: 7
-                color: [0, 0, 0]
-        3d-buildings:
-            filter: { $zoom: { min: 13 } }
-            draw:
-                buildings:
-                    extrude: true
-                buildingsLines:
-                    order: 8
-                    color: [0.643,0.851,0.690]
-                    width: [[12, .1px], [14, 0.5px], [15, 1.5px], [17, 1.5px], [18, 2px]]
-                    extrude: true
-
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, not: { kind: rail }, $zoom: { min: 14 } }
-        draw:
-            text:
-                font:
-                    family: Courier
-                    size: 14px
-                    fill: white
-                    stroke: { color: black , width: 6 }
-    places:
-        data: { source: osm }
-        filter: { name: true }
-        draw:
-            places_label:
-                font:
-                    family: Courier
-                    size: 20px
-                    weight: bold
-                    fill: white
-                    stroke: { color: black , width: 6 }
-            places_icons:
-                color: [0.643,0.851,0.690]
-                size: [[13, 40px], [15, 60px]]
-                interactive: true

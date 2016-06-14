@@ -1,0 +1,49 @@
+﻿# Author @patriciogv - 2015
+
+import:
+    - https://tangrams.github.io/blocks/geometry/matrices.yaml
+    - https://tangrams.github.io/blocks/geometry/projections.yaml
+
+sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+cameras:
+    perspective:
+        type: flat
+lights:
+    point1:
+        type: point
+        origin: world
+        position: [0,58,14900000]
+styles:
+    textures:
+        base: polygons
+        mix: [geometry-projections, geometry-matrices]
+        animated: true
+        shaders:
+            uniforms:
+                u_cloud_map: ../styles/imgs/earth-clouds.jpg
+            blocks:
+                normal: |
+                    vec2 st = u_map_position.xy+v_position.xy;
+                    vec2 pos = vec2(y2lat_m(st.y),x2lon_m(st.x));
+                    mat3 sphere = rotateY3D(deg2rad(pos.y)) * rotateX3D(deg2rad(pos.x));
+                    pos /= vec2(90.,180.); // Normalize
+                    pos = (pos+1.)*.5; // re-map between 0.0 and 1.0
+                filter: |
+                    float clouds = texture2D(u_cloud_map,fract(pos.yx) ).r;
+                    color = mix(color-clouds,color+clouds,light_accumulator_diffuse.r);
+layers:
+    earth:
+        data: { source: osm }
+        draw:
+            textures:
+                order: 0
+                color: '#555'
+    water:
+        data: { source: osm }
+        draw:
+            textures:
+                order: 1
+                color: '#ddd'

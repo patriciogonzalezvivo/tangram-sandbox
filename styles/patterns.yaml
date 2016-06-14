@@ -1,98 +1,102 @@
 ﻿# Author @patriciogv - 2015
 
-cameras:
-    camera1:
-        type: perspective
-        focal_length: [[16, 2], [20, 6]] # pairs of [zoom, focal len]
-        vanishing_point: [-250, -250] # relative to center of screen, in pixels
+import:
+    - default.yaml
+    - https://tangrams.github.io/blocks/generative/random.yaml
+    - https://tangrams.github.io/blocks/space/tile.yaml
+    - https://tangrams.github.io/blocks/geometry/normal.yaml
+    - https://tangrams.github.io/blocks/geometry/matrices.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/tiling/tile.yaml
+    - https://tangrams.github.io/blocks/tiling/brick.yaml
+    - https://tangrams.github.io/blocks/shapes/circle.yaml
+    - https://tangrams.github.io/blocks/functions/aastep.yaml
+
 lights:
-    light1:
+    dir:
         type: directional
         direction: [0, 1, -.5]
         diffuse: .5
         ambient: .3
-    light2:
+    pnt:
         type: point
         position: [0, 0, 500px]
         origin: ground
         ambient: .3
         diffuse: .3
-styles:
-    space-tile:
-        shaders:
-            blocks:
-                global: |
-                    // Variant to be add to both vertex and fragments shaders
-                    varying vec3 v_pos;
-                    //
-                    // Get the coordinates in tile space
-                    // ================================
-                    vec2 getTileCoords() {
-                        return fract(v_pos.xy);
-                    }
 
-                position: |
-                    // Normalize the attribute position of a vertex
-                    v_pos = modelPosition().xyz;
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            water:
+                color: '#343434'
+    earth:
+        data: { source: osm }
+        draw:
+            earth:
+                color: '#ddeeee'
+    landuse:
+        data: { source: osm }
+        draw:
+            lines:
+                order: global.order
+                color: [0.204,0.204,0.204]
+                width: 2px
+            landuse:
+                color: '#aaffaa'
+                visible: false
+    roads:
+        data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
+        draw:
+            roads:
+                color: '#343434'
+            text:
+                font:
+                    family: Helvetica
+                    size: 14px
+                    fill: [1.000,0.968,0.968]
+                    stroke: { color: [0.204,0.204,0.204] , width: 3  }
+    buildings:
+        data: { source: osm }
+        draw:
+            buildings:
+                color: global.pseudoRandomColor
+                extrude: true
+            lines:
+                order: global.order
+                color: white
+                width: [[12, .1px], [14, 1px], [15, 2px], [17, 5px], [18, 10px]]
+            buildingsLines:
+                order: global.order-top
+                color: white
+                width: [[12, .1px], [14, 1px], [15, 2px], [17, 4px], [18, 5px]]
+                extrude: true
+    places:
+        data: { source: osm }
+        filter: { name: true }
+        draw:
+            text:
+                font:
+                    family: Helvetica
+                    size: 20px
+                    weight: bold
+                    fill: [0.204,0.204,0.204]
+                    stroke: { color: white , width: 4 }
+styles:
     patterns:
-        mix: space-tile
+        mix: [space-tile, geometry-matrices, functions-aastep]
         material:
             ambient: 1
             diffuse: 1
         shaders:
-            extensions: OES_standard_derivatives
             blocks:
                 global: |
-                    // Random
-                    //=============================
-                    float random( in float _x){
-                        return fract(sin(_x)*1e4);
-                    }
-                    // Color
-                    //=============================
-                    float getBrightness(in vec3 _rgb){
-                        return 0.212655 * _rgb.r + 0.715158 * _rgb.g + 0.072187 * _rgb.b;
-                    }
-                    // Space
-                    //=============================
-                    vec2 rotate2D(vec2 _st, float _angle){
-                      _st -= 0.5;
-                      _st =  mat2(cos(_angle),-sin(_angle),
-                                  sin(_angle),cos(_angle)) * _st;
-                      _st += 0.5;
-                      return _st;
-                    }
-                    vec2 tile(vec2 _st, float _zoom){
-                      _st *= _zoom;
-                      return fract(_st);
-                    }
-                    vec2 brickTile(vec2 _st, float _zoom){
-                        _st *= _zoom;
-                        if (fract(_st.y * 0.5) > 0.5){
-                            _st.x += 0.5;
-                        }
-                        return fract(_st);
-                    }
-                    // Shapes
-                    //=============================
-                    #ifdef TANGRAM_FRAGMENT_SHADER
-                    float aastep(float threshold, float value) {
-                      #ifdef TANGRAM_EXTENSION_OES_standard_derivatives
-                        float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
-                        return smoothstep(threshold-afwidth, threshold+afwidth, value);
-                      #else
-                        return step(threshold, value);
-                      #endif  
-                    }
-                    float circle(vec2 st, float radius){
-                      vec2 pos = vec2(0.5)-st;
-                      return 1.0-aastep(radius,dot(pos,pos)*3.14);
-                    }
                     float stripes(vec2 st, float angle, float width){
-                        st = rotate2D(st*20., angle);
-                        return aastep(width,abs(sin(st.x*3.1415)));
+                        st = rotate2D(angle) * (st*20.);
+                        return aastep(width, abs(sin(st.x*3.1415)));
                     }
-                    #endif
     plain:
         base: polygons
         mix: patterns
@@ -102,13 +106,28 @@ styles:
         shaders:
             blocks:
                 color: |
-                    vec2 st = getTileCoords()*5.;
-                    float b = 1.0-getBrightness(color.rgb);
-                    float pattern = stripes(st,3.1415*b,b*5.);
+                    vec2 st = getTileCoords()*1.768;
+                    float pattern = stripes(st, 0.785375, .5);
                     color.rgb = mix(vec3(0.704), vec3(1.000,0.968,0.908), pattern);
+    water:
+        base: polygons
+    earth:
+        base: polygons
+        mix: plain
+    landuse:
+        base: polygons
+        mix: plain
+    roads:
+        base: lines
+        texcoords: true
+        shaders:
+            blocks:
+                color: |
+                    float x = v_texcoord.x;
+                    color.rgb += 1.-clamp(step(.15,x) - step(.85,x),0.,1.);
     buildings:
         base: polygons
-        mix: patterns
+        mix: [patterns, color-tools, generative-random, shapes-circle, tiling-brick, tiling-tile, geometry-normal]
         texcoords: true
         shaders:
             blocks:
@@ -119,22 +138,22 @@ styles:
                     float b = 0.1+random(getBrightness(color.rgb))*.9;
                     float pattern = 0.0;
                     if (b > 0.9){
-                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
+                        if( !isWall() ){
                             st = fract(worldPosition().xy*0.1);
                         } else {
                             st = tile(st,3.);
                         }
                         pattern = circle(st,0.2);
                     } else if (b > 0.8){
-                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
+                        if( !isWall() ){
                             st = fract(worldPosition().xy*0.05);
-                            st = brickTile(st,2.);
+                            st = brick(st, 2.);
                         } else {
-                            st = brickTile(st,5.);
+                            st = brick(st, 5.);
                         }
                         pattern = 1.0-circle(st,0.1);
                     } else {
-                        if( dot(v_normal,vec3(0.,0.,1.)) >= 0.9 ){
+                        if( !isWall() ){
                             st = v_texcoord.xy;
                         } else {
                             st *= 0.5;
@@ -144,7 +163,7 @@ styles:
                         pattern = stripes(st,angle,gradient);
                     }
                     color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),pattern);
-    buildings-lines:
+    buildingsLines:
         base: lines
         mix: patterns
         texcoords: true
@@ -157,147 +176,3 @@ styles:
                 color: |
                     vec2 st = v_texcoord.xy;
                     color.rgb = mix(vec3(0.204,0.204,0.204),vec3(1.000,0.968,0.908),smoothstep(0.4,0.5,st.x));
-sources:
-    osm:
-        type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-
-layers:
-    earth:
-        data: { source: osm }
-        draw:
-            plain:
-                order: 1
-                color: '#ddeeee'
-            outline:
-                order: 0
-                style: lines
-                color: [0.204,0.204,0.204]
-                width: 2
-    landuse:
-        data: { source: osm }
-        draw:
-            plain:
-                order: 1
-                color: '#aaffaa'
-            outline:
-                order: 2
-                style: lines
-                color: [0.204,0.204,0.204]
-                width: 2
-
-    water:
-        data: { source: osm }
-        draw:
-            polygons:
-                order: 3
-                color: '#343434'
-    roads:
-        data: { source: osm }
-        filter: { not: { kind: [rail, ferry] } }
-        draw:
-            lines:
-                order: 5
-                color: '#343434'
-                width: 8
-            outline:
-                order: 4
-                style: lines
-                color: '#FDF5E6'
-                width: 10
-        highway:
-            filter:
-                kind: highway
-            draw:
-                lines:
-                    color: '#343434'
-                    width: 12
-                outline:
-                    color: '#FDF5E6'
-                    width: 14
-        tunnel:
-            filter:
-                is_tunnel: yes
-            draw:
-                lines:
-                    color: '#343434'
-            rail:
-                filter:
-                    kind: rail
-                draw:
-                    lines:
-                        width: 0
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                lines:
-                    color: '#343434'
-                    width: 5
-                outline:
-                    color: '#FDF5E6'
-                    width: 6
-        path:
-            filter:
-                kind: path
-            draw:
-                lines:
-                    color: '#343434'
-                    width: 3
-                outline:
-                    color: '#FDF5E6'
-                    width: 4
-        rail:
-            filter:
-                kind: rail
-                is_tunnel: no
-            draw:
-                lines:
-                    color: '#343434'
-                    width: 3
-                outline:
-                    color: '#FDF5E6'
-                    width: 4
-    buildings:
-        data: { source: osm }
-        draw:
-            buildings:
-                order: 7
-                color: Style.color.pseudoRandomColor()
-            outline:
-                style: lines
-                order: 6
-                color: white
-                width: [[12, .1px], [14, 1px], [15, 2px], [17, 5px], [18, 10px]]
-        extruded:
-            filter: { $zoom: { min: 13 } }
-            draw:
-                buildings:
-                    extrude: true
-                buildings-lines:
-                    order: 8
-                    color: white
-                    width: [[12, .1px], [14, 1px], [15, 2px], [17, 4px], [18, 5px]]
-                    extrude: true
-
-    road_labels:
-        data: { source: osm, layer: roads }
-        filter: { name: true, $zoom: { min: 14 } }
-        draw:
-            text:
-                font:
-                    family: Helvetica
-                    size: 14px
-                    fill: [1.000,0.968,0.968]
-                    stroke: { color: [0.204,0.204,0.204] , width: 3 }
-    places:
-        data: { source: osm }
-        filter: { name: true }
-        draw:
-            text:
-                font:
-                    family: Helvetica
-                    size: 20px
-                    weight: bold
-                    fill: [0.204,0.204,0.204]
-                    stroke: { color: white , width: 4 }

@@ -1,0 +1,23 @@
+# Author @patriciogv - 2015
+
+import:
+    - sandbox.yaml
+    - https://tangrams.github.io/blocks/filter/lut.yaml
+
+styles:
+    filter-lut:
+        shaders:
+            uniforms:
+                u_lut: imgs/lut-0001.png
+    water:
+        base: polygons
+        mix: [generative-noise,filter-lut]
+    roads:
+        base: lines
+        mix: [generative-noise, filter-lut]
+    earth:
+        base: polygons
+        mix: [filter-lut]
+    buildings:
+        base: polygons
+        mix: [generative-noise, geometry-matrices, filter-lut]

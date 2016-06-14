@@ -1,0 +1,229 @@
+﻿# Author @patriciogv - 2015
+
+sources:
+    osm:
+        type: TopoJSON
+        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+cameras:
+    perspective:
+        type: perspective
+        vanishing_point: [0, -500]
+lights:
+    directional1:
+        type: directional
+        direction: [.1, .5, -1]
+        diffuse: .7
+        ambient: .5
+styles:
+    color-conversion:
+        shaders:
+            blocks:
+                global: |
+                    // Convert from RGB to HSB
+                    // ================================
+                    vec3 rgb2hsb (vec3 c) {
+                        vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+                        vec4 p = mix(vec4(c.bg, K.wz),
+                                     vec4(c.gb, K.xy),
+                                     step(c.b, c.g));
+                        vec4 q = mix(vec4(p.xyw, c.r),
+                                     vec4(c.r, p.yzx),
+                                     step(p.x, c.r));
+                        float d = q.x - min(q.w, q.y);
+                        float e = 1.0e-10;
+                        return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)),
+                                    d / (q.x + e),
+                                    q.x);
+                    }
+                    vec3 rgb2hsb (vec4 c) {
+                        return rgb2hsb(c.rgb);
+                    }
+                    //
+                    // Convert from HSB to RGB by Iñigo Quiles ( https://www.shadertoy.com/view/MsS3Wc )
+                    // ================================
+                    vec3 hsb2rgb (vec3 c) {
+                        vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),
+                                                 6.0)-3.0)-1.0,
+                                         0.0,
+                                         1.0 );
+                        rgb = rgb*rgb*(3.0-2.0*rgb);
+                        return c.z * mix(vec3(1.0), rgb, c.y);
+                    }
+    buildings:
+        base: polygons
+        shaders:
+            blocks:
+                color: |
+                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
+    street:
+        base: lines
+        animated: true
+        mix: [color-conversion,geometry-matrices]
+        texcoords: true
+        shaders:
+            extensions: OES_standard_derivatives
+            defines:
+                PI: 3.14159265358979323846
+            blocks:
+                width: |
+                    width *= 2.0;
+                color: |
+                    vec2 diff = vec2(dFdx(v_texcoord.y), dFdy(v_texcoord.y));
+                    float angle = 0.0;
+                    angle = atan(diff.y,diff.x);
+                    // If the road have two ways
+                    if ( v_color.r < 0.5) {
+                        if (v_texcoord.x < 0.5) {
+                            // Invert the left side
+                            angle += PI;    
+                        }
+                    }
+                    
+                    // Normalize the angle between 0.0~1.0
+                    angle = (angle/PI)*.5+.5; 
+                    // Colorize the direction mapping the angle direction to the HUE spectrum
+                    color.rgb = hsb2rgb(vec3(angle,1.,1.));
+                    
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 2
+                color: '#353535'
+    earth:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 0
+                color: '#555'
+    landuse:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 1
+                color: '#666'
+    buildings:
+        data: { source: osm }
+        draw:
+            polygons:
+                order: 50
+                color: '#999'
+        extruded:
+            draw:
+                polygons:
+                    style: buildings
+                    extrude: function () { return feature.height > 0 || $zoom >= 16; }
+    roads:
+        data: { source: osm, layer: roads }
+        filter: { not: { highway: service, kind: rail } }
+        draw:
+            street:
+                order: 7
+                color: black
+                width: function () { return Math.log($zoom); }
+        oneway:
+            filter: { oneway: yes }
+            draw: { street: { color: red } }
+        highway:
+            filter: { kind: highway }
+            draw:
+                street:
+                    # put highways on top of all other roads
+                    order: 8
+                    width: [[11, 2px], [14, 3px], [16, 4px], [17, 10m]]
+            link:
+                filter: { is_link: yes } # on- and off-ramps, etc
+                draw:
+                    street:
+                        width: [[13, 0px], [14, 3px], [16, 5px], [18, 10m]]
+                tunnel-link:
+                    filter: {is_tunnel: yes, $zoom: {min: 13} }
+            tunnel:
+                filter: {is_tunnel: yes, $zoom: {min: 13} }
+                draw:
+                    street:
+                        order: 5
+        major_road:
+            filter: { kind: major_road }
+            draw:
+                street:
+                    width: [[13, 0px], [14, 2px], [16, 2.5px], [19, 8m]]
+            primary:
+                filter: { highway: primary }
+                draw:
+                    street:
+                        width: [[10, 0px], [11, 1.5px], [13, 2.5px], [16, 2.5px], [19, 8m]]
+            secondary:
+                filter: { highway: secondary }
+                draw:
+                    street:
+                        width: [[11, 0px], [13, 1.5px], [14, 2.5px], [16, 2.5px], [19, 8m]]
+            tertiary:
+                filter: { highway: tertiary }
+                draw:
+                    street:
+                        width: [[11, 0px], [13, .75px], [14, 2.5px], [16, 2.5px], [19, 8m]]
+        minor_road:
+            filter: { kind: minor_road, not: { highway: service } }
+            draw:
+                street:
+                    width: [[13, 0px], [14, 1.5px], [15, 3px], [16, 5m]]
+        path:
+            filter: { kind: path }
+            draw:
+                street:
+                    width: [[16, 0], [17, 3m]]
+
+        z-order:
+            filter: { $zoom: {min: 14} }
+            draw:
+                street:
+                    # let roads sort themselves past zoom 14
+                    order: function() { return 6 + feature.sort_key; }
+    road_labels:
+        data: { source: osm, layer: roads }
+        filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
+        highway:
+            filter: { kind: highway, $zoom: { min: 5 } }
+            draw:
+                text:
+                    font:
+                        fill: black
+                        size: 16px
+                        family: helvetica
+                        weight: 600
+                        stroke: { color: white, width: 4 }
+
+        not_highway:
+            filter: { not: { kind: highway }, $zoom: { min: 13 } }
+            draw:
+                text:
+                    font:
+                        fill: black
+                        stroke: { color: white, width: 3 }
+                        size: 16px
+                        family: helvetica
+                        weight: 500
+
+            major_road:
+                filter: { kind: major_road, $zoom: { min: 14 } }
+                draw:
+                    text:
+                        font:
+                            size: 16px
+                            family: helvetica
+                            weight: 100
+                            stroke: { color: white, width: 4 }
+            minor_road:
+                filter: { kind: minor_road, railway: false, $zoom: { min: 15 } }
+                draw:
+                    text:
+                        font:
+                            size: 14px
+                            family: helvetica
+                            weight: 100
+                            stroke: { color: white, width: 4 }
+            small:
+                filter: { highway: [residential, unclassified], $zoom: { max: 15 } }
+                visible: false

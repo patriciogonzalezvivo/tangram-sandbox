@@ -1,0 +1,194 @@
+author: Patricio Gonzalez Vivo (@patriciogv) - 2016 
+
+import:
+    - https://tangrams.github.io/blocks/color/tools.yaml
+    - https://tangrams.github.io/blocks/geometry/projections.yaml
+    - https://tangrams.github.io/blocks/patterns/grid.yaml
+    - https://tangrams.github.io/blocks/lines/dash.yaml
+    - https://tangrams.github.io/blocks/shapes/cross.yaml
+    
+sources:
+    osm:
+        type: TopoJSON
+        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-Nhm6Mkg
+        rasters: [normals, elevation]
+    normals:
+        type: Raster
+        url: https://s3.amazonaws.com/elevation-tiles-prod/normal/{z}/{x}/{y}.png
+        max_zoom: 15
+    elevation:
+        type: Raster
+        url: https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png
+        max_zoom: 15
+
+textures:
+    puyehue:
+        url: https://dl.dropboxusercontent.com/u/335522/openframe/20110613.jpg
+    palette:
+        url: data:image/png;base64,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
+
+scene:
+    background:
+        color: [.1,.1,.1]
+
+cameras:
+    perspective:
+        type: perspective
+        
+lights:
+    dir:
+        type: directional
+        direction: [0.489,0.786,-0.379]
+        diffuse: .9
+        ambient: .5
+
+global:
+    order: function () { return feature.sort_key; }
+    order-top: function () { return feature.sort_key + 1; }
+    order-buttom: function () { return feature.sort_key - 1; }
+    pseudoRandomColor: |
+        function() {
+            return [
+                0.7 * (parseInt(feature.id, 16) / 100 % 1),     // jshint ignore:line
+                0.7 * (parseInt(feature.id, 16) / 10000 % 1),   // jshint ignore:line
+                0.7 * (parseInt(feature.id, 16) / 1000000 % 1), // jshint ignore:line
+                1
+            ];
+        }
+        
+layers:
+    water:
+        data: { source: osm }
+        draw:
+            water:
+                order: global.order
+                color: [.1,.1,.1]
+    earth:
+        data: { source: osm }
+        draw:
+            earth:
+                order: global.order
+                color: gray
+            lines:
+                order: global.order-top
+                color: white
+                width: 2px
+    roads:
+        data: { source: osm }
+        filter: { not: { kind: [rail, ferry] } }
+        draw:
+            roads:
+                order: global.order
+                color: [0.988, 0.988, 0.988]
+                width: [[7,0.0px], [10, .5px], [15, .75px], [17, 5m]]
+        highway:
+            filter: { kind: highway }
+            draw:
+                roads:
+                    order: global.order
+                    width: [[8,0px], [8,.25px], [11, 1.5px], [14, 2px], [16, 4px], [17, 10m]]
+            link:
+                filter: { is_link: yes } # on- and off-ramps, etc
+                draw:
+                    roads:
+                        width: [[8,0px], [14, 3px], [16, 5px], [18, 10m]]
+                tunnel-link:
+                    filter: {is_tunnel: yes, $zoom: {min: 13} }
+        tunnel:
+            filter: {is_tunnel: yes }
+            draw:
+                roads:
+                    order: global.order
+    boundaries:
+        data: { source: osm }
+        filter: { $zoom: {max: 15}}
+        draw:
+            lines-dash:
+                order: global.order
+                color: white
+                width: 1px
+    places:
+        data: { source: osm }
+        filter: 
+            any:
+                - { capital: yes }
+                - { state_capital: yes }
+        draw:
+            icons:
+                color: white
+                size: 15px
+            text:
+                offset: [0,-16px]
+                font:
+                    transform: uppercase
+                    typeface: Helvetica
+                    fill: white
+styles:
+    elevation:
+        raster: custom
+        shaders:
+            uniforms:
+                u_palette: palette
+            blocks:
+                global: |
+                    // Unpack RGB elevation
+                    float unpack(vec4 h) {
+                        return (h.r * 1. + h.g / 256. + h.b / 65536.);
+                    }
+                color: |
+                    float elevation = (unpack(sampleRaster(1))-.5)*20.;
+                    elevation = elevation*0.6;
+                    color = texture2D(u_palette,vec2(elevation,.5));
+                    normal = (sampleRaster(0).rgb-.5)*2.;
+        
+    picture:
+        base: polygons
+        raster: normal
+        mix: [geometry-projections, color-tools]
+        shaders:
+            uniforms:
+                u_tex: puyehue
+            blocks:
+                color: |
+                    vec2 pos = u_map_position.xy+v_position.xy;
+                    vec2 latlon = vec2(y2lat_m(pos.y),x2lon_m(pos.x)); // 90/180
+                    vec2 uv = (latlon.yx/vec2(180.,90.)+1.)*.5;
+                    uv.x += -294.096*0.001;
+                    uv.y += -266.584*0.001;
+                    uv *= 17.088;
+                    uv.x *= 9.840*0.1;
+                    
+                    if (uv.x < 1. && uv.x >= 0. && 
+                        uv.y <= 1. && uv.y >= 0.) {
+                        vec4 img = texture2D(u_tex, uv);
+                        float b = getBrightness(img*7.040);
+                        color = mix(color, img, pow(b,.2));
+                    }
+    water:
+        base: polygons
+        mix: [patterns-grid, picture]
+        shaders:
+            blocks:
+                color: |
+                    color += tileGrid()*.2;
+    earth:
+        base: polygons
+        mix: [elevation, picture]
+
+    roads:
+        base: lines
+        lighting: false
+    lines-dash:
+        shaders:
+            defines:
+                DASH_SIZE: .5
+                DASH_SCALE: .3
+    icons:
+        base: points
+        mix: [shapes-cross]
+        v_texcoord: true
+        shaders:
+            blocks:
+                color: |
+                    vec2 st = v_texcoord.xy;
+                    color.a = clamp(cross(st,vec2(2.,.5)),0.,1.)*.75;

@@ -1,0 +1,25 @@
+author: Patricio Gonzalez Vivo (@patriciogv) - 2016 
+
+import:
+    - elevation-ramp.yaml
+    - https://tangrams.github.io/blocks/elevation/stripes.yaml
+    
+layers:
+    landuse:
+        draw:
+            landuse:
+                visible: true
+                color: [0.000, 1.000, 0.480]
+    roads:
+        draw:
+            roads:
+                color: black
+styles:
+    landuse:
+        base: polygons
+        mix: [elevation-stripes]
+        shaders:
+            defines:
+                STRIPES_ALPHA: .5
+                STRIPES_SCALE: 4.
+                STRIPES_PCT: 1.7

@@ -16,6 +16,9 @@ styles:
     tilt:
         animated: true
         shaders:
+            defines:
+                PI: 3.1415926535897932384626433832795
+                HALF_PI: 1.5707963267948966192313216916398
             blocks:
                 global: |
                     mat3 rotateX3D(float phi){
@@ -31,8 +34,9 @@ styles:
                             vec3(0.,0.,1.));
                     }
                 position: |
-                    float t = u_time*0.05; 
-                    position.xyz = rotateX3D(abs(cos(t))) * rotateZ3D(abs(sin(t))*.5) * position.xyz;
+                    float t = u_time*0.1; 
+                    float z = smoothstep(0.7,1.,max((u_map_position.z)/20.,0.)*0.9);
+                    position.xyz = rotateX3D(z*HALF_PI*1.5) * rotateZ3D(sin(t)*PI*z) * position.xyz;
     lin:
          base: lines
          mix: tilt  
@@ -359,7 +363,7 @@ layers:
                 tile_edges: false
     roads:
         data: { source: osm }
-        filter: { not: { highway: service, kind: [rail, ferry] } }
+        filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
                 order: 5
@@ -378,7 +382,7 @@ layers:
         draw:
             buildings: 
                 order: 8
-                color: Style.color.pseudoRandomColor()
+                color: Style.color.pseudoRandomColor
                 extrude: true
             lin:
                 order: 7

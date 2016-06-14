@@ -1,9 +1,0 @@
-# Patricio Gonzalez Vivo - 2015
-
-styles:
-    filter-tv:
-        shaders: 
-            blocks: 
-                filter: |
-                    color *= abs(cos((gl_FragCoord.y*10.+u_time*5.)));
-
