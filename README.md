@@ -2,6 +2,11 @@
 
 Pushing the limits of how 3D maps can look like on [Tangram.js](https://github.com/tangrams/tangram) by [Patricio Gonzalez Vivo](https://twitter.com/patriciogv) at [Mapzen](https://mapzen.com/).
 
+## Elevation
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/elevation.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/elevation#10.97291/40.7461/-74.0931)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/elevation-ramp.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/elevation-ramp#10.97291/40.7461/-74.0931)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/elevation-stripes.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/elevation-stripes#10.97291/40.7461/-74.0931)
+
 ## Materials & Procedural Textures
 
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/9845C.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/9845C#10.97291/40.7461/-74.0931)
