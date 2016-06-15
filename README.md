@@ -12,6 +12,10 @@ Pushing the limits of how 3D maps can look like on [Tangram.js](http://github.co
 
 
 ## Procedural generated textures
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/callejas.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?stylescallejas#16.575/40.70321/-74.00666)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/oblivion.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/oblivion#16.575/40.70321/-74.00666)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/tilt.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/tilt#16.575/40.70321/-74.00666)
+[ ![](http://tangrams.github.io/tangram-sandbox/styles/grain.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/grain#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/grain-area.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/grain-area#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/grain-roads.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/grain-roads#16.575/40.70321/-74.00666)
 [ ![](http://tangrams.github.io/tangram-sandbox/styles/grain.png) ](http://tangrams.github.io/tangram-sandbox/tangram.html?styles/grain#16.575/40.70321/-74.00666)
