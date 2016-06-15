@@ -27,7 +27,3 @@ styles:
     buildings:
         base: polygons
         mix: filter-grain
-        shaders:
-            blocks:
-                color: |
-                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
