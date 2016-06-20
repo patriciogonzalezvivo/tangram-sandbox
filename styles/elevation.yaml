@@ -1,27 +1,17 @@
 author: Patricio Gonzalez Vivo (@patriciogv) - 2016 
 
 import:
-    - default.yaml
+    - borders.yaml
     - https://tangrams.github.io/blocks/source-elevation.yaml
     - https://tangrams.github.io/blocks/elevation/normal.yaml
-    - https://tangrams.github.io/blocks/filter/grid.yaml
-    - https://tangrams.github.io/blocks/lines/dash.yaml
 
 sources:
     osm:
         type: TopoJSON
         url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-Nhm6Mkg
         rasters: [normals-elevation]
-
-scene:
-    background:
-        color: [.1,.1,.1]
         
 layers:
-    water:
-        draw:
-            water:
-                color: [.1,.1,.1]
     earth:
         draw:
             earth:
@@ -35,29 +25,10 @@ layers:
             landuse:
                 visible: false
                 color: [0.000, 1.000, 0.480]
-    boundaries:
-        data: { source: osm }
-        draw:
-            lines-dash:
-                order: global.order
-                color: [0.000, 1.000, 1.000]
-                width: 1px
 styles:
-    water:
-        base: polygons
-        mix: [filter-grid]
-        lighting: false
-        shaders:
-            defines:
-                GRID_AMOUNT: .2
     earth:
         base: polygons
         mix: [elevation-normal]
     earth_lines:
         base: lines
         lighting: false
-    lines-dash:
-        shaders:
-            defines:
-                DASH_SIZE: .5
-                DASH_SCALE: .3

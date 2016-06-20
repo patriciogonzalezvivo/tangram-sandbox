@@ -2,6 +2,11 @@
 import:
     - default.yaml
     - https://tangrams.github.io/blocks/geometry/tilt.yaml
+    - https://tangrams.github.io/blocks/geometry/rotation.yaml
+
+scene:
+    background:
+        color: black
 
 styles:
     geometry-tilt:
@@ -9,20 +14,25 @@ styles:
             defines:
                 TILT_IN: 10.
                 TILT_OUT: 20.
-                TILT_ROTATE: true
+    geometry-rotation:
+        shaders:
+            defines:
+                ROTATION_IN: 14.
+                ROTATION_OUT: 20.
+                ROTATION_SPEED: .1
     water:
         base: polygons
-        mix: [geometry-tilt]
+        mix: [geometry-rotation, geometry-tilt]
     earth:
         base: polygons
-        mix: [geometry-tilt]
+        mix: [geometry-rotation, geometry-tilt]
     landuse:
         base: polygons
-        mix: [geometry-tilt]
+        mix: [geometry-rotation, geometry-tilt]
     roads:
         base: lines
-        mix: [geometry-tilt]
+        mix: [geometry-rotation, geometry-tilt]
         lighting: false
     buildings:
         base: polygons
-        mix: [geometry-tilt]
+        mix: [geometry-rotation, geometry-tilt]
