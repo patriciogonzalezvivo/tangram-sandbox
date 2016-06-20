@@ -1,0 +1,36 @@
+author: Patricio Gonzalez Vivo (@patriciogv) - 2016 
+
+import:
+    - default.yaml
+    - https://tangrams.github.io/blocks/filter/grid.yaml
+    - https://tangrams.github.io/blocks/lines/dash.yaml
+
+scene:
+    background:
+        color: [.1,.1,.1]
+        
+layers:
+    water:
+        draw:
+            water:
+                color: [.1,.1,.1]
+    boundaries:
+        data: { source: osm }
+        draw:
+            lines-dash:
+                order: global.order
+                color: [0.000, 1.000, 1.000]
+                width: 1px
+styles:
+    water:
+        base: polygons
+        mix: [filter-grid]
+        lighting: false
+        shaders:
+            defines:
+                GRID_AMOUNT: .2
+    lines-dash:
+        shaders:
+            defines:
+                DASH_SIZE: .5
+                DASH_SCALE: .3

@@ -3,8 +3,8 @@
 import:
     - default.yaml
     - https://tangrams.github.io/blocks/filter/grain.yaml
-    - https://tangrams.github.io/blocks/space/tile.yaml
-    - https://tangrams.github.io/blocks/geometry/normal.yaml
+    - https://tangrams.github.io/blocks/polygons/windows.yaml
+    - https://tangrams.github.io/blocks/polygons/glass-walls.yaml
     - https://tangrams.github.io/blocks/fx/water.yaml
 
 scene:
@@ -119,57 +119,14 @@ styles:
                     material.emission = vec4(0.957,0.988,0.976,1.0) * max(0.0,(0.7-dot(fpos-.5,fpos-vec2(.5,.9))*3.) * step(0.5,random(ipos.y)));
                     
                     float lineWidth = 0.2;
+
                     float borders = 1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
                     material.emission *= 1.-borders;
                     
                     color.rgb = vec3(0.4)*borders+n;
     buildings:
-        # animated: true
-        texcoords: true
-        base: polygons
-        mix: [filter-grain, geometry-normal]
-        material:
-            shininess: 1.
-            specular: 0.0
-            emission: 0.0
-        shaders:
-            blocks:
-                color: |
-                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
-                    float t = 0.5;//fract(u_time*0.0000005);
-                    if (isWall()) {
-                        vec2 st = vec2(v_texcoord.x*10.,worldPosition().z*0.2);
-                        vec2 ipos = floor(st);
-                        vec2 fpos = fract(st);
-                        if ( step(0.6,fpos.x)*step(0.4,fpos.y) > 0.0 ){
-                            material.specular = vec4(1.) * max( 1.-(worldPosition().z*.001 + .5), 0. );
-                            material.emission = vec4(0.988,0.983,0.880,1.0) * step(.5,random(ipos+floor(worldNormal().xy*10.0)+t));
-                        }
-                    }
-                filter: |
-                    color.rgb += vec3(1.)* min( 1.-(worldPosition().z*.001 + .7) , 0.5 );
+        mix: [filter-grain, polygons-windows]
+        
     offices:
-        texcoords: true
-        base: polygons
-        mix: [filter-grain, geometry-normal]
-        material:
-            shininess: 1.
-            specular: 0.0
-            emission: 0.0
-        shaders:
-            blocks:
-                color: |
-                    color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
-                    
-                    if (isWall()) {
-                        vec2 st = vec2(v_texcoord.x*10.,worldPosition().z*0.2);
-                        vec2 ipos = floor(st);
-                        vec2 fpos = fract(st);
-                        if ( step(0.01,fpos.x)*step(0.1,fpos.y) > 0.0 ){
-                            material.specular = vec4(1.) * max( 1.-(worldPosition().z*.001 + .5), 0. );
-                            material.emission = vec4(0.957,0.988,0.976,1.0) * step(.5,random(ipos*vec2(0.0000001,0.01)+floor(worldNormal().xy*10.0)));
-                            material.emission *= vec4(0.988,0.983,0.880,1.0) * step(.5,random(ipos));
-                        }
-                    }
-                filter: |
-                    color.rgb += vec3(1.)* min( 1.-(worldPosition().z*.001 + .7) , 0.5 );
+        mix: [filter-grain, polygons-glass-walls]
+        

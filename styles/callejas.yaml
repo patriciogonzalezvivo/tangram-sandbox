@@ -1,30 +1,11 @@
 # Author: Paitricio Gonzalez Vivo (@patriciogv) - 2016
 
 import:
-    - default.yaml
-    - https://tangrams.github.io/blocks/functions/aastep.yaml
-    - https://tangrams.github.io/blocks/functions/map.yaml
-    - https://tangrams.github.io/blocks/color/tools.yaml
-    - https://tangrams.github.io/blocks/geometry/matrices.yaml
-    - https://tangrams.github.io/blocks/patterns/grid.yaml
-    - https://tangrams.github.io/blocks/shapes/cross.yaml
+    - elevation-stripes.yaml
+    - https://tangrams.github.io/blocks/filter/grid.yaml
     - https://tangrams.github.io/blocks/lines/dash.yaml
     - https://tangrams.github.io/blocks/lines/outline.yaml
-    - https://tangrams.github.io/blocks/shapes/cross.yaml
-
-sources:
-    osm:
-        type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-Nhm6Mkg
-        rasters: [normals, elevation]
-    normals:
-        type: Raster
-        url: https://s3.amazonaws.com/elevation-tiles-prod/normal/{z}/{x}/{y}.png
-        max_zoom: 15
-    elevation:
-        type: Raster
-        url: https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png
-        max_zoom: 15
+    - https://tangrams.github.io/blocks/points/cross.yaml
 
 textures:
     palette:
@@ -50,18 +31,16 @@ layers:
         draw:
             earth:
                 color: [0.302,0.310,0.349]
+            earth_lines:
+                color: [[0,[0.624,0.039,0.392]], [20,[1.,1.,1.]]]
     landuse:
         draw:
             landuse:
                 color: [0.741,0.753,0.765]
     boundaries:
-        data: { source: osm }
-        filter: { $zoom: {max: 15}}
         draw:
             lines-dash:
-                order: global.order
-                color: black
-                width: 1px
+                color: [[0,[0.835,0.424,0.757]], [20,[0.,0.,0.]]]
     roads:
         filter: { $zoom: {min: 7}, not: { kind: [rail, ferry] } }
         draw:
@@ -96,7 +75,7 @@ layers:
                 - { state_capital: yes }
                 - kind: [city,town]
         draw:
-            icons:
+            points-cross:
                 color: white
                 size: 15px
             text:
@@ -105,71 +84,38 @@ layers:
                     transform: uppercase
                     typeface: Helvetica
                     fill: white
-                    # stroke: { color: [0.941,0.925,0.922] , width: 4 }
+                    size: 12px
+                    stroke: { color: [0.302,0.310,0.349] , width: 4 }
 styles:
-    water:
-        base: polygons
-        mix: [patterns-grid]
-        lighting: false
-        shaders:
-            blocks:
-                color: |
-                    color.rgb -= tileGrid()*0.4;
-    earth:
-        base: polygons
+    elevation-ramp:
         raster: custom
         shaders:
             uniforms:
-                u_palette: palette
-            blocks:
-                global: |
-                    // Unpack RGB elevation
-                    float unpack(vec4 h) {
-                        return (h.r * 1. + h.g / 256. + h.b / 65536.);
-                    }
-                color: |
-                    float elevation = (unpack(sampleRaster(1)) - .5) * 20.;
-                    elevation = elevation;
-                    color = max(color,texture2D(u_palette,vec2(pow(elevation,2.),.5)));
-                    normal = (sampleRaster(0).rgb-.5)*2.;
+                u_ramp: palette
+
+    points-cross:
+        shaders:
+            defines:
+                CROSS_ALPHA: 1.
     lines-dash:
         shaders:
             defines:
                 DASH_SIZE: .5
                 DASH_SCALE: .2
-    landuse:
+    water:
         base: polygons
-        mix: [geometry-matrices, functions-map, color-tools, functions-aastep, space-tile]
-        blend: inlay
+        mix: [filter-grid]
         lighting: false
-        raster: custom
-        shaders: 
-            blocks: 
-                global: |
-                    float stripes(vec2 st, float width){
-                        st = rotate2D(0.78539816339)*st;
-                        st *= 29.7;
-                        return aastep(.5+width*0.5,abs(sin(st.y*3.14159265358)));
-                    }
-                filter: |
-                    vec2 st = getTileCoords()*2.;
-                    vec3 n = (sampleRaster(0).rgb-.5)*2.;
-                    float pct = map(u_map_position.z,1.,15.,0.0,1.0, true);
-                    pct = mix((1.-pct*pct),dot(n, vec3(0.5, 0.8, .6)),pct);
-                    color.a = stripes(st,pct)*.125;
+        shaders:
+            defines:
+                GRID_ADD: false
+                GRID_SUBSTRACT: true
+                GRID_AMOUNT: 0.4
     roads:
         base: lines
-        mix: [blueprint, lines-outline]
+        mix: [lines-outline]
         shaders:
             defines:
                 outline_width: 0.1
                 outline_color: vec3(0.302,0.310,0.349)
-    icons:
-        base: points
-        mix: [shapes-cross]
-        v_texcoord: true
-        shaders:
-            blocks:
-                color: |
-                    vec2 st = v_texcoord.xy;
-                    color.a = clamp(cross(st,vec2(2.,.5)),0.,1.)*.75;
+

@@ -1,0 +1,39 @@
+# author: Patricio Gonzalez Vivo (@patriciogv) - 2016 
+# 
+#   Trip from Buenos Aires to New York
+#
+
+import:
+    - elevation-places.yaml
+    - https://tangrams.github.io/blocks/geometry/projections.yaml
+
+sources:
+    trip: 
+        type: GeoJSON
+        url: ../data/trip.json
+
+
+layers:
+    trip:
+        data: { source: trip }
+        draw:
+            trip:
+                color: [1.,1.,0.]
+                width: [ [0, 4px], [20, 200]]
+                order: 1000
+styles:
+    trip:
+        blend: overlay
+        animated: true
+        mix: [lines-dash, geometry-projections]
+        shaders:
+            defines:
+                CHEVRON_SIZE: 1
+                CHEVRON_SCALE: .25
+                CHEVRON_ALPHA: 0.0
+            blocks:
+                filter: |
+                    vec2 pos = u_map_position.xy+v_position.xy;
+                    vec2 latlon = vec2(y2lat_m(pos.y),x2lon_m(pos.x)); // 90/180
+                    vec2 uv = (latlon.yx/vec2(180.,90.)+1.)*.5;
+                    color.a *= 1.-step(fract(0.145+u_time*0.02),uv.x);

@@ -1,0 +1,44 @@
+author: Patricio Gonzalez Vivo (@patriciogv) - 2016 
+
+import:
+    - elevation-places.yaml
+    - https://tangrams.github.io/blocks/geometry/projections.yaml
+    - https://tangrams.github.io/blocks/color/tools.yaml
+
+sources:
+    places: 
+        type: GeoJSON
+        url: ../data/places.json
+
+textures:
+    puyehue:
+        url: imgs/lansat-puyehue.jpg
+
+styles:        
+    picture:
+        base: polygons
+        raster: normal
+        mix: [geometry-projections, color-tools]
+        shaders:
+            uniforms:
+                u_tex: puyehue
+            blocks:
+                color: |
+                    vec2 pos = u_map_position.xy+v_position.xy;
+                    vec2 latlon = vec2(y2lat_m(pos.y),x2lon_m(pos.x)); // 90/180
+                    vec2 uv = (latlon.yx/vec2(180.,90.)+1.)*.5;
+
+                    uv.x += -294.080*0.001;
+                    uv.y += -260.552*0.001;
+                    uv.x *= 168.200*.1;
+                    uv.y *= 104.794*.1;
+                    
+                    if (uv.x < 1. && uv.x >= 0. && 
+                        uv.y <= 1. && uv.y >= 0.) {
+                        vec4 img = texture2D(u_tex, uv);
+                        float b = getBrightness(img*7.040);
+                        color = mix(color, img, pow(b,.2));
+                    }
+    earth:
+        base: polygons
+        mix: [elevation-ramp, picture]
