@@ -7,9 +7,7 @@ import:
 sources:
     osm:
         type: TopoJSON
-        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson
-        url_params:
-            api_key: vector-tiles-JUsa0Gc
+        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
         max_zoom: 16
 
 cameras:
