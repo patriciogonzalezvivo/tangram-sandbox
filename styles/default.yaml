@@ -13,7 +13,7 @@ sources:
 cameras:
     cam:
         type: perspective
-        vanishing_point: [0, -500]
+        # vanishing_point: [0, -500]
 
 lights:
     dir:
