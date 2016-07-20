@@ -113,13 +113,14 @@ layers:
                     extrude: true
 styles:
     tilt:
-        mix: [functions-zoom, geometry-rotation, geometry-tilt]
+        mix: [functions-zoom, geometry-tilt]
         shaders:
             defines:
                 ZOOM_START: 10.
-                ZOOM_END: 16.
-                TILT: zoom()*PI
-                ROTATION_RANGE: zoom()*HALF_PI
+                ZOOM_END: 14.
+                ZOOM_IN: 0.
+                ZOOM_OUT: PI
+                TILT: zoom()
     terrain:
         base: polygons
         mix: [terrain-terrain, elevation-ramp]
@@ -164,14 +165,14 @@ styles:
     ##################################################################
     flat_roads:
         base: lines
-        mix: geometry-tilt
+        mix: tilt
     elev_roads:
         base: lines
         mix: terrain-lines
     ##################################################################
     flat_buildings:
         base: lines
-        mix: geometry-til
+        mix: tilt
     elev_buildings:
         base: polygons
         mix: [terrain-polygons, filter-height]

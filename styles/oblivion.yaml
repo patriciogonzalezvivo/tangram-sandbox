@@ -8,6 +8,7 @@ import:
     - https://tangrams.github.io/blocks/geometry/tilt.yaml
     - https://tangrams.github.io/blocks/geometry/rotation.yaml
     - https://tangrams.github.io/blocks/shapes/cross.yaml
+    - https://tangrams.github.io/blocks/functions/zoom.yaml
 
 sources:
     osm:
