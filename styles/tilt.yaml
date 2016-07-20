@@ -3,36 +3,34 @@ import:
     - default.yaml
     - https://tangrams.github.io/blocks/geometry/tilt.yaml
     - https://tangrams.github.io/blocks/geometry/rotation.yaml
+    - https://tangrams.github.io/blocks/functions/zoom.yaml
 
 scene:
     background:
         color: black
 
 styles:
-    geometry-tilt:
+    tilt-rotate:
+        mix: [functions-zoom, geometry-rotation, geometry-tilt]
         shaders:
             defines:
-                TILT_IN: 10.
-                TILT_OUT: 20.
-    geometry-rotation:
-        shaders:
-            defines:
-                ROTATION_IN: 14.
-                ROTATION_OUT: 20.
-                ROTATION_SPEED: .1
+                ZOOM_START: 10.
+                ZOOM_END: 20.
+                TILT: zoom()*PI
+                ROTATION_RANGE: zoom()*HALF_PI
     water:
         base: polygons
-        mix: [geometry-rotation, geometry-tilt]
+        mix: [tilt-rotate]
     earth:
         base: polygons
-        mix: [geometry-rotation, geometry-tilt]
+        mix: [tilt-rotate]
     landuse:
         base: polygons
-        mix: [geometry-rotation, geometry-tilt]
+        mix: [tilt-rotate]
     roads:
         base: lines
-        mix: [geometry-rotation, geometry-tilt]
+        mix: [tilt-rotate]
         lighting: false
     buildings:
         base: polygons
-        mix: [geometry-rotation, geometry-tilt]
+        mix: [tilt-rotate]

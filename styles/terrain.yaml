@@ -11,6 +11,7 @@ import:
     - https://tangrams.github.io/blocks/terrain/terrain.yaml
     - https://tangrams.github.io/blocks/terrain/lines.yaml
     - https://tangrams.github.io/blocks/terrain/polygons.yaml
+    - https://tangrams.github.io/blocks/functions/zoom.yaml
     
 textures:
     ramp:
@@ -111,12 +112,14 @@ layers:
                     color: white
                     extrude: true
 styles:
-    geometry-tilt:
+    tilt:
+        mix: [functions-zoom, geometry-rotation, geometry-tilt]
         shaders:
             defines:
-                TILT_IN: 10.
-                TILT_OUT: 16.
-                TILT_ROTATE: false
+                ZOOM_START: 10.
+                ZOOM_END: 16.
+                TILT: zoom()*PI
+                ROTATION_RANGE: zoom()*HALF_PI
     terrain:
         base: polygons
         mix: [terrain-terrain, elevation-ramp]
@@ -126,7 +129,7 @@ styles:
     ##################################################################
     flat_earth:
         base: polygons
-        mix: [geometry-tilt, elevation-ramp]
+        mix: [tilt, elevation-ramp]
         shaders:
             uniforms:
                 u_ramp: ramp    
@@ -139,7 +142,7 @@ styles:
     ##################################################################  
     flat_water:
         base: polygons
-        mix: [geometry-tilt, filter-grid]
+        mix: [tilt, filter-grid]
         shaders:
             defines:
                 GRID_AMOUNT: .2
@@ -149,7 +152,7 @@ styles:
     elev_water:
         base: raster
         animated: true
-        mix: [terrain-polygons, geometry-tilt, fx-water, filter-grid]
+        mix: [terrain-polygons, tilt, fx-water, filter-grid]
         blend: multiply
         shaders:
             defines:

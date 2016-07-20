@@ -79,19 +79,14 @@ layers:
                 width: 5
 
 styles:
-    geometry-tilt:
+    tilt-rotate:
+        mix: [functions-zoom, geometry-rotation, geometry-tilt]
         shaders:
             defines:
-                TILT_IN: 10.
-                TILT_OUT: 20.
-                TILT_MAX_ZOOM: 20.
-    geometry-rotation:
-        shaders:
-            defines:
-                ROTATION_IN: 10.
-                ROTATION_OUT: 20.
-                ROTATION_MAX_ZOOM: 20.
-                ROTATION_SPEED: .1
+                ZOOM_START: 10.
+                ZOOM_END: 20.
+                TILT: zoom()*PI
+                ROTATION_RANGE: zoom()*HALF_PI
     overlay_grid:
         mix: [space-screen, shapes-cross, generative-random]
         shaders:
@@ -184,10 +179,10 @@ styles:
                     color.rgb += overlayGrid*.4;                    
     lin:
         base: lines
-        mix: [geometry-rotation, geometry-tilt, overlay_grid]
+        mix: [tilt-rotate, overlay_grid]
     pol:
         base: polygons
-        mix: [geometry-rotation, geometry-tilt, overlay_grid]
+        mix: [tilt-rotate, overlay_grid]
 
     flat:
         base: polygons
