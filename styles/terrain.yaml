@@ -147,9 +147,6 @@ styles:
         shaders:
             defines:
                 GRID_AMOUNT: .2
-                GRID_ADD: true
-                GRID_SUBSTRACT: false
-                GRID_MULTIPLY: false
     elev_water:
         base: raster
         animated: true
@@ -158,9 +155,6 @@ styles:
         shaders:
             defines:
                 GRID_AMOUNT: .2
-                GRID_ADD: true
-                GRID_SUBSTRACT: false
-                GRID_MULTIPLY: false
                 TERRAIN_ZOFFSET: 3.
     ##################################################################
     flat_roads:
