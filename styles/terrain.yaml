@@ -117,10 +117,12 @@ styles:
         shaders:
             defines:
                 ZOOM_START: 10.
-                ZOOM_END: 14.
+                ZOOM_END: 20.
                 ZOOM_IN: 0.
                 ZOOM_OUT: PI
                 TILT: zoom()
+    terrain-base:
+        mix: [terrain-geometry,tilt]
     terrain:
         base: polygons
         mix: [terrain-terrain, elevation-ramp]
