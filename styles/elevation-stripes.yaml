@@ -3,6 +3,7 @@ author: Patricio Gonzalez Vivo (@patriciogv) - 2016
 import:
     - elevation-ramp.yaml
     - https://tangrams.github.io/blocks/elevation/stripes.yaml
+    - https://tangrams.github.io/blocks/functions/zoom.yaml
     
 layers:
     landuse:
@@ -17,9 +18,15 @@ layers:
 styles:
     landuse:
         base: polygons
-        mix: [elevation-stripes]
+        mix: [functions-zoom, elevation-stripes]
         shaders:
             defines:
+                ZOOM_START: 0.
+                ZOOM_END: 13.
                 STRIPES_ALPHA: .5
-                STRIPES_SCALE: 4.
-                STRIPES_PCT: 1.7
+                STRIPES_SCALE: 40.
+                STRIPES_PCT: 1.3
+                STRIPES_WIDTH: mix( (1.-zoom()),
+                                    dot((sampleRaster(int(NORMAL_TEXTURE_INDEX)).rgb-.5)*2.,
+                                        STRIPES_DIR),
+                                    zoom())*STRIPES_PCT

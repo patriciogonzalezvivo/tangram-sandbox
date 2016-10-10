@@ -11,6 +11,7 @@ import:
     - https://tangrams.github.io/blocks/terrain/terrain.yaml
     - https://tangrams.github.io/blocks/terrain/lines.yaml
     - https://tangrams.github.io/blocks/terrain/polygons.yaml
+    - https://tangrams.github.io/blocks/functions/zoom.yaml
     
 textures:
     ramp:
@@ -111,12 +112,17 @@ layers:
                     color: white
                     extrude: true
 styles:
-    geometry-tilt:
+    tilt:
+        mix: [functions-zoom, geometry-tilt]
         shaders:
             defines:
-                TILT_IN: 10.
-                TILT_OUT: 16.
-                TILT_ROTATE: false
+                ZOOM_START: 10.
+                ZOOM_END: 20.
+                ZOOM_IN: 0.
+                ZOOM_OUT: PI
+                TILT: zoom()
+    terrain-base:
+        mix: [terrain-geometry,tilt]
     terrain:
         base: polygons
         mix: [terrain-terrain, elevation-ramp]
@@ -126,7 +132,7 @@ styles:
     ##################################################################
     flat_earth:
         base: polygons
-        mix: [geometry-tilt, elevation-ramp]
+        mix: [tilt, elevation-ramp]
         shaders:
             uniforms:
                 u_ramp: ramp    
@@ -139,36 +145,30 @@ styles:
     ##################################################################  
     flat_water:
         base: polygons
-        mix: [geometry-tilt, filter-grid]
+        mix: [tilt, filter-grid]
         shaders:
             defines:
                 GRID_AMOUNT: .2
-                GRID_ADD: true
-                GRID_SUBSTRACT: false
-                GRID_MULTIPLY: false
     elev_water:
         base: raster
         animated: true
-        mix: [terrain-polygons, geometry-tilt, fx-water, filter-grid]
+        mix: [terrain-polygons, tilt, fx-water, filter-grid]
         blend: multiply
         shaders:
             defines:
                 GRID_AMOUNT: .2
-                GRID_ADD: true
-                GRID_SUBSTRACT: false
-                GRID_MULTIPLY: false
                 TERRAIN_ZOFFSET: 3.
     ##################################################################
     flat_roads:
         base: lines
-        mix: geometry-tilt
+        mix: tilt
     elev_roads:
         base: lines
         mix: terrain-lines
     ##################################################################
     flat_buildings:
         base: lines
-        mix: geometry-til
+        mix: tilt
     elev_buildings:
         base: polygons
         mix: [terrain-polygons, filter-height]

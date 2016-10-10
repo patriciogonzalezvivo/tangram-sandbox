@@ -108,8 +108,7 @@ styles:
         lighting: false
         shaders:
             defines:
-                GRID_ADD: false
-                GRID_SUBSTRACT: true
+                GRID_BLEND: 'SUB'
                 GRID_AMOUNT: 0.4
     roads:
         base: lines

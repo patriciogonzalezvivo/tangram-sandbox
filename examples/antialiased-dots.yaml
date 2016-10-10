@@ -66,7 +66,7 @@ styles:
     
 sources:
     osm:
-        type: TopoJSONTiles
+        type: TopoJSON
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?
 layers:
     water:
