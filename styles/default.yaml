@@ -7,7 +7,7 @@ import:
 sources:
     osm:
         type: TopoJSON
-        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url: https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
         max_zoom: 16
 
 cameras:
@@ -56,14 +56,14 @@ layers:
                     order: global.order
                     width: [[8,0px], [8,.25px], [11, 1.5px], [14, 2px], [16, 4px], [17, 10m]]
             link:
-                filter: { is_link: yes } # on- and off-ramps, etc
+                filter: { is_link: true } # on- and off-ramps, etc
                 draw:
                     roads:
                         width: [[8,0px], [14, 3px], [16, 5px], [18, 10m]]
                 tunnel-link:
-                    filter: {is_tunnel: yes, $zoom: {min: 13} }
+                    filter: {is_tunnel: true, $zoom: {min: 13} }
         tunnel:
-            filter: {is_tunnel: yes }
+            filter: {is_tunnel: true }
             draw:
                 roads:
                     order: global.order

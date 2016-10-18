@@ -1,0 +1,22 @@
+﻿import:
+    - https://tangrams.github.io/tangram-sandbox/styles/elevation.yaml
+    - https://tangrams.github.io/blocks/elevation/rainbow.yaml
+    - https://tangrams.github.io/blocks/elevation/contours.yaml
+
+layers:
+    earth:
+        draw:
+            earth:
+                color: [0.140, 0.140, 0.140]
+scene:
+    background:
+        color: black
+styles:     
+    earth:
+        base: polygons
+        mix: [elevation-rainbow, elevation-contours]
+        blend: opaque
+
+
+
+        

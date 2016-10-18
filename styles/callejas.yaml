@@ -52,12 +52,12 @@ layers:
                 roads:
                     color: [0.622,0.038,0.394]
             link:
-                filter: { is_link: yes } # on- and off-ramps, etc
+                filter: { is_link: true } # on- and off-ramps, etc
                 draw:
                     roads:
                         color: [0.728,0.181,0.526]
         tunnel:
-            filter: {is_tunnel: yes }
+            filter: {is_tunnel: true }
             draw:
                 roads:
                     color: [0.622,0.155,0.449]
@@ -71,8 +71,8 @@ layers:
             all:
                 - { population: { min: 500000 } }
             any:
-                - { capital: yes }
-                - { state_capital: yes }
+                - { country_capital: true }
+                - { state_capital: true }
                 - kind: [city,town]
         draw:
             points-cross:
@@ -108,8 +108,7 @@ styles:
         lighting: false
         shaders:
             defines:
-                GRID_ADD: false
-                GRID_SUBSTRACT: true
+                GRID_BLEND: 'SUB'
                 GRID_AMOUNT: 0.4
     roads:
         base: lines

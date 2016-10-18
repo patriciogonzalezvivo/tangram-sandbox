@@ -4,7 +4,7 @@
 sources:
     osm:
         type: TopoJSONTiles
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+        url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
         
 styles:
     ink:

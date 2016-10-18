@@ -10,7 +10,7 @@ import:
 sources:
     osm:
         type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-Nhm6Mkg
+        url:  https:tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-Nhm6Mkg
         rasters: [normals, elevation]
     normals:
         type: Raster
@@ -43,9 +43,9 @@ lights:
         ambient: .5
 
 global:
-    order: function () { return feature.sort_key; }
-    order-top: function () { return feature.sort_key + 1; }
-    order-buttom: function () { return feature.sort_key - 1; }
+    order: function () { return feature.sort_rank; }
+    order-top: function () { return feature.sort_rank + 1; }
+    order-buttom: function () { return feature.sort_rank - 1; }
     pseudoRandomColor: |
         function() {
             return [

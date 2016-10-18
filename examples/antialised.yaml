@@ -120,7 +120,7 @@ styles:
 sources:
     osm:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?
+        url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?
 layers:
     water:
         data: { source: osm }
