@@ -168,7 +168,7 @@ styles:
 sources:
     osm:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 layers:
     earth:
         data: { source: osm }  
@@ -203,7 +203,7 @@ layers:
                 color: [0, 0, 0]
                 width: 8
         oneway:
-            filter: { oneway: yes }
+            filter: { oneway: true }
             draw: { roads: { color: red } }
 
         highway:
@@ -220,7 +220,7 @@ layers:
                     width: 13
         tunnel:
             filter:
-                is_tunnel: yes
+                is_tunnel: true
             rail:
                 filter:
                     kind: rail

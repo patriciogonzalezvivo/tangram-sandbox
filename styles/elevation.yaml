@@ -8,7 +8,7 @@ import:
 sources:
     osm:
         type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-Nhm6Mkg
+        url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-Nhm6Mkg
         rasters: [normals-elevation]
         
 layers:
@@ -20,6 +20,7 @@ layers:
                 order: global.order-top
                 color: [0.545, 0.990, 1.000]
                 width: 2px
+                tile_edges: false
     landuse:
         draw:
             landuse:
