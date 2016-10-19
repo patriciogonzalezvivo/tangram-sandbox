@@ -40,7 +40,7 @@ layers:
             roads:
                 color: black
         oneway:
-            filter: { oneway: true }
+            filter: { oneway: yes }
             draw: { roads: { color: red } }
         labels:
             highway:
