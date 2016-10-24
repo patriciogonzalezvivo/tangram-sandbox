@@ -9,7 +9,7 @@ import:
 sources:
     osm:
         type: TopoJSON
-        url:  https:tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 
 scene:
     background:
@@ -21,7 +21,7 @@ cameras:
 
 global:
     order: function () { return feature.sort_rank; }
-                    
+
 layers:
     water:
         data: { source: osm }
@@ -34,7 +34,7 @@ layers:
                 width: 5px
         lakes:
             filter: { kind: [lake, riverbank, dock, water, basin, reservoir, playa, canal, dam, ditch, drain, river, stream]}
-            draw: 
+            draw:
                 lines:
                     order: global.order
                     color: black
@@ -74,7 +74,7 @@ layers:
                 order: global.order
                 color: white
                 width: [[5, 2.px],[15, 4px],[85, 60]]
-    
+
     boundaries:
         data: { source: osm }
         draw:
@@ -96,14 +96,14 @@ layers:
                     typeface: Italic 14px Times
                     fill: black
                     stroke: { color: white , width: 5 }
-                
+
 
 styles:
     pallete:
         shaders:
-            blocks: 
+            blocks:
                 global: |
-                    // Common Values 
+                    // Common Values
                     //================================
                     float radio = 0.05;
                     vec2 size = vec2(1.,.6);
@@ -115,7 +115,7 @@ styles:
         mix: [functions-pulse, functions-aastep, pallete]
         texcoords: true
         shaders:
-            blocks: 
+            blocks:
                 color: |
                     vec2 st = v_texcoord.xy;
                     float pattern = aastep(.5,pulse(st.x,.7,.1)+pulse(st.x,.35,.25));
@@ -125,17 +125,17 @@ styles:
         mix: [functions-pulse, functions-aastep, pallete]
         texcoords: true
         shaders:
-            blocks: 
+            blocks:
                 color: |
                     vec2 st = v_texcoord.xy;
                     float pattern = aastep(.5,pulse(st.x,.5,.2));
                     color.rgb = mix(background,color.rgb,pattern);
-                    
+
     waves:
         base: polygons
         mix: [space-screen, pallete, patterns-stripes]
-        shaders: 
-            blocks: 
+        shaders:
+            blocks:
                 color: |
                     vec2 pos = getScreenNonStretchCoords();
                     pos.y += sin(pos.x*30.)*.01;
@@ -143,8 +143,8 @@ styles:
     hatch:
         base: polygons
         mix: [functions-aastep, pallete, patterns-stripes, space-screen]
-        shaders: 
-            blocks: 
+        shaders:
+            blocks:
                 color: |
                     vec2 st = getScreenNonStretchCoords();
                     color.rgb = mix(color.rgb,background,diagonalStripes(st*300.));

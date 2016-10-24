@@ -203,7 +203,7 @@ layers:
                 color: [0, 0, 0]
                 width: 8
         oneway:
-            filter: { oneway: true }
+            filter: { oneway: yes }
             draw: { roads: { color: red } }
 
         highway:

@@ -46,7 +46,7 @@ layers:
                     fill: white
                     stroke: { color: black , width: 6 }
         oneway:
-            filter: { oneway: true }
+            filter: { oneway: yes }
             draw: { roads: { color: red } }
     buildings:
         data: { source: osm }
