@@ -122,7 +122,7 @@ styles:
             defines:
                 ZOOM_START: 14.
                 ZOOM_END: 21.
-                TILT: zoom()*HALF_PI
+                TILT: clamp(zoom()*HALF_PI,0.,HALF_PI-.6)
                 ROTATION_RANGE: zoom()*HALF_PI
     lin:
          base: lines
