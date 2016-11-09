@@ -6,6 +6,10 @@ import:
     - https://tangrams.github.io/blocks/lines/dash.yaml
     - https://tangrams.github.io/blocks/lines/outline.yaml
     - https://tangrams.github.io/blocks/points/cross.yaml
+    - https://tangrams.github.io/blocks/polygons/dots.yaml
+    - https://tangrams.github.io/blocks/elevation/stripes.yaml
+    - https://tangrams.github.io/blocks/elevation/normal.yaml
+    - https://tangrams.github.io/blocks/filter/grain.yaml
 
 textures:
     palette:
@@ -36,7 +40,7 @@ layers:
     landuse:
         draw:
             landuse:
-                color: [0.741,0.753,0.765]
+                color: [0.153, 0.055, 0.247, 1.00]
     boundaries:
         draw:
             lines-dash:
@@ -92,7 +96,6 @@ styles:
         shaders:
             uniforms:
                 u_ramp: palette
-
     points-cross:
         shaders:
             defines:
@@ -102,12 +105,45 @@ styles:
             defines:
                 DASH_SIZE: .5
                 DASH_SCALE: .2
+    earth:
+        base: polygons
+        mix: [elevation-ramp, elevation-normal, functions-zoom, polygons-dots]
+        shaders:
+            defines:
+                ZOOM_START: 0.
+                ZOOM_END: 13.
+                DOTS_DIR: vec3(-0.600,-0.420,0.600)
+                DOTS_COLOR: color.rgb
+                DOTS_BACKGROUND_COLOR: vec3(0.)
+                DOTS_SCALE: 30
+                DOTS_SIZE: mix(shade*10.,shade*2.,zoom())
+            blocks:
+                normal: |
+                    float shade = dot(normal, DOTS_DIR);
+                    shade =shade*shade*shade;
+    landuse:
+        base: polygons
+        mix: [functions-zoom, elevation-stripes]
+        raster: custom
+        shaders:
+            defines:
+                ZOOM_START: 0.
+                ZOOM_END: 13.
+                STRIPES_ALPHA: .5
+                # STRIPES_SCALE: 60.
+                STRIPES_DIR: vec3(-0.600,-0.420,0.560)
+                STRIPES_PCT: 1.8
+                STRIPES_WIDTH: mix( (1.-zoom()),
+                                    dot((sampleRaster(int(NORMAL_TEXTURE_INDEX)).rgb-.5)*2.,
+                                        STRIPES_DIR),
+                                    zoom())*STRIPES_PCT
     water:
         base: polygons
-        mix: [filter-grid]
+        mix: [filter-grid,filter-grain]
         lighting: false
         shaders:
             defines:
+                GRAIN_AMOUNT: .4
                 GRID_BLEND: 'SUBTRACT'
                 GRID_AMOUNT: 0.4
     roads:
