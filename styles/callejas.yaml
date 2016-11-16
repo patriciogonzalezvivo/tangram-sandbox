@@ -4,7 +4,6 @@ import:
     - elevation-stripes.yaml
     - https://tangrams.github.io/blocks/filter/grid.yaml
     - https://tangrams.github.io/blocks/lines/dash.yaml
-    - https://tangrams.github.io/blocks/lines/outline.yaml
     - https://tangrams.github.io/blocks/points/cross.yaml
     - https://tangrams.github.io/blocks/polygons/dots.yaml
     - https://tangrams.github.io/blocks/elevation/stripes.yaml
@@ -145,11 +144,4 @@ styles:
                 GRAIN_AMOUNT: .4
                 GRID_BLEND: 'SUBTRACT'
                 GRID_AMOUNT: 0.4
-    roads:
-        base: lines
-        mix: [lines-outline]
-        shaders:
-            defines:
-                outline_width: 0.1
-                outline_color: vec3(0.302,0.310,0.349)
 
