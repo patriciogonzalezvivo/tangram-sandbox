@@ -5,7 +5,7 @@ import:
     - https://tangrams.github.io/blocks/functions/zoom.yaml
     
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -18,26 +18,26 @@ cameras:
         
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             poly:
                 order: global.order
                 color: '#555'
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             poly:
                 order: global.order
                 color: '#ddd'
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             line:
                 order: global.order
                 color: white
                 width: 1px
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         properties: { width: 3 }
         draw:
             line:
@@ -45,7 +45,7 @@ layers:
                 color: gray
                 width: [[5, .25px],[15, .5px],[85, 10]]
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { $zoom: { min: 14 } }
         draw:
             poly:

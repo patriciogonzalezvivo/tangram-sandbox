@@ -2,7 +2,7 @@
     perspective:
         type: flat
 sources:
-    osm:
+    mapzen:
         type: TopoJSONTiles
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?
         url_params:
@@ -87,13 +87,13 @@ styles:
                     // color.rgb = mix(color.rgb, vec3(0.898,0.886,0.890), step(.5, snoise( vec3(st*2.,t+0.0) ) ));
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 0
                 color: '#555'
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             splatter:
                 order: 1

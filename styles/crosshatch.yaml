@@ -58,7 +58,7 @@ layers:
                 extrude: true
                 color: [0.217,0.217,0.217]
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { name: true }
         draw:
             text:

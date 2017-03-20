@@ -29,25 +29,25 @@ lights:
 
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             water:
                 order: global.order
                 color: '#88bbee'
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             earth:
                 order: global.order
                 color: '#ddeeee'
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             landuse:
                 order: global.order
                 color: [0.502,0.369,0.494]
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
@@ -55,14 +55,14 @@ layers:
                 color: gray
                 width: 8
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             buildings:
                 order: global.order
                 color: global.pseudoRandomColor
                 extrude: true
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             text:
                 font:

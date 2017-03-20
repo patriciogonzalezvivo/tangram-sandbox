@@ -62,28 +62,28 @@ lights:
 
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             water:
                 color: [0.271,0.267,0.243]
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             earth:
                 color: [0.271,0.267,0.243]
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             landuse:
                 color: [0.271,0.267,0.243]
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
                 color: '#343434'
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             buildings:
                 color: white
@@ -94,7 +94,7 @@ layers:
                 extrude: true
                 color: [0.217,0.217,0.217]
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             text:
                 font:
@@ -104,7 +104,7 @@ layers:
                     fill: black
                     stroke: { color: white , width: 7 }
     landuse_labels:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { name: true, kind: park, $zoom: { min: 16 } }
         draw:
             text:
