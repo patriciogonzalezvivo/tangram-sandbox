@@ -90,7 +90,7 @@ styles:
                     
 sources:
     mapzen:
-        type: TopoJSONTiles
+        type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?
 layers:
     water:

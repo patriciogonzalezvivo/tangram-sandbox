@@ -3,7 +3,7 @@
         type: flat
 sources:
     mapzen:
-        type: TopoJSONTiles
+        type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
             api_key: vector-tiles-P6dkVl4
