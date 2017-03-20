@@ -11,7 +11,7 @@ import:
     - https://tangrams.github.io/blocks/space/tile.yaml
     
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -29,20 +29,20 @@ scene:
 
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             simpleGrid:
                 order: global.order
                 color: [0.362,0.362,0.362]
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             lin:
                 order: global.order
                 color: [0.703,0.703,0.703]
                 width: 1px
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             numericGrid:
                 order: global.order
@@ -54,7 +54,7 @@ layers:
                 width: 2px
                 tile_edges: false
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
@@ -104,7 +104,7 @@ layers:
                 roads:
                     color: red
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             buildings: 
                 order: global.order

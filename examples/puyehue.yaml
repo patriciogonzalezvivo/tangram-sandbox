@@ -8,7 +8,7 @@ import:
     - https://tangrams.github.io/blocks/shapes/cross.yaml
     
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  https:tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -60,13 +60,13 @@ global:
         
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             water:
                 order: global.order
                 color: [.1,.1,.1]
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             earth:
                 order: global.order
@@ -76,7 +76,7 @@ layers:
                 color: white
                 width: 2px
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
@@ -102,7 +102,7 @@ layers:
                 roads:
                     order: global.order
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { $zoom: {max: 15}}
         draw:
             lines-dash:
@@ -110,7 +110,7 @@ layers:
                 color: white
                 width: 1px
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: 
             any:
                 - { capital: yes }

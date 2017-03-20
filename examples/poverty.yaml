@@ -1,5 +1,5 @@
 ﻿sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?
     data:
@@ -183,7 +183,7 @@ styles:
         
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         properties: { width: 3 }
         draw:
             line:

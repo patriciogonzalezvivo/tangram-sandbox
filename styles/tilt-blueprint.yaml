@@ -155,20 +155,20 @@ styles:
                     float pct = 1.0-(step(lineWidth,v_texcoord.x)-step(1.0-lineWidth,v_texcoord.x));
                     color.rgb = vec3(0.14+pct*0.1); 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
             api_key: vector-tiles-JUsa0Gc
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             base:
                 order: 3
                 color: [.1,.1,.1]
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             lin:
                 order: 5
@@ -181,7 +181,7 @@ layers:
                 order: 0
                 color: [0,0,0]
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             lin:
                 order: 3
@@ -194,7 +194,7 @@ layers:
                 order: 0
                 color: [0,0,0]
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         properties: { width: 3 }
         draw:
@@ -203,7 +203,7 @@ layers:
                 color: '#C1D3DC'
                 width: 6
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { $zoom: { min: 10 } }
         draw:
             buildings:
