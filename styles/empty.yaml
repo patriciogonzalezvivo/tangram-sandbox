@@ -1,5 +1,5 @@
 ﻿sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -11,13 +11,13 @@ cameras:
         
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: function () { return feature.sort_rank; }
                 color: '#555'
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: function () { return feature.sort_rank; }

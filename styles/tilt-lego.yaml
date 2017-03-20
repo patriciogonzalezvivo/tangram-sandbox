@@ -165,7 +165,7 @@ styles:
                     }
                     color *= clamp(0.6+worldPosition().z*0.007,0.,1.);
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -173,7 +173,7 @@ sources:
 layers:
     earth:
         data:
-            source: osm
+            source: mapzen
             layer: earth
         draw:
             floor:
@@ -181,7 +181,7 @@ layers:
                 color: [0.094,0.573,0.255]
     landuse:
         data:
-            source: osm
+            source: mapzen
             layer: landuse
         draw:
             floor:
@@ -190,7 +190,7 @@ layers:
 
     water:
         data:
-            source: osm
+            source: mapzen
             layer: water
         draw:
             floor:
@@ -198,7 +198,7 @@ layers:
                 color: [0.016,0.341,0.651]
 
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
@@ -255,7 +255,7 @@ layers:
                     width: 3
     buildings:
         data:
-            source: osm
+            source: mapzen
             layer: buildings
         draw:
             buildings:

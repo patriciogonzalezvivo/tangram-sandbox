@@ -68,7 +68,7 @@ layers:
             buildings:
                 color: [0.941,0.925,0.922]
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: 
             all:
                 - { population: { min: 500000 } }

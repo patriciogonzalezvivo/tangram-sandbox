@@ -65,30 +65,30 @@ styles:
                     color.rgb *= vec3(min((worldPosition().z*.001 + .5),1.));
     
 sources:
-    osm:
+    mapzen:
         type: TopoJSONTiles
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             dots:
                 order: 2
                 color: '#353535'
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 0
                 color: '#555'
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 1
                 color: '#666'
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         properties: { width: 3 }
         draw:
             lines:
@@ -96,7 +96,7 @@ layers:
                 color: '#777'
                 width: 5
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { $zoom: { min: 14 } }
         draw:
             polygons:
