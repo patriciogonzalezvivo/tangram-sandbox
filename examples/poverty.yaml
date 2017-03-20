@@ -1,7 +1,7 @@
 ﻿sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?
+        url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson?
     data:
         type: TopoJSON
         url:  ../styles/data/us-states-10m.json
@@ -183,7 +183,7 @@ styles:
         
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         properties: { width: 3 }
         draw:
             line:

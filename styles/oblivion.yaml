@@ -11,9 +11,11 @@ import:
     - https://tangrams.github.io/blocks/functions/zoom.yaml
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url_params:
+            api_key: vector-tiles-JUsa0Gc
 
 textures:
     sem:
@@ -36,11 +38,11 @@ lights:
         ambient: .5
     
 global:
-    order: function () { return feature.sort_key; }
+    order: function () { return feature.sort_rank; }
 
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             water:
                 order: global.order
@@ -49,7 +51,7 @@ layers:
                 order: 0
                 color: [0.129, 0.129, 0.129]
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             pol:
                 order: global.order
@@ -58,20 +60,20 @@ layers:
                 order: 0
                 color: [0.129, 0.129, 0.129]
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             area:
                 order: global.order
                 color: [1.000,0.014,0.187]
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             buildings:
                 order: global.order
                 color: '#999'
                 extrude: true
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             lin:

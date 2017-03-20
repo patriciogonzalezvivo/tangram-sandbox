@@ -47,5 +47,5 @@ feature = geojson.Feature(geometry=line)
 feature_collection = geojson.FeatureCollection([feature])
 
 file = open('trip.json', 'w')
-file.write(geojson.dumps(feature_collection, sort_keys=True))
+file.write(geojson.dumps(feature_collection, sort_key=True))
 file.close()

@@ -166,24 +166,26 @@ styles:
                 position: |
                     // position.z *= max(1.0,0.5+(1.0-(u_map_position.z/20.0))*5.0);
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url_params:
+            api_key: vector-tiles-JUsa0Gc
 layers:
     earth:
-        data: { source: osm }  
+        data: { source: mapzen }  
         draw:
             grid:
                 order: 0
                 color: [0.101,0.203,0.203]
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             grid:
                 order: 1
                 color: '#ff00ff'
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             tiledCross:
                 order: 2
@@ -195,7 +197,7 @@ layers:
                 width: 1px
                 tile_edges: false
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
@@ -220,7 +222,7 @@ layers:
                     width: 13
         tunnel:
             filter:
-                is_tunnel: yes
+                is_tunnel: true
             rail:
                 filter:
                     kind: rail
@@ -245,7 +247,7 @@ layers:
                 roads:
                     width: 3
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             walls:
                 order: 6

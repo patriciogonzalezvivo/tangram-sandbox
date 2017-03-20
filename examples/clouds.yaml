@@ -5,9 +5,11 @@ import:
     - https://tangrams.github.io/blocks/geometry/projections.yaml
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url_params:
+            api_key: vector-tiles-JUsa0Gc
 cameras:
     perspective:
         type: flat
@@ -36,13 +38,13 @@ styles:
                     color = mix(color-clouds,color+clouds,light_accumulator_diffuse.r);
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             textures:
                 order: 0
                 color: '#555'
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             textures:
                 order: 1

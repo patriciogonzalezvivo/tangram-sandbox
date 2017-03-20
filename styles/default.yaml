@@ -5,9 +5,11 @@ import:
     - https://tangrams.github.io/blocks/filter/height.yaml
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url: https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url_params:
+            api_key: vector-tiles-JUsa0Gc
         max_zoom: 16
 
 cameras:
@@ -24,25 +26,25 @@ lights:
 
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             water:
                 order: global.order
                 color: '#353535'
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             earth:
                 order: global.order
                 color: '#555'
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             landuse:
                 order: global.order
                 color: '#666'
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
@@ -56,19 +58,19 @@ layers:
                     order: global.order
                     width: [[8,0px], [8,.25px], [11, 1.5px], [14, 2px], [16, 4px], [17, 10m]]
             link:
-                filter: { is_link: yes } # on- and off-ramps, etc
+                filter: { is_link: true } # on- and off-ramps, etc
                 draw:
                     roads:
                         width: [[8,0px], [14, 3px], [16, 5px], [18, 10m]]
                 tunnel-link:
-                    filter: {is_tunnel: yes, $zoom: {min: 13} }
+                    filter: {is_tunnel: true, $zoom: {min: 13} }
         tunnel:
-            filter: {is_tunnel: yes }
+            filter: {is_tunnel: true }
             draw:
                 roads:
                     order: global.order
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             buildings:
                 order: global.order

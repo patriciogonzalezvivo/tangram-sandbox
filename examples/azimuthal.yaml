@@ -1,9 +1,11 @@
 ﻿# Author @patriciogv - 2015
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-P6dkVl4
+        url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url_params:
+            api_key: vector-tiles-P6dkVl4
 cameras:
     perspective:
         type: flat
@@ -76,7 +78,7 @@ styles:
                     color = day;
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             textures:
                 order: 0
@@ -86,13 +88,13 @@ layers:
                 color: white
                 width: [[2,0px],[5,1px]]
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             textures:
                 order: 1
                 color: '#ddd'
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             lines:
                 order: 3

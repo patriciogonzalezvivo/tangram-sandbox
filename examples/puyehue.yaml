@@ -8,9 +8,11 @@ import:
     - https://tangrams.github.io/blocks/shapes/cross.yaml
     
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-Nhm6Mkg
+        url:  https:tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url_params:
+            api_key: vector-tiles-Nhm6Mkg
         rasters: [normals, elevation]
     normals:
         type: Raster
@@ -43,9 +45,9 @@ lights:
         ambient: .5
 
 global:
-    order: function () { return feature.sort_key; }
-    order-top: function () { return feature.sort_key + 1; }
-    order-buttom: function () { return feature.sort_key - 1; }
+    order: function () { return feature.sort_rank; }
+    order-top: function () { return feature.sort_rank + 1; }
+    order-buttom: function () { return feature.sort_rank - 1; }
     pseudoRandomColor: |
         function() {
             return [
@@ -58,13 +60,13 @@ global:
         
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             water:
                 order: global.order
                 color: [.1,.1,.1]
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             earth:
                 order: global.order
@@ -74,7 +76,7 @@ layers:
                 color: white
                 width: 2px
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
@@ -100,7 +102,7 @@ layers:
                 roads:
                     order: global.order
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { $zoom: {max: 15}}
         draw:
             lines-dash:
@@ -108,7 +110,7 @@ layers:
                 color: white
                 width: 1px
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: 
             any:
                 - { capital: yes }

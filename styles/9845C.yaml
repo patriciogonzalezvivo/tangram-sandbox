@@ -9,9 +9,11 @@ import:
     - https://tangrams.github.io/blocks/shapes/cross.yaml
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url_params:
+            api_key: vector-tiles-JUsa0Gc
 
 scene:
     background: 
@@ -23,7 +25,7 @@ cameras:
         
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             border-red:
                 order: global.order
@@ -38,7 +40,7 @@ layers:
                 color: [0.757, 0.961, 1.000]
                 width: 1px
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { kind: lake }
         draw:
             border-red:
@@ -54,7 +56,7 @@ layers:
                 color: [0.757, 0.961, 1.000]
                 width: .8px
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             border-red:
                 order: global.order
@@ -69,7 +71,7 @@ layers:
                 color: [0.451, 0.573, 0.596]
                 width: .4px
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             border-red:
@@ -85,7 +87,7 @@ layers:
                 color: [0.451, 0.573, 0.596]
                 width: .3px
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { name: true }
         draw:
             icons:

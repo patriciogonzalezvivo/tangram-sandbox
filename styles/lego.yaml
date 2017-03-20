@@ -24,34 +24,34 @@ lights:
 
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             earth:
                 color: [0.094,0.573,0.255]
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             landuse:
                 color: white
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             water:
                 color: [0.016,0.341,0.651]
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
                 color: gray
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             buildings:
                 color: global.pseudoRandomColor
                 extrude: true
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { name: true }
         draw:
             text:

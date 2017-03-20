@@ -4,8 +4,10 @@ import:
     - elevation-stripes.yaml
     - https://tangrams.github.io/blocks/filter/grid.yaml
     - https://tangrams.github.io/blocks/lines/dash.yaml
-    - https://tangrams.github.io/blocks/lines/outline.yaml
     - https://tangrams.github.io/blocks/points/cross.yaml
+    - https://tangrams.github.io/blocks/polygons/dots.yaml
+    - https://tangrams.github.io/blocks/elevation/stripes.yaml
+    - https://tangrams.github.io/blocks/elevation/normal.yaml
 
 textures:
     palette:
@@ -36,7 +38,7 @@ layers:
     landuse:
         draw:
             landuse:
-                color: [0.741,0.753,0.765]
+                color: [0.153, 0.055, 0.247, 1.00]
     boundaries:
         draw:
             lines-dash:
@@ -52,12 +54,12 @@ layers:
                 roads:
                     color: [0.622,0.038,0.394]
             link:
-                filter: { is_link: yes } # on- and off-ramps, etc
+                filter: { is_link: true } # on- and off-ramps, etc
                 draw:
                     roads:
                         color: [0.728,0.181,0.526]
         tunnel:
-            filter: {is_tunnel: yes }
+            filter: {is_tunnel: true }
             draw:
                 roads:
                     color: [0.622,0.155,0.449]
@@ -66,13 +68,13 @@ layers:
             buildings:
                 color: [0.941,0.925,0.922]
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: 
             all:
                 - { population: { min: 500000 } }
             any:
-                - { capital: yes }
-                - { state_capital: yes }
+                - { country_capital: true }
+                - { state_capital: true }
                 - kind: [city,town]
         draw:
             points-cross:
@@ -92,7 +94,6 @@ styles:
         shaders:
             uniforms:
                 u_ramp: palette
-
     points-cross:
         shaders:
             defines:
@@ -102,19 +103,45 @@ styles:
             defines:
                 DASH_SIZE: .5
                 DASH_SCALE: .2
+    earth:
+        base: polygons
+        mix: [elevation-ramp, elevation-normal, functions-zoom, polygons-dots]
+        shaders:
+            defines:
+                ZOOM_START: 0.
+                ZOOM_END: 13.
+                DOTS_DIR: vec3(-0.600,-0.420,0.600)
+                DOTS_COLOR: color.rgb
+                DOTS_BACKGROUND_COLOR: vec3(0.)
+                DOTS_SCALE: 30
+                DOTS_SIZE: mix(shade*10.,shade*2.,zoom())
+            blocks:
+                normal: |
+                    float shade = dot(normal, DOTS_DIR);
+                    shade =shade*shade*shade;
+    landuse:
+        base: polygons
+        mix: [functions-zoom, elevation-stripes]
+        raster: custom
+        shaders:
+            defines:
+                ZOOM_START: 0.
+                ZOOM_END: 13.
+                STRIPES_ALPHA: .5
+                # STRIPES_SCALE: 60.
+                STRIPES_DIR: vec3(-0.600,-0.420,0.560)
+                STRIPES_PCT: 1.8
+                STRIPES_WIDTH: mix( (1.-zoom()),
+                                    dot((sampleRaster(int(NORMAL_TEXTURE_INDEX)).rgb-.5)*2.,
+                                        STRIPES_DIR),
+                                    zoom())*STRIPES_PCT
     water:
         base: polygons
         mix: [filter-grid]
         lighting: false
         shaders:
             defines:
-                GRID_BLEND: 'SUB'
+                GRAIN_AMOUNT: .4
+                GRID_BLEND: 'SUBTRACT'
                 GRID_AMOUNT: 0.4
-    roads:
-        base: lines
-        mix: [lines-outline]
-        shaders:
-            defines:
-                outline_width: 0.1
-                outline_color: vec3(0.302,0.310,0.349)
 

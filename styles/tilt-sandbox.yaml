@@ -184,14 +184,16 @@ styles:
                     color.rgb = mix(vec3(0.2+color.r*0.5,0.1+color.g*0.15,color.b*0.2)*1.5,color.rgb,smoothstep(0.0,color.g,pattern));
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
-        url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
+        url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url_params:
+            api_key: vector-tiles-JUsa0Gc
 
 layers:
     earth:
         data:
-            source: osm
+            source: mapzen
             layer: earth
         draw:
             sand:
@@ -199,7 +201,7 @@ layers:
                 color: [0.933,0.890,0.839]
     landuse:
         data:
-            source: osm
+            source: mapzen
             layer: landuse
         draw:
             sand:
@@ -208,7 +210,7 @@ layers:
 
     water:
         data:
-            source: osm
+            source: mapzen
             layer: water
         draw:
             ocean:
@@ -216,7 +218,7 @@ layers:
                 color: '#88bbee'
 
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
@@ -267,7 +269,7 @@ layers:
 
     buildings:
         data:
-            source: osm
+            source: mapzen
             layer: buildings
         draw:
             wood:

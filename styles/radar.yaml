@@ -6,7 +6,7 @@ import:
 
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 style: animation
