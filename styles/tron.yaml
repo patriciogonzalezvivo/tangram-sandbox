@@ -12,12 +12,12 @@ scene:
 
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             water:
                 color: [0,0,0]
     earth:
-        data: { source: osm }  
+        data: { source: mapzen }  
         draw:
             lines:
                 order: global.order-top
@@ -26,12 +26,12 @@ layers:
             earth:
                 color: [0.101,0.203,0.203]
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             landuse:
                 color: '#ff00ff'
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             roads:
@@ -42,7 +42,7 @@ layers:
                 roads: 
                     color: red
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             buildings:
                 order: global.order
@@ -59,7 +59,7 @@ layers:
                 extrude: true
                 color: [0.654,0.897,1.000]
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { name: true }
         draw:
             text:

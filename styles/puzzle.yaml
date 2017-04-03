@@ -1,7 +1,7 @@
 ﻿# Author @patriciogv - 2016
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -208,20 +208,20 @@ layers:
                 order: 0
                 color: [0.106, 0.106, 0.106]
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             billboardPly:
                 order: 1
                 color: [0.333, 0.333, 0.333]
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             billboardLns:
                 order: 2
                 color: white
                 width: 1px
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             billboardLns:
                 order: 3

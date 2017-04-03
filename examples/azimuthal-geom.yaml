@@ -1,7 +1,7 @@
 ﻿# Author @patriciogv - 2015
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -141,7 +141,7 @@ styles:
                     position.xy = azim.yx*EARTH_RADIUS;
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             textures:
                 order: 0
@@ -151,13 +151,13 @@ layers:
                 color: white
                 width: [[2,0px],[5,1px]]
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             textures:
                 order: 1
                 color: '#ddd'
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             lines:
                 order: 3

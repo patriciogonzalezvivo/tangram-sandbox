@@ -5,7 +5,7 @@ import:
     - https://tangrams.github.io/blocks/geometry/projections.yaml
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -38,13 +38,13 @@ styles:
                     color = mix(color-clouds,color+clouds,light_accumulator_diffuse.r);
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             textures:
                 order: 0
                 color: '#555'
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             textures:
                 order: 1

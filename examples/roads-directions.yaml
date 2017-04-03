@@ -1,7 +1,7 @@
 ﻿# Author @patriciogv - 2015
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -88,25 +88,25 @@ styles:
                     
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 2
                 color: '#353535'
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 0
                 color: '#555'
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 1
                 color: '#666'
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             polygons:
                 order: 50
@@ -117,7 +117,7 @@ layers:
                     style: buildings
                     extrude: function () { return feature.height > 0 || $zoom >= 16; }
     roads:
-        data: { source: osm, layer: roads }
+        data: { source: mapzen, layer: roads }
         filter: { not: { highway: service, kind: rail } }
         draw:
             street:
@@ -184,7 +184,7 @@ layers:
                     # let roads sort themselves past zoom 14
                     order: function() { return 6 + feature.sort_rank; }
     road_labels:
-        data: { source: osm, layer: roads }
+        data: { source: mapzen, layer: roads }
         filter: { name: true, aeroway: false, tunnel: false, railway: false, not: { kind: rail } }
         highway:
             filter: { kind: highway, $zoom: { min: 5 } }

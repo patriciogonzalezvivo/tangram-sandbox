@@ -15,7 +15,7 @@ layers:
             water:
                 color: [.1,.1,.1]
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             lines-dash:
                 order: global.order

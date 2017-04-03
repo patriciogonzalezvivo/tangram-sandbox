@@ -7,7 +7,7 @@ import:
     - https://tangrams.github.io/blocks/space/screen.yaml
 
 sources:
-    osm:
+    mapzen:
         type: TopoJSON
         url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
@@ -26,7 +26,7 @@ global:
 
 layers:
     water:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             waves:
                 order: global.order
@@ -43,7 +43,7 @@ layers:
                     cap: round
                     width: .5px
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             border:
                 order: 10000
@@ -51,20 +51,20 @@ layers:
                 cap: round
                 width: 6px
     landuse:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             hatch:
                 order: global.order
                 color: '#464C40'
     buildings:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             b_border:
                 order: global.order
                 color: [[10,[1,1,1]],[15,[1,1,1]],[18,[0.306, 0.306, 0.306]]]
                 width: [[10, 1], [12, 1px],[14, 1px], [16, 2px], [17, 3px], [18, 5px]]
     roads:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { not: { kind: [rail, ferry] } }
         draw:
             lines:
@@ -78,7 +78,7 @@ layers:
                 width: [[5, 2.px],[15, 4px],[85, 60]]
 
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             lines:
                 order: global.order
@@ -90,7 +90,7 @@ layers:
                 color: white
                 width: 3px
     places:
-        data: { source: osm }
+        data: { source: mapzen }
         filter: { name: true }
         draw:
             text:

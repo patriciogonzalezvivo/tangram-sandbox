@@ -2,8 +2,8 @@
     perspective:
         type: flat
 sources:
-    osm:
-        type: TopoJSONTiles
+    mapzen:
+        type: TopoJSON
         url:  tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         url_params:
             api_key: vector-tiles-P6dkVl4
@@ -43,7 +43,7 @@ scene:
         color: [0,0,0]
 layers:
     earth:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             lines:
                 order: 0
@@ -58,7 +58,7 @@ layers:
                 color: [0.0, 0.000, 1.000]
                 width: 1px
     boundaries:
-        data: { source: osm }
+        data: { source: mapzen }
         draw:
             lines:
                 order: 2
